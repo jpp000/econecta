@@ -28,8 +28,7 @@ services:
       - server
 
   db:
-    image: postgres:latest
+    image: mongo
     ports:
-      - "5433:5432"
-    env_file:
-      - server/.env
+      - "27017:27017"
+    
