@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -7,23 +7,25 @@ import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  private readonly logger = new Logger(JwtStrategy.name);
+
   constructor(
     configService: ConfigService,
     private readonly usersService: UsersService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get('JWT_ACCESS_TOKEN_SECRET'),
+      secretOrKey: configService.getOrThrow('JWT_ACCESS_TOKEN_SECRET'),
     });
   }
 
   async validate({ userId }: TokenPayload) {
-    const user = await this.usersService.getUser({ _id: userId });
+    try {
+      return await this.usersService.getUser({ _id: userId });
+    } catch (err) {
+      this.logger.error('Error validating user', err);
 
-    if (!user.verified) {
-      throw new UnauthorizedException('Email not verified');
+      throw new UnauthorizedException('User not found');
     }
-
-    return user;
   }
 }

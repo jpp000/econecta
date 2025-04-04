@@ -10,7 +10,7 @@ COPY server/nest-cli.json ./
 
 RUN npm i -g pnpm 
 
-RUN pnpm i
+RUN pnpm install --frozen-lockfile
 
 RUN pnpm build
 

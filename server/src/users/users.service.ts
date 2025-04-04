@@ -8,8 +8,9 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { UpdateUserPasswordDto } from './dto/update-user-password';
+import { GetUserDto } from './dto/get-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -88,5 +89,9 @@ export class UsersService {
 
       throw err;
     }
+  }
+
+  async getUser({ _id }: GetUserDto) {
+    return this.usersRepository.findOne({ _id });
   }
 }
