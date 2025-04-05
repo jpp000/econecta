@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
+import { useAuthStore } from "@/store/useAuthStore";
 
 import HomeContainer from "./views/Home/HomeContainer";
 import NavbarContainer from "./components/Navbar/NavbarContainer";
@@ -14,12 +15,11 @@ import ChatsContainer from "./views/Chats/ChatsContainer";
 import Calendar from "./views/Calendar/Calendar";
 import Footer from "./components/Footer/Footer";
 
+
 const App = () => {
-  const loading = false;
+  const { isLoading, user } = useAuthStore();
 
-  const authUser = false;
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />
@@ -34,39 +34,39 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={authUser ? <HomeContainer /> : <Navigate to="/login" />}
+          element={user ? <HomeContainer /> : <Navigate to="/login" />}
         />
         <Route
           path="/login"
-          element={authUser ? <Navigate to="/" /> : <LoginContainer />}
+          element={user ? <Navigate to="/" /> : <LoginContainer />}
         />
         <Route
           path="/signup"
-          element={authUser ? <Navigate to="/" /> : <SignupContainer />}
+          element={user ? <Navigate to="/" /> : <SignupContainer />}
         />
         <Route
           path="/donations"
-          element={authUser ? <DonationsContainer /> : <HomeContainer />}
+          element={user ? <DonationsContainer /> : <LoginContainer />}
         />
         <Route
           path="/about"
-          element={authUser ? <AboutUsContainer /> : <HomeContainer />}
+          element={user ? <AboutUsContainer /> : <LoginContainer />}
         />
         <Route
           path="/profile"
-          element={authUser ? <ProfileContainer /> : <HomeContainer />}
+          element={user ? <ProfileContainer /> : <LoginContainer />}
         />
         <Route
           path="/courses"
-          element={authUser ? <CoursesContainer /> : <HomeContainer />}
+          element={user ? <CoursesContainer /> : <LoginContainer />}
         />
         <Route
           path="/chats"
-          element={authUser ? <ChatsContainer /> : <HomeContainer />}
+          element={user ? <ChatsContainer /> : <LoginContainer />}
         />
         <Route
           path="/calendar"
-          element={authUser ? <Calendar /> : <HomeContainer />}
+          element={user ? <Calendar /> : <LoginContainer />}
         />
       </Routes>
 

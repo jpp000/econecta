@@ -53,19 +53,19 @@ const Navbar = ({ authUser }: NavbarProps) => {
             </Link>
 
             {!authUser && (
-              <Button className="border border-[#2F4F4F] bg-white/10 text-[#2F4F4F] hover:bg-gray-200/40 transition-all cursor-pointer">
-                <Link to={"/login"}>
+              <Link to={"/login"}>
+                <Button className="border border-[#2F4F4F] bg-white/10 text-[#2F4F4F] hover:bg-gray-200/40 transition-all cursor-pointer">
                   Entrar
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             )}
-            
+
             {authUser && (
-              <Button className="border bg-base-100 rounded-lg hover:bg-gray-100 cursor-pointer">
-                <Link to={"/profile"}>
+              <Link to={"/profile"}>
+                <Button className="border bg-base-100 rounded-lg hover:bg-gray-100 cursor-pointer">
                   <User className="size-5 text-black" />
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             )}
           </div>
         </div>

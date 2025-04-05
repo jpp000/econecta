@@ -11,9 +11,12 @@ async function bootstrap() {
 
   app.useLogger(app.get(Logger));
 
-  // app.enableCors({
-  //   origin: configService.get('CORS_ORIGIN'),
-  // });
+  app.enableCors({
+    origin: configService.get('CLIENT_URL'),
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  });
 
   app.use(helmet());
 

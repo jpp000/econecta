@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcryptjs';
@@ -53,8 +53,8 @@ export class UsersService {
   async verifyUser(email: string, password: string) {
     const user = await this.usersRepository.findOne({ email });
 
-    if (!user.password) {
-      throw new UnauthorizedException('Sign in with Google');
+    if (!user) {
+      throw new UnauthorizedException('User not found');
     }
 
     const passwordIsValid = await bcrypt.compare(password, user.password);
@@ -72,6 +72,10 @@ export class UsersService {
     newPassword,
   }: UpdateUserPasswordDto & { _id: string }) {
     const user = await this.usersRepository.findOne({ _id });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
 
     const passwordIsValid = await bcrypt.compare(oldPassword, user.password);
 
@@ -92,6 +96,16 @@ export class UsersService {
   }
 
   async getUser({ _id }: GetUserDto) {
-    return this.usersRepository.findOne({ _id });
+    const user = await this.usersRepository.findOne({ _id });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    return user;
+  }
+
+  async findByEmail(email: string) {
+    return this.usersRepository.findOne({ email });
   }
 }
