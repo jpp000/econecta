@@ -12,6 +12,7 @@ import ProfileContainer from "./views/Profile/ProfileContainer";
 import CoursesContainer from "./views/Courses/CoursesContainer";
 import ChatsContainer from "./views/Chats/ChatsContainer";
 import Calendar from "./views/Calendar/Calendar";
+import Footer from "./components/Footer/Footer";
 
 const App = () => {
   const loading = false;
@@ -69,6 +70,7 @@ const App = () => {
         />
       </Routes>
 
+      <Footer />
       <Toaster />
     </div>
   );

@@ -1,6 +1,9 @@
 import { FeatureCard } from "@/components/SustentableCard/SustentableCard";
 import BgSustentable from "../../assets/bg-image.jpg";
+import WorldGreen from "../../assets/world-green.png";
 import { Button } from "@/components/ui/button";
+import { Sprout } from "lucide-react";
+import { CarrosselVertical } from "@/components/CarrosselVertical/CarrosselVertical";
 
 const Home = () => {
   return (
@@ -23,38 +26,80 @@ const Home = () => {
         </div>
 
         <section className="px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <FeatureCard
               title="Reciclagem Inteligente"
               description="Soluções que otimizam o descarte de resíduos, promovendo a economia circular."
-              linkText="Donations"
-              linkHref="/donations"
             />
 
             <FeatureCard
               title="Energia Limpa"
               description="Investimos em energia solar e eólica para um futuro mais verde."
-              linkText="Explorar"
-              linkHref="/energy"
             />
 
             <FeatureCard
               title="Educação Ambiental"
               description="Capacitação de comunidades para práticas ecológicas no dia a dia."
-              linkText="Ver mais"
-              linkHref="/education"
             />
           </div>
         </section>
       </section>
 
-      <section className="h-screen flex items-center justify-center bg-white text-green-950">
-        <div className="max-w-4xl text-center">
-          <h2 className="text-5xl font-bold">About Us</h2>
-          <p className="mt-4 text-lg text-gray-300">
-            We believe in a sustainable future and work tirelessly to develop
-            eco-friendly solutions.
-          </p>
+      <section className="bg-white text-green-950 overflow-hidden">
+        {/* Imagens decorativas nos cantos */}
+        <div className="relative h-screen flex items-center justify-center">
+          <img
+            src={WorldGreen}
+            alt="Folha decorativa"
+            className="absolute top-10 left-10 w-70"
+          />
+          <img
+            src={WorldGreen}
+            alt="Folha decorativa"
+            className="absolute top-10 right-10 w-70"
+          />
+          <img
+            src={WorldGreen}
+            alt="Folha decorativa"
+            className="absolute bottom-10 left-10 w-70"
+          />
+          <img
+            src={WorldGreen}
+            alt="Folha decorativa"
+            className="absolute bottom-10 right-10 w-70"
+          />
+          <div className="h-full flex flex-col items-center justify-center">
+            <h2 className="text-5xl max-w-5xl text-center">
+              Junte-se a nós na luta por um futuro mais verde e sustentável.{" "}
+              <Sprout className="size-12 inline-block" /> Acreditamos que
+              pequenas ações podem fazer uma grande diferença.
+            </h2>
+            <p className="mt-4 text-lg text-gray-400 max-w-sm text-center">
+              Cada passo conta na construção de um mundo mais sustentável.
+            </p>
+            <div className="mt-8">
+              <Button className="bg-yellow-400 text-black text-md font-medium rounded-full hover:bg-yellow-500 cursor-pointer">
+                Sobre Nós
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="m-20">
+          <div className="relative flex justify-around bg-green-100/30 px-10 py-6 rounded-lg shadow-lg h-[700px] gap-16">
+            <div className="flex flex-col gap-8 w-1/2 items-start">
+              <h3 className="text-6xl font-semibold max-w-100">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+              </h3>
+              <p className="mt-2 text-gray-500 max-w-100 font-light leading-7">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
+                natus vero tempore hic nesciunt quisquam, qui dolorum laboriosam
+                perferendis voluptas.
+              </p>
+            </div>
+
+            <CarrosselVertical />
+          </div>
         </div>
       </section>
 
@@ -73,10 +118,10 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="h-screen flex items-center justify-center bg-white text-green-950">
+      <section className="h-screen flex items-center justify-center bg-green-100/30 text-green-950">
         <div className="max-w-4xl text-center">
           <h2 className="text-5xl font-bold">Contact Us</h2>
-          <p className="mt-4 text-lg text-gray-300">
+          <p className="mt-4 text-lg ">
             Want to know more? Get in touch and lets create a better world
             together.
           </p>
