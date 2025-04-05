@@ -1,35 +1,77 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Navigate, Route, Routes } from "react-router-dom";
+import { Loader } from "lucide-react";
+import { Toaster } from "react-hot-toast";
 
-function App() {
-  const [count, setCount] = useState(0)
+import HomeContainer from "./views/Home/HomeContainer";
+import NavbarContainer from "./components/Navbar/NavbarContainer";
+import LoginContainer from "./views/Login/LoginContainer";
+import SignupContainer from "./views/Signup/SignupContainer";
+import DonationsContainer from "./views/Donations/DonationsContainer";
+import AboutUsContainer from "./views/AboutUs/AboutUsContainer";
+import ProfileContainer from "./views/Profile/ProfileContainer";
+import CoursesContainer from "./views/Courses/CoursesContainer";
+import ChatsContainer from "./views/Chats/ChatsContainer";
+import Calendar from "./views/Calendar/Calendar";
+
+const App = () => {
+  const loading = false;
+
+  const authUser = true;
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="size-10 animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <NavbarContainer />
 
-export default App
+      <Routes>
+        <Route
+          path="/"
+          element={authUser ? <HomeContainer /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/login"
+          element={authUser ? <Navigate to="/" /> : <LoginContainer />}
+        />
+        <Route
+          path="/signup"
+          element={authUser ? <Navigate to="/" /> : <SignupContainer />}
+        />
+        <Route
+          path="/donations"
+          element={authUser ? <DonationsContainer /> : <HomeContainer />}
+        />
+        <Route
+          path="/about"
+          element={authUser ? <AboutUsContainer /> : <HomeContainer />}
+        />
+        <Route
+          path="/profile"
+          element={authUser ? <ProfileContainer /> : <HomeContainer />}
+        />
+        <Route
+          path="/courses"
+          element={authUser ? <CoursesContainer /> : <HomeContainer />}
+        />
+        <Route
+          path="/chats"
+          element={authUser ? <ChatsContainer /> : <HomeContainer />}
+        />
+        <Route
+          path="/calendar"
+          element={authUser ? <Calendar /> : <HomeContainer />}
+        />
+      </Routes>
+
+      <Toaster />
+    </div>
+  );
+};
+
+export default App;
