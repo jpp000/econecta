@@ -12,9 +12,9 @@ const Navbar = ({ logout, authUser }: NavbarProps) => {
     <header className="fixed w-full top-0 z-40 bg-transparent">
       <div className="container mx-auto px-4 h-16">
         <div className="flex items-center justify-around h-full">
-          <Link to={"/"} className="flex items-center gap-3 group">
+          <Link to={"/"} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <div className="relative">
-              <div className="absolute inset-0 bg-[#2F4F4F] rounded-full opacity-20 group-hover:opacity-30 transition-opacity blur-md"></div>
+              <div className="absolute inset-0 bg-[#2F4F4F] rounded-full opacity-20 transition-opacity blur-md"></div>
               <div className="relative bg-[#2F4F4F] text-white p-2.5 rounded-full">
                 <Leaf className="w-5 h-5" strokeWidth={1.5} />
               </div>
