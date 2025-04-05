@@ -17,7 +17,7 @@ import Footer from "./components/Footer/Footer";
 const App = () => {
   const loading = false;
 
-  const authUser = true;
+  const authUser = false;
 
   if (loading) {
     return (

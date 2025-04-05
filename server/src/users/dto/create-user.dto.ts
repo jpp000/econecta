@@ -9,13 +9,8 @@ import {
 
 export class CreateUserDto {
   @IsString()
-  @IsOptional()
   @MinLength(3)
-  username?: string;
-
-  @IsString()
-  @IsOptional()
-  name?: string;
+  username: string;
 
   @IsString()
   @IsOptional()
