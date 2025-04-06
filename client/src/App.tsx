@@ -8,7 +8,6 @@ import NavbarContainer from "./components/Navbar/NavbarContainer";
 import LoginContainer from "./views/Login/LoginContainer";
 import SignupContainer from "./views/Signup/SignupContainer";
 import DonationsContainer from "./views/Donations/DonationsContainer";
-import AboutUsContainer from "./views/AboutUs/AboutUsContainer";
 import ProfileContainer from "./views/Profile/ProfileContainer";
 import CoursesContainer from "./views/Courses/CoursesContainer";
 import ChatsContainer from "./views/Chats/ChatsContainer";
@@ -47,10 +46,6 @@ const App = () => {
         <Route
           path="/donations"
           element={user ? <DonationsContainer /> : <LoginContainer />}
-        />
-        <Route
-          path="/about"
-          element={user ? <AboutUsContainer /> : <LoginContainer />}
         />
         <Route
           path="/profile"
