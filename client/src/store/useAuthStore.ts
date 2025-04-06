@@ -1,7 +1,7 @@
 import { axiosInstance } from '@/lib/axiosInstance';
+import { handleApiError } from '@/lib/handleApiError';
 import { LoginData } from '@/schemas/loginSchema';
 import { SignupData } from '@/schemas/signupSchema';
-import toast from 'react-hot-toast';
 import { create } from 'zustand';
 
 type User = {
@@ -32,7 +32,6 @@ export const useAuthStore = create<AuthState>((set) => ({
         try {
             const response = await axiosInstance.post('/auth/login', {
                 username: data.username,
-                email: data.email,
                 password: data.password
             });
 
@@ -44,15 +43,15 @@ export const useAuthStore = create<AuthState>((set) => ({
                 user,
                 token,
                 isAuthenticated: true,
-                isLoading: false
             });
         } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
+            handleApiError(error, 'Login failed. Please try again.');
 
-            toast.error(errorMessage);
-
-            set({ isLoading: false, user: null, token: null, isAuthenticated: false });
+            set({ user: null, token: null, isAuthenticated: false });
             localStorage.removeItem('token');
+
+        } finally {
+            set({ isLoading: false });
         }
     },
 
@@ -77,9 +76,7 @@ export const useAuthStore = create<AuthState>((set) => ({
                 isLoading: false
             });
         } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Signup failed. Please try again.';
-
-            toast.error(errorMessage);
+            handleApiError(error, 'Signup failed. Please try again.');
 
             set({ isLoading: false, user: null, token: null, isAuthenticated: false });
             localStorage.removeItem('token');

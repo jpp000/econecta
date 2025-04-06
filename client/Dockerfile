@@ -2,7 +2,8 @@ FROM node:alpine
 
 WORKDIR /app
 
-COPY ./client/package.json ./client/pnpm-lock.yaml ./
+COPY package.json ./
+COPY pnpm-lock.yaml ./
 
 RUN npm install -g pnpm
 

@@ -65,29 +65,6 @@ const Login = ({
 
             <div className="space-y-2">
               <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                {...register("email")}
-                className={`w-full px-4 py-3 rounded-lg border ${
-                  errors.email ? "border-red-500" : "border-gray-300"
-                } focus:outline-none focus:ring-2 focus:ring-green-950 focus:border-transparent transition-all`}
-                placeholder="Enter your email"
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <label
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >

@@ -50,8 +50,8 @@ export class UsersService {
     }
   }
 
-  async verifyUser(email: string, password: string) {
-    const user = await this.usersRepository.findOne({ email });
+  async verifyUser(username: string, password: string) {
+    const user = await this.usersRepository.findOne({ username });
 
     if (!user) {
       throw new UnauthorizedException('User not found');

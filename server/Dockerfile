@@ -2,11 +2,11 @@ FROM node:alpine AS build
 
 WORKDIR /app
 
-COPY server/package.json ./
-COPY server/pnpm-lock.yaml ./
-COPY server/tsconfig.json ./
-COPY server/tsconfig.build.json ./
-COPY server/nest-cli.json ./
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+COPY tsconfig.json ./
+COPY tsconfig.build.json ./
+COPY nest-cli.json ./
 
 RUN npm i -g pnpm 
 

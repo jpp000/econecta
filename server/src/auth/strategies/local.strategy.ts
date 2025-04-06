@@ -6,12 +6,12 @@ import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   constructor(private readonly usersService: UsersService) {
-    super({ usernameField: 'email' });
+    super();
   }
 
-  async validate(email: string, password: string) {
+  async validate(username: string, password: string) {
     try {
-      return this.usersService.verifyUser(email, password);
+      return this.usersService.verifyUser(username, password);
     } catch (err) {
       throw new UnauthorizedException(err);
     }

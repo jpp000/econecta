@@ -20,7 +20,11 @@ export class AuthService {
     const accessToken = this.generateAccessToken(tokenPayload);
 
     return {
-      user,
+      user: {
+        username: user.username,
+        email: user.email,
+        _id: user._id.toHexString(),
+      },
       token: accessToken,
     };
   }
