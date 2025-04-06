@@ -43,6 +43,10 @@ const MissionSection = () => {
             </Button>
           </div>
         </div>
+
+        <div className="h-[10vh]">
+
+        </div>
       </div>
 
       <div className="m-20 h-min-screen">

@@ -1,10 +1,10 @@
 import { useAuthStore } from "@/store/useAuthStore";
-import Navbar from "./Navbar"
+import Navbar from "./Navbar";
 
 const NavbarContainer = () => {
-    const { user } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
 
-    return <Navbar authUser={!!user}  />
-}
+  return <Navbar authUser={isAuthenticated} />;
+};
 
 export default NavbarContainer;

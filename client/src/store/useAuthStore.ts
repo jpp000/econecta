@@ -16,6 +16,7 @@ type AuthState = {
     isAuthenticated: boolean;
     isLoading: boolean;
 
+    checkAuth: () => Promise<void>;
     login: (data: LoginData) => Promise<void>;
     signup: (data: SignupData) => Promise<void>;
     logout: () => void;
@@ -23,33 +24,56 @@ type AuthState = {
 
 export const useAuthStore = create<AuthState>((set) => ({
     user: null,
-    token: localStorage.getItem('token'),
-    isAuthenticated: !!localStorage.getItem('token'),
+    token: localStorage.getItem("token") || null,
+    isAuthenticated: !!localStorage.getItem("token"),
     isLoading: false,
+
+    checkAuth: async () => {
+        set({ isLoading: true });
+        try {
+            console.log("Checking authentication...");
+
+            const response = await axiosInstance.get("/users");
+
+            console.log("Response from checkAuth:", response);
+
+            const { user } = response.data;
+
+            set({
+                user,
+                isAuthenticated: true,
+            });
+        } catch (error: any) {
+            handleApiError(error, "Please log in again.");
+            localStorage.removeItem("token");
+            set({
+                user: null,
+                token: null,
+                isAuthenticated: false,
+            });
+        } finally {
+            set({ isLoading: false, });
+        }
+    },
 
     login: async (data: LoginData) => {
         set({ isLoading: true });
         try {
-            const response = await axiosInstance.post('/auth/login', {
-                username: data.username,
-                password: data.password
-            });
-
+            const response = await axiosInstance.post("/auth/login", data);
             const { user, token } = response.data;
 
-            localStorage.setItem('token', token);
+            localStorage.setItem("token", token);
 
             set({
                 user,
                 token,
                 isAuthenticated: true,
+
             });
         } catch (error: any) {
-            handleApiError(error, 'Login failed. Please try again.');
-
-            set({ user: null, token: null, isAuthenticated: false });
-            localStorage.removeItem('token');
-
+            handleApiError(error, "Login failed.");
+            localStorage.removeItem("token");
+            set({ user: null, token: null, isAuthenticated: false, });
         } finally {
             set({ isLoading: false });
         }
@@ -57,39 +81,34 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     signup: async (data: SignupData) => {
         set({ isLoading: true });
-
         try {
-            const response = await axiosInstance.post('/auth/signup', {
-                username: data.username,
-                email: data.email,
-                password: data.password
-            });
-
+            const response = await axiosInstance.post("/auth/signup", data);
             const { user, token } = response.data;
 
-            localStorage.setItem('token', token);
+            localStorage.setItem("token", token);
 
             set({
                 user,
                 token,
                 isAuthenticated: true,
-                isLoading: false
+
             });
         } catch (error: any) {
-            handleApiError(error, 'Signup failed. Please try again.');
-
-            set({ isLoading: false, user: null, token: null, isAuthenticated: false });
-            localStorage.removeItem('token');
+            handleApiError(error, "Signup failed.");
+            localStorage.removeItem("token");
+            set({ user: null, token: null, isAuthenticated: false, });
+        } finally {
+            set({ isLoading: false });
         }
     },
 
     logout: () => {
-        localStorage.removeItem('token');
-
+        localStorage.removeItem("token");
         set({
             user: null,
             token: null,
-            isAuthenticated: false
+            isAuthenticated: false,
+
         });
     },
 }));
