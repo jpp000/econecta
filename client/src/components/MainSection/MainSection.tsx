@@ -1,12 +1,11 @@
 import { Button } from "../ui/button";
-import { FeatureCard } from "../SustentableCard/SustentableCard";
 import { useNavbarStore } from "@/store/useNavbarStore";
 import { useEffect } from "react";
 import { useSectionInView } from "@/hooks/useSectionInView";
 
 const MainSection = () => {
   const { setVariant } = useNavbarStore();
-  const { ref, isInView } = useSectionInView();
+  const { ref, isInView } = useSectionInView(0.3);
 
   useEffect(() => {
     if (isInView) {
@@ -30,25 +29,6 @@ const MainSection = () => {
           Get Started →
         </Button>
       </div>
-
-      <section className="px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <FeatureCard
-            title="Reciclagem Inteligente"
-            description="Soluções que otimizam o descarte de resíduos, promovendo a economia circular."
-          />
-
-          <FeatureCard
-            title="Energia Limpa"
-            description="Investimos em energia solar e eólica para um futuro mais verde."
-          />
-
-          <FeatureCard
-            title="Educação Ambiental"
-            description="Capacitação de comunidades para práticas ecológicas no dia a dia."
-          />
-        </div>
-      </section>
     </section>
   );
 };

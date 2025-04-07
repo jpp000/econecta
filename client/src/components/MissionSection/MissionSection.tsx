@@ -11,7 +11,7 @@ import { useSectionInView } from "@/hooks/useSectionInView";
 
 const MissionSection = () => {
   const { setVariant } = useNavbarStore();
-  const { ref, isInView } = useSectionInView();
+  const { ref, isInView } = useSectionInView(0.3);
 
   useEffect(() => {
     if (isInView) {
