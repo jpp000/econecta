@@ -4,10 +4,23 @@ import { Sprout } from "lucide-react";
 import { CarrosselVertical } from "../CarrosselVertical/CarrosselVertical";
 import { Button } from "../ui/button";
 import PartnerLogosCarousel from "../PartnerLogosCarousel/PartnerLogosCarousel";
+import { useEffect } from "react";
+import { useNavbarStore } from "@/store/useNavbarStore";
+
+import { useSectionInView } from "@/hooks/useSectionInView";
 
 const MissionSection = () => {
+  const { setVariant } = useNavbarStore();
+  const { ref, isInView } = useSectionInView();
+
+  useEffect(() => {
+    if (isInView) {
+      setVariant("transparent");
+    }
+  }, [isInView, setVariant]);
+  
   return (
-    <section className="bg-white text-green-950 overflow-hidden">
+    <section ref={ref} className="bg-white text-green-950 overflow-hidden">
       <div className="relative h-screen flex items-center justify-center">
         <img
           src={WorldGreen}

@@ -1,19 +1,17 @@
-import { InfiniteCarousel } from "@/components/InfiniteCarousel/InfiniteCarousel"
-import { Leaf, Check, ChevronDown, Lock } from "lucide-react"
+import { InfiniteCarousel } from "@/components/InfiniteCarousel/InfiniteCarousel";
+import { Leaf, Check, ChevronDown, Lock } from "lucide-react";
 
-interface DonationProps { 
-  testimonials : any
-  handleInputChange : any
-  handleAmountSelect : any
-  handleSubmit : any
-  donationAmounts: any
-  paymentMethods: any
-  selectedAmount: number
-  customAmount: string
-  setCustomAmount: any
-  formData: any
-  
-    
+interface DonationProps {
+  testimonials: any;
+  handleInputChange: any;
+  handleAmountSelect: any;
+  handleSubmit: any;
+  donationAmounts: any;
+  paymentMethods: any;
+  selectedAmount: number;
+  customAmount: string;
+  setCustomAmount: any;
+  formData: any;
 }
 
 const Donations = ({
@@ -25,14 +23,9 @@ const Donations = ({
   paymentMethods,
   selectedAmount,
   customAmount,
-  setCustomAmount, 
+  setCustomAmount,
   formData,
- 
-  
-
-  }: DonationProps) => {
-  
-
+}: DonationProps) => {
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 bg-green-100/30">
       <div className="max-w-6xl mx-auto">
@@ -46,9 +39,12 @@ const Donations = ({
               </div>
             </div>
           </div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#2F4F4F] mb-3">Faça sua doação</h1>
+          <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#2F4F4F] mb-3">
+            Faça sua doação
+          </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Sua contribuição ajuda a financiar projetos de sustentabilidade e educação ambiental em todo o Brasil.
+            Sua contribuição ajuda a financiar projetos de sustentabilidade e
+            educação ambiental em todo o Brasil.
           </p>
         </div>
 
@@ -57,16 +53,22 @@ const Donations = ({
           <div className="md:col-span-1">
             <div className="bg-white rounded-xl border shadow-sm p-6 sticky top-24 flex flex-col gap-6">
               <div>
-                <h2 className="text-xl font-semibold text-[#2F4F4F]">Sua doação</h2>
-                <p className="text-sm text-gray-500">Escolha quanto você quer doar</p>
+                <h2 className="text-xl font-semibold text-[#2F4F4F]">
+                  Sua doação
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Escolha quanto você quer doar
+                </p>
               </div>
 
               <div className="space-y-6">
                 {/* Donation Amount */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Valor da doação</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Valor da doação
+                  </label>
                   <div className="grid grid-cols-3 gap-2">
-                    {donationAmounts.map((amount) => (
+                    {donationAmounts.map((amount: any) => (
                       <button
                         key={amount.value}
                         type="button"
@@ -102,7 +104,9 @@ const Donations = ({
 
                 {/* Impact Information */}
                 <div className="bg-green-50 p-4 rounded-lg border border-green-100">
-                  <h3 className="font-medium text-green-800 mb-2">Seu impacto</h3>
+                  <h3 className="font-medium text-green-800 mb-2">
+                    Seu impacto
+                  </h3>
                   <ul className="space-y-2 text-sm text-green-700">
                     <li className="flex items-start">
                       <Check className="w-4 h-4 mr-2 mt-0.5 text-green-600" />
@@ -126,17 +130,23 @@ const Donations = ({
           <div className="md:col-span-2">
             <div className="bg-white rounded-xl border shadow-sm">
               <div className="px-6 py-6 border-b">
-                <h2 className="text-xl font-semibold text-[#2F4F4F]">Informações de pagamento</h2>
-                <p className="text-sm text-gray-500">Escolha seu método de pagamento preferido</p>
+                <h2 className="text-xl font-semibold text-[#2F4F4F]">
+                  Informações de pagamento
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Escolha seu método de pagamento preferido
+                </p>
               </div>
 
               <div className="px-6 py-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Payment Method Selection */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Método de pagamento</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Método de pagamento
+                    </label>
                     <div className="grid grid-cols-1 gap-3">
-                      {paymentMethods.map((method) => (
+                      {paymentMethods.map((method: any) => (
                         <button
                           key={method.id}
                           type="button"
@@ -153,12 +163,15 @@ const Donations = ({
                     <div className="mb-4">
                       <div className="mx-auto w-32 h-32 bg-white p-2 rounded-lg shadow-sm">
                         <div className="w-full h-full border-2 border-dashed border-gray-300 rounded flex items-center justify-center">
-                          <span className="text-sm text-gray-500">Código QR PIX</span>
+                          <span className="text-sm text-gray-500">
+                            Código QR PIX
+                          </span>
                         </div>
                       </div>
                     </div>
                     <p className="text-sm text-yellow-800 mb-2">
-                      Escaneie o código QR com seu aplicativo bancário ou copie a chave PIX abaixo
+                      Escaneie o código QR com seu aplicativo bancário ou copie
+                      a chave PIX abaixo
                     </p>
                     <div className="flex items-center justify-center">
                       <input
@@ -179,10 +192,15 @@ const Donations = ({
 
                   {/* Address Information */}
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-3">Endereço de cobrança</h3>
+                    <h3 className="text-lg font-medium text-gray-900 mb-3">
+                      Endereço de cobrança
+                    </h3>
                     <div className="grid grid-cols-1 gap-4">
                       <div>
-                        <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label
+                          htmlFor="address"
+                          className="block text-sm font-medium text-gray-700 mb-1"
+                        >
                           Endereço
                         </label>
                         <input
@@ -196,7 +214,10 @@ const Donations = ({
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="city"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Cidade
                           </label>
                           <input
@@ -209,7 +230,10 @@ const Donations = ({
                           />
                         </div>
                         <div>
-                          <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-1">
+                          <label
+                            htmlFor="state"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
                             Estado
                           </label>
                           <div className="relative">
@@ -220,34 +244,34 @@ const Donations = ({
                               onChange={handleInputChange}
                               className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#2F4F4F] focus:border-[#2F4F4F] sm:text-sm appearance-none"
                             >
-                                <option value="">Selecione</option>
-                                <option value="AC">Acre</option>
-                                <option value="AL">Alagoas</option>
-                                <option value="AP">Amapá</option>
-                                <option value="AM">Amazonas</option>
-                                <option value="BA">Bahia</option>
-                                <option value="CE">Ceará</option>
-                                <option value="DF">Distrito Federal</option>
-                                <option value="ES">Espírito Santo</option>
-                                <option value="GO">Goiás</option>
-                                <option value="MA">Maranhão</option>
-                                <option value="MT">Mato Grosso</option>
-                                <option value="MS">Mato Grosso do Sul</option>
-                                <option value="MG">Minas Gerais</option>
-                                <option value="PA">Pará</option>
-                                <option value="PB">Paraíba</option>
-                                <option value="PR">Paraná</option>
-                                <option value="PE">Pernambuco</option>
-                                <option value="PI">Piauí</option>
-                                <option value="RJ">Rio de Janeiro</option>
-                                <option value="RN">Rio Grande do Norte</option>
-                                <option value="RS">Rio Grande do Sul</option>
-                                <option value="RO">Rondônia</option>
-                                <option value="RR">Roraima</option>
-                                <option value="SC">Santa Catarina</option>
-                                <option value="SP">São Paulo</option>
-                                <option value="SE">Sergipe</option>
-                                <option value="TO">Tocantins</option>
+                              <option value="">Selecione</option>
+                              <option value="AC">Acre</option>
+                              <option value="AL">Alagoas</option>
+                              <option value="AP">Amapá</option>
+                              <option value="AM">Amazonas</option>
+                              <option value="BA">Bahia</option>
+                              <option value="CE">Ceará</option>
+                              <option value="DF">Distrito Federal</option>
+                              <option value="ES">Espírito Santo</option>
+                              <option value="GO">Goiás</option>
+                              <option value="MA">Maranhão</option>
+                              <option value="MT">Mato Grosso</option>
+                              <option value="MS">Mato Grosso do Sul</option>
+                              <option value="MG">Minas Gerais</option>
+                              <option value="PA">Pará</option>
+                              <option value="PB">Paraíba</option>
+                              <option value="PR">Paraná</option>
+                              <option value="PE">Pernambuco</option>
+                              <option value="PI">Piauí</option>
+                              <option value="RJ">Rio de Janeiro</option>
+                              <option value="RN">Rio Grande do Norte</option>
+                              <option value="RS">Rio Grande do Sul</option>
+                              <option value="RO">Rondônia</option>
+                              <option value="RR">Roraima</option>
+                              <option value="SC">Santa Catarina</option>
+                              <option value="SP">São Paulo</option>
+                              <option value="SE">Sergipe</option>
+                              <option value="TO">Tocantins</option>
                               {/* Add more states as needed */}
                             </select>
                             <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
@@ -257,7 +281,10 @@ const Donations = ({
                         </div>
                       </div>
                       <div>
-                        <label htmlFor="zip" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label
+                          htmlFor="zip"
+                          className="block text-sm font-medium text-gray-700 mb-1"
+                        >
                           CEP
                         </label>
                         <input
@@ -291,40 +318,36 @@ const Donations = ({
           </div>
         </div>
       </div>
-{/* Testimonials */}
-<div className="mt-16">
-          <h2 className="text-2xl font-serif font-bold text-[#2F4F4F] text-center mb-8">
-            O que dizem nossos doadores
-          </h2>
+      {/* Testimonials */}
+      <div className="mt-16">
+        <h2 className="text-2xl font-serif font-bold text-[#2F4F4F] text-center mb-8">
+          O que dizem nossos doadores
+        </h2>
 
-          <InfiniteCarousel>
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={index}
-                className="bg-white p-6 rounded-lg shadow-sm border"
-              >
-                <p className="text-gray-600 mb-4 italic">
-                  "{testimonial.quote}"
-                </p>
-                <div className="flex items-center">
-                  <div className="w-10 h-10 bg-[#2F4F4F] rounded-full flex items-center justify-center text-white font-medium">
-                    {testimonial.name.charAt(0)}
-                  </div>
-                  <div className="ml-3">
-                    <h4 className="font-medium text-gray-900">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-sm text-gray-500">{testimonial.role}</p>
-                  </div>
+        <InfiniteCarousel>
+          {testimonials.map((testimonial: any, index: number) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-lg shadow-sm border"
+            >
+              <p className="text-gray-600 mb-4 italic">"{testimonial.quote}"</p>
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-[#2F4F4F] rounded-full flex items-center justify-center text-white font-medium">
+                  {testimonial.name.charAt(0)}
+                </div>
+                <div className="ml-3">
+                  <h4 className="font-medium text-gray-900">
+                    {testimonial.name}
+                  </h4>
+                  <p className="text-sm text-gray-500">{testimonial.role}</p>
                 </div>
               </div>
-            ))}
-          </InfiniteCarousel>
-        </div>
-        </div>
-    
-    
-  )
-}
+            </div>
+          ))}
+        </InfiniteCarousel>
+      </div>
+    </div>
+  );
+};
 
-export default Donations
+export default Donations;

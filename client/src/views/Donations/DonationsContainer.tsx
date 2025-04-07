@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Donations from "./Donations";
+import { useNavbarStore } from "@/store/useNavbarStore";
 
 const DonationsContainer = () => {
   const donationAmounts = [
@@ -8,15 +9,19 @@ const DonationsContainer = () => {
     { value: 50, label: "R$50" },
     { value: 100, label: "R$100" },
     { value: 0, label: "Outro" },
-  ]
-  
+  ];
+
   const paymentMethods = [
     {
       id: "pix",
       name: "Pix",
-      icon: <div className="w-5 h-5 flex items-center justify-center text-s font-bold">Pix</div>,
+      icon: (
+        <div className="w-5 h-5 flex items-center justify-center text-s font-bold">
+          Pix
+        </div>
+      ),
     },
-  ]
+  ];
   const testimonials = [
     {
       name: "Ana Silva",
@@ -37,54 +42,66 @@ const DonationsContainer = () => {
       role: "Doadora recente",
     },
   ];
-  const [selectedAmount, setSelectedAmount] = useState(25)
-  const [customAmount, setCustomAmount] = useState("")
+  const [selectedAmount, setSelectedAmount] = useState(25);
+  const [customAmount, setCustomAmount] = useState("");
   const [formData, setFormData] = useState({
     address: "",
     city: "",
     state: "",
     zip: "",
-  })
+  });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleAmountSelect = (amount: number) => {
-    setSelectedAmount(amount)
+    setSelectedAmount(amount);
     if (amount > 0) {
-      setCustomAmount("")
+      setCustomAmount("");
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const donationAmount = selectedAmount === 0 ? Number.parseFloat(customAmount) : selectedAmount
+    e.preventDefault();
+    const donationAmount =
+      selectedAmount === 0 ? Number.parseFloat(customAmount) : selectedAmount;
 
     if (isNaN(donationAmount) || donationAmount <= 0) {
-      alert("Por favor, insira um valor de doação válido maior que 0.")
-      return
+      alert("Por favor, insira um valor de doação válido maior que 0.");
+      return;
     }
 
     console.log({
       amount: donationAmount,
       ...formData,
-    })
-    alert("Doação processada com sucesso! Obrigado pela sua contribuição.")
-  }
-  return <Donations
-    testimonials={testimonials}
-    handleInputChange={handleInputChange}
-    handleAmountSelect={handleAmountSelect}
-    handleSubmit={handleSubmit}
-    donationAmounts={donationAmounts}
-    paymentMethods={paymentMethods}
-    selectedAmount={selectedAmount}
-    customAmount={customAmount}
-    setCustomAmount={setCustomAmount} 
-    formData={formData}
-  />;
-}
+    });
+    alert("Doação processada com sucesso! Obrigado pela sua contribuição.");
+  };
+
+  const { setVariant } = useNavbarStore();
+
+  useEffect(() => {
+      setVariant("transparent");
+  }, [setVariant]);
+
+  return (
+    <Donations
+      testimonials={testimonials}
+      handleInputChange={handleInputChange}
+      handleAmountSelect={handleAmountSelect}
+      handleSubmit={handleSubmit}
+      donationAmounts={donationAmounts}
+      paymentMethods={paymentMethods}
+      selectedAmount={selectedAmount}
+      customAmount={customAmount}
+      setCustomAmount={setCustomAmount}
+      formData={formData}
+    />
+  );
+};
 
 export default DonationsContainer;

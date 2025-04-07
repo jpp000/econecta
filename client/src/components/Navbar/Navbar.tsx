@@ -17,7 +17,7 @@ const Navbar = ({ authUser }: NavbarProps) => {
     navbar: {
       transparent: "bg-transparent",
       light: "bg-white shadow-sm",
-      dark: "bg-[#1E3A3A] shadow-md",
+      dark: "bg-[#1E3A3A]",
     },
     logo: {
       transparent: "text-[#2F4F4F]",

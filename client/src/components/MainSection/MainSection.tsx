@@ -1,12 +1,22 @@
-import BgSustentable from "@/assets/bg-image.jpg";
 import { Button } from "../ui/button";
 import { FeatureCard } from "../SustentableCard/SustentableCard";
+import { useNavbarStore } from "@/store/useNavbarStore";
+import { useEffect } from "react";
+import { useSectionInView } from "@/hooks/useSectionInView";
 
 const MainSection = () => {
+  const { setVariant } = useNavbarStore();
+  const { ref, isInView } = useSectionInView();
+
+  useEffect(() => {
+    if (isInView) {
+      setVariant("dark");
+    }
+  }, [isInView, setVariant]);
+
   return (
-    <section
-      className="h-screen flex flex-col items-center justify-center text-center text-white bg-fixed bg-cover bg-center"
-      style={{ backgroundImage: `url(${BgSustentable})` }}
+    <section ref={ref}
+      className="h-screen flex flex-col items-center justify-center text-center text-white bg-[#1E3A3A] bg-fixed bg-cover bg-center"
     >
       <div className="mt-30 mb-50 flex flex-col items-center justify-center text-center z-10">
         <h1 className="text-7xl font-medium max-w-6xl">
