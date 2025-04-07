@@ -3,6 +3,7 @@ import WorldGreen from "../../assets/world-green.png";
 import { Sprout } from "lucide-react";
 import { CarrosselVertical } from "../CarrosselVertical/CarrosselVertical";
 import { Button } from "../ui/button";
+import PartnerLogosCarousel from "../PartnerLogosCarousel/PartnerLogosCarousel";
 
 const MissionSection = () => {
   return (
@@ -43,10 +44,14 @@ const MissionSection = () => {
             </Button>
           </div>
         </div>
+      </div>
 
-        <div className="h-[10vh]">
+      <div className="h-[200px]">
+        <h2 className="text-4xl text-green-950 m-10 text-center">
+          Nossos Colaboradores
+        </h2>
 
-        </div>
+        <PartnerLogosCarousel />
       </div>
 
       <div className="m-20 h-min-screen">
