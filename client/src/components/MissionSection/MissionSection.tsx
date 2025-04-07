@@ -52,7 +52,7 @@ const MissionSection = () => {
             Cada passo conta na construção de um mundo mais sustentável.
           </p>
           <div className="mt-8">
-            <Button className="bg-yellow-400 text-black text-md font-medium rounded-full hover:bg-yellow-500 cursor-pointer">
+            <Button className="bg-[#ece94c] text-black text-md font-medium rounded-full hover:bg-[#ece94c]/90 cursor-pointer">
               Sobre Nós
             </Button>
           </div>

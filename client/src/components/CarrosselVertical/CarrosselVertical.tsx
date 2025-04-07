@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import BgImage from "@/assets/bg-image.jpg"; // string
+import BgImage from "@/assets/bg-image.jpg";
 
 const cards = [
   {
@@ -35,7 +35,7 @@ export function CarrosselVertical() {
       {/* Container dos cards */}
       <div
         ref={containerRef}
-        className="flex flex-col transition-transform duration-700 ease-in-out"
+        className="flex flex-col transition-transform duration-700 ease-in-out shadow-2xl"
         style={{
           transform: `translateY(-${index * 650}px)`,
         }}

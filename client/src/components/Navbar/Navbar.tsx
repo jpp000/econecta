@@ -16,7 +16,7 @@ const Navbar = ({ authUser }: NavbarProps) => {
   const styles = {
     navbar: {
       transparent: "bg-transparent",
-      light: "bg-white shadow-sm",
+      light: "bg-white",
       dark: "bg-[#1E3A3A]",
     },
     logo: {
@@ -105,7 +105,7 @@ const Navbar = ({ authUser }: NavbarProps) => {
 
           <div className="flex items-center gap-4">
             <Link to={"/donations"} className="hidden sm:block">
-              <Button className="bg-yellow-400 hover:bg-yellow-500 text-black rounded-full px-6 py-2 h-auto text-sm font-medium transition-colors cursor-pointer">
+              <Button className="bg-[#ece94c] hover:bg-[#ece94c]/90 text-black rounded-full px-6 py-2 h-auto text-sm font-medium transition-colors cursor-pointer">
                 <HandCoins className="size-5" strokeWidth={1.5} />
                 Faça sua doação
               </Button>

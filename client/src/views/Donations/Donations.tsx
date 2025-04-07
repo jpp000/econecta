@@ -303,7 +303,7 @@ const Donations = ({
                   <div className="px-6 py-6 border-t flex flex-col">
                     <button
                       type="submit"
-                      className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-3 rounded-md flex items-center justify-center gap-2"
+                      className="w-full bg-[#ece94c] hover:bg-[#ece94c]/90 text-black font-medium py-3 rounded-md flex items-center justify-center gap-2"
                     >
                       <Lock className="w-4 h-4" />
                       Finalizar doação

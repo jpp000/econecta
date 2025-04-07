@@ -25,7 +25,7 @@ const MainSection = () => {
           From cutting-edge green designs to recycling programs, we're dedicated
           to transforming the world.
         </p>
-        <Button className="mt-6 bg-yellow-400 text-black text-md font-medium rounded-full hover:bg-yellow-500 cursor-pointer">
+        <Button className="mt-6 bg-[#ece94c] text-black text-md font-medium rounded-full hover:bg-[#ece94c]/90 cursor-pointer">
           Get Started →
         </Button>
       </div>

@@ -23,7 +23,7 @@ export function FeatureCard({
         <div className="flex flex-col items-start mt-4 gap-2">
           <h3 className="text-xl font-medium">{title}</h3>
           <p className="text-white/80 text-md text-start">{description}</p>
-          <Button className="mt-6 bg-yellow-400 text-black text-md font-medium rounded-full hover:bg-yellow-500 cursor-pointer">
+          <Button className="mt-6 bg-[#ece94c] text-black text-md font-medium rounded-full hover:bg-[#ece94c]/90 cursor-pointer">
             Get Started →
           </Button>
         </div>
