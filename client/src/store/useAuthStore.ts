@@ -31,13 +31,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     checkAuth: async () => {
         set({ isLoading: true });
         try {
-            console.log("Checking authentication...");
-
             const response = await axiosInstance.get("/users");
 
-            console.log("Response from checkAuth:", response);
-
-            const { user } = response.data;
+            const user = response.data;
 
             set({
                 user,
