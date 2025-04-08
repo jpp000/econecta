@@ -1,9 +1,11 @@
-export const Calendar = () => {
+import { ContinuousCalendar } from "@/components/ContinuousCalendar/ContinuousCalendar";
+
+function Calendar() {
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <h1>Calendar Page</h1>
+    <div className="mt-20 flex justify-center items-center w-full">
+      <ContinuousCalendar />
     </div>
   );
-};
+}
 
 export default Calendar;
