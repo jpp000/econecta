@@ -85,7 +85,7 @@ const DonationsContainer = () => {
   const { setVariant } = useNavbarStore();
 
   useEffect(() => {
-      setVariant("transparent");
+      setVariant("dark");
   }, [setVariant]);
 
   return (
