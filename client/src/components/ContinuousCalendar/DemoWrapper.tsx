@@ -19,6 +19,7 @@ const monthNames = [
 export default function DemoWrapper() {
   const onClickHandler = (day: number, month: number, year: number) => {
     const snackMessage = `Clicked on ${monthNames[month]} ${day}, ${year}`;
+    console.log(snackMessage);
     toast.success(snackMessage);
   };
 
