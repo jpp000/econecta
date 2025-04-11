@@ -1,5 +1,6 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { SingleEventModal } from "../Modals/EventModal";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const monthNames = [
@@ -20,10 +21,12 @@ const monthNames = [
 interface ContinuousCalendarProps {
   onClick?: (_day: number, _month: number, _year: number) => void;
   addEventClick?: () => void;
+  showAllEventsClick: any;
 }
 
 export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
-  onClick, addEventClick
+  addEventClick,
+  showAllEventsClick,
 }) => {
   const today = new Date();
   const dayRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -85,11 +88,11 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
   };
 
   const handleDayClick = (day: number, month: number, year: number) => {
-    if (!onClick) return;
+    if (!showAllEventsClick) return;
     if (month < 0) {
-      onClick(day, 11, year - 1);
+      showAllEventsClick(day, 11, year - 1);
     } else {
-      onClick(day, month, year);
+      showAllEventsClick(day, month, year);
     }
   };
 
@@ -106,6 +109,33 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
     }
     return days;
   };
+
+  const events = [
+    {
+      title: "Reunião importante",
+      description: "Com time de produto",
+      tags: [{ name: "trabalho", color: "green-500" }],
+      date: new Date(2025, 3, 10), // 10 de abril de 2025
+    },
+    {
+      title: "Aniversário",
+      description: "Bolo e parabéns",
+      tags: [{ name: "pessoal", color: "red-500" }],
+      date: new Date(2025, 3, 10),
+    },
+    {
+      title: "Reunião importante",
+      description: "Com time de produto",
+      tags: [{ name: "trabalho", color: "green-500" }],
+      date: new Date(2025, 3, 10), // 10 de abril de 2025
+    },
+    {
+      title: "Aniversário",
+      description: "Bolo e parabéns",
+      tags: [{ name: "pessoal", color: "red-500" }],
+      date: new Date(2025, 3, 10),
+    },
+  ];
 
   const generateCalendar = useMemo(() => {
     const today = new Date();
@@ -125,6 +155,14 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
               today.getMonth() === currentMonth &&
               today.getDate() === day;
 
+            const dayEvents = events.filter(
+              (event) =>
+                day !== null &&
+                event.date.getDate() === day &&
+                event.date.getMonth() === currentMonth &&
+                event.date.getFullYear() === year
+            );
+
             return (
               <div
                 key={`${currentMonth}-${day}-${index}`}
@@ -134,19 +172,48 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
                 }}
                 data-day={day ?? undefined}
                 data-month={currentMonth}
-                className={`relative z-10 aspect-square w-full cursor-pointer rounded-xl border text-sm font-medium transition-all hover:z-20 hover:border-green-900/50 sm:rounded-2xl sm:border-2 sm:text-base lg:rounded-3xl ${
+                className={`relative z-10 aspect-square w-full rounded-xl border text-sm font-medium transition-all hover:z-20 hover:border-green-800 sm:rounded-2xl sm:border-2 sm:text-base lg:rounded-3xl ${
                   day ? "text-slate-800" : "invisible"
                 }`}
               >
                 <span
                   className={`absolute left-1 top-1 flex size-5 items-center justify-center rounded-full text-xs sm:size-6 sm:text-sm lg:left-2 lg:top-2 lg:size-8 lg:text-base ${
                     isToday
-                      ? "bg-[#1E3A3A] font-semibold text-white"
+                      ? "bg-green-800 font-semibold text-white"
                       : "text-slate-800"
                   }`}
                 >
                   {day}
                 </span>
+
+                <button
+                  onClick={addEventClick}
+                  className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-slate-600/80 text-white hover:bg-green-900/90 sm:h-8 sm:w-8 cursor-pointer transition-all duration-200 ease-in-out"
+                  title="Add Event"
+                >
+                  <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
+                </button>
+
+                <div
+                  className={`mt-14 flex flex-col gap-2 overflow-y-auto px-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-400`}
+                  style={{ maxHeight: "4.5rem" }}
+                >
+                  {dayEvents.slice(0, 2).map((event, i) => (
+                    <EventCard
+                      key={`${day}-${event.title}-${i}`}
+                      title={event.title}
+                      description={event.description}
+                      tags={event.tags || []}
+                      tagColor={event.tags[0]?.color || "green-500"}
+                      date={new Date(event.date)}
+                    />
+                  ))}
+                  {dayEvents.length > 2 && (
+                    <span className="ml-2 text-xs text-slate-600/80">
+                      +{dayEvents.length - 2} evento(s)
+                    </span>
+                  )}
+                </div>
               </div>
             );
           })}
@@ -221,7 +288,7 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
   };
 
   return (
-    <div className="flex h-[820px] min-w-[70vw] mt-20 mb-15 overflow-hidden rounded-2xl bg-white text-slate-800 shadow-xl">
+    <div className="flex h-[820px] w-[92vw] mt-20 mb-15 overflow-hidden rounded-2xl bg-white text-slate-800 shadow-xl">
       <div className="w-72 shrink-0 overflow-y-auto border-r border-slate-200 bg-white sm:p-8">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
@@ -345,3 +412,50 @@ export const Select = ({
     </select>
   </div>
 );
+
+interface EventCardProps {
+  title: string;
+  tagColor: string;
+  description?: string;
+  tags?: { name: string; color: string }[];
+  date?: Date;
+  onOpenEvent?: (
+    event: Omit<EventCardProps, "onOpenEvent" | "tagColor">
+  ) => void;
+}
+
+const EventCard = ({
+  title,
+  tagColor,
+  description,
+  tags,
+  date,
+}: EventCardProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    setIsOpen(true);
+  };
+
+  return (
+    <>
+      <div
+        className={`mx-1 w-9/10 cursor-pointer rounded-md border-l-4 bg-slate-100 px-1 py-0.5 text-[10px] sm:text-xs truncate border-${tagColor}`}
+        onClick={handleClick}
+        title={title}
+      >
+        {title}
+      </div>
+      <SingleEventModal
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        event={{
+          title,
+          description,
+          tags,
+          date,
+        }}
+      />
+    </>
+  );
+};
