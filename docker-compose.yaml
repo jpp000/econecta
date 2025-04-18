@@ -7,6 +7,7 @@ services:
     command: pnpm run start:dev
     ports:
       - "3000:3000"
+      - "4000:4000"
     volumes:
       - ./server:/app
       - /app/node_modules
