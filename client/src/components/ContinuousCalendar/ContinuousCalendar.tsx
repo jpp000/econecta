@@ -1,8 +1,9 @@
+import { Event } from "@/interfaces/event.interface";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { SingleEventModal } from "../Modals/EventModal";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 const monthNames = [
   "January",
   "February",
@@ -19,16 +20,16 @@ const monthNames = [
 ];
 
 interface ContinuousCalendarProps {
-  onClick?: (_day: number, _month: number, _year: number) => void;
   addEventClick?: () => void;
   showAllEventsClick: any;
+  events: Event[];
 }
 
 export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
   addEventClick,
   showAllEventsClick,
+  events,
 }) => {
-  const today = new Date();
   const dayRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
@@ -110,33 +111,6 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
     return days;
   };
 
-  const events = [
-    {
-      title: "Reunião importante",
-      description: "Com time de produto",
-      tags: [{ name: "trabalho", color: "green-500" }],
-      date: new Date(2025, 3, 10), // 10 de abril de 2025
-    },
-    {
-      title: "Aniversário",
-      description: "Bolo e parabéns",
-      tags: [{ name: "pessoal", color: "red-500" }],
-      date: new Date(2025, 3, 10),
-    },
-    {
-      title: "Reunião importante",
-      description: "Com time de produto",
-      tags: [{ name: "trabalho", color: "green-500" }],
-      date: new Date(2025, 3, 10), // 10 de abril de 2025
-    },
-    {
-      title: "Aniversário",
-      description: "Bolo e parabéns",
-      tags: [{ name: "pessoal", color: "red-500" }],
-      date: new Date(2025, 3, 10),
-    },
-  ];
-
   const generateCalendar = useMemo(() => {
     const today = new Date();
     const currentMonth = visibleMonthIndex;
@@ -155,18 +129,18 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
               today.getMonth() === currentMonth &&
               today.getDate() === day;
 
-            const dayEvents = events.filter(
-              (event) =>
-                day !== null &&
-                event.date.getDate() === day &&
-                event.date.getMonth() === currentMonth &&
-                event.date.getFullYear() === year
-            );
+            const dayEvents =
+              events?.filter(
+                (event) =>
+                  day !== null &&
+                  event.date.getDate() === day &&
+                  event.date.getMonth() === currentMonth &&
+                  event.date.getFullYear() === year
+              ) ?? [];
 
             return (
               <div
                 key={`${currentMonth}-${day}-${index}`}
-                onClick={() => day && handleDayClick(day, currentMonth, year)}
                 ref={(el) => {
                   if (day !== null) dayRefs.current[index] = el;
                 }}
@@ -187,7 +161,7 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
                 </span>
 
                 <button
-                  onClick={addEventClick}
+                  onClick={() => addEventClick && addEventClick()}
                   className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-slate-600/80 text-white hover:bg-green-900/90 sm:h-8 sm:w-8 cursor-pointer transition-all duration-200 ease-in-out"
                   title="Add Event"
                 >
@@ -195,16 +169,19 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
                 </button>
 
                 <div
-                  className={`mt-14 flex flex-col gap-2 overflow-y-auto px-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-400`}
-                  style={{ maxHeight: "4.5rem" }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    day && handleDayClick(day, currentMonth, year);
+                  }}
+                  className={`absolute mt-2 inset-x-0 bottom-0 top-[2.8rem] flex flex-col gap-2 overflow-y-auto px-1 cursor-pointer scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-400`}
+                  style={{ maxHeight: "calc(100% - 2.8rem)" }}
                 >
-                  {dayEvents.slice(0, 2).map((event, i) => (
+                  {dayEvents.slice(0, 2).map((event) => (
                     <EventCard
-                      key={`${day}-${event.title}-${i}`}
+                      key={event._id}
                       title={event.title}
                       description={event.description}
-                      tags={event.tags || []}
-                      tagColor={event.tags[0]?.color || "green-500"}
+                      tagColor="green-500"
                       date={new Date(event.date)}
                     />
                   ))}
@@ -225,24 +202,11 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
   useEffect(() => {
     const calendarContainer = document.querySelector(".calendar-container");
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const month = parseInt(
-              entry.target.getAttribute("data-month")!,
-              10
-            );
-            // Placeholder for possible visible month tracking logic
-          }
-        });
-      },
-      {
-        root: calendarContainer,
-        rootMargin: "-75% 0px -25% 0px",
-        threshold: 0,
-      }
-    );
+    const observer = new IntersectionObserver(() => {}, {
+      root: calendarContainer,
+      rootMargin: "-75% 0px -25% 0px",
+      threshold: 0,
+    });
 
     dayRefs.current.forEach((ref) => {
       if (ref && ref.getAttribute("data-day") === "15") {
@@ -415,47 +379,20 @@ export const Select = ({
 
 interface EventCardProps {
   title: string;
-  tagColor: string;
   description?: string;
-  tags?: { name: string; color: string }[];
+  tagColor: string;
   date?: Date;
-  onOpenEvent?: (
-    event: Omit<EventCardProps, "onOpenEvent" | "tagColor">
-  ) => void;
 }
 
-const EventCard = ({
-  title,
-  tagColor,
-  description,
-  tags,
-  date,
-}: EventCardProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsOpen(true);
-  };
-
+const EventCard = ({ title, tagColor }: EventCardProps) => {
   return (
     <>
       <div
-        className={`mx-1 w-9/10 cursor-pointer rounded-md border-l-4 bg-slate-100 px-1 py-0.5 text-[10px] sm:text-xs truncate border-${tagColor}`}
-        onClick={handleClick}
+        className={`mx-1 w-9/10 rounded-md border-l-4 bg-slate-100 px-1 py-0.5 text-[10px] sm:text-xs truncate border-${tagColor}`}
         title={title}
       >
         {title}
       </div>
-      <SingleEventModal
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        event={{
-          title,
-          description,
-          tags,
-          date,
-        }}
-      />
     </>
   );
 };

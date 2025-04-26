@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Leaf, X, CalendarIcon, Check } from "lucide-react";
+import { Leaf, X, CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
@@ -21,39 +21,40 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 
-const sustainableTags = [
-  { name: "Eco-Friendly", color: "#2E7D32" },
-  { name: "Renewable", color: "#00796B" },
-  { name: "Conservation", color: "#558B2F" },
-  { name: "Community", color: "#827717" },
-  { name: "Recycling", color: "#1B5E20" },
-];
+interface AddEventModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onAddEvent: any;
+  selectedDate?: Date | null;
+  isDateEditable?: boolean;
+}
 
-export function SustainableEventModal({
+export const AddEventModal: React.FC<AddEventModalProps> = ({
   open,
   onOpenChange,
   onAddEvent,
-  selectedDate,
-  isDateEditable,
-}) {
+  selectedDate = null,
+  isDateEditable = true,
+}) => {
+  console.log("Selected Date:", selectedDate);
+  console.log("Is Date Editable:", isDateEditable);
+  console.log("Open State:", open);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [date, setDate] = useState(selectedDate || new Date());
+  const [date, setDate] = useState<Date>(selectedDate || new Date());
 
-  // Update date when selectedDate prop changes
   useEffect(() => {
     if (selectedDate) {
       setDate(selectedDate);
     }
   }, [selectedDate]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newEvent = {
       title,
       description,
-      tags: selectedTags,
-      date: date,
+      date,
     };
 
     onAddEvent(newEvent);
@@ -63,20 +64,6 @@ export function SustainableEventModal({
   const resetForm = () => {
     setTitle("");
     setDescription("");
-    setSelectedTags([]);
-    // Don't reset date to keep the context
-  };
-
-  const toggleTag = (tag) => {
-    if (selectedTags.some((t) => t.name === tag.name)) {
-      setSelectedTags(selectedTags.filter((t) => t.name !== tag.name));
-    } else {
-      setSelectedTags([...selectedTags, tag]);
-    }
-  };
-
-  const isTagSelected = (tagName) => {
-    return selectedTags.some((tag) => tag.name === tagName);
   };
 
   return (
@@ -115,7 +102,9 @@ export function SustainableEventModal({
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={setDate}
+                  onSelect={(selected) => {
+                    if (selected) setDate(selected);
+                  }}
                   initialFocus
                   disabled={!isDateEditable}
                 />
@@ -150,62 +139,6 @@ export function SustainableEventModal({
               className="min-h-[100px] border-slate-300 focus-visible:ring-[#1E3A3A] cursor-text"
             />
           </div>
-
-          {/* Tags Selection */}
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <Label className="text-[#1E3A3A] font-medium ml-1">
-                Event Tags (Optional)
-              </Label>
-              {selectedTags.length > 0 && (
-                <button
-                  onClick={() => setSelectedTags([])}
-                  className="text-xs text-[#1E3A3A]/70 hover:text-[#1E3A3A] cursor-pointer"
-                >
-                  Clear all
-                </button>
-              )}
-            </div>
-
-            {/* Available Tags */}
-            <div className="flex flex-wrap gap-3">
-              {sustainableTags.map((tag) => (
-                <button
-                  key={tag.name}
-                  onClick={() => toggleTag(tag)}
-                  className={`h-3/4 p-2 rounded-full text-white text-sm transition-all flex items-center cursor-pointer ${
-                    isTagSelected(tag.name)
-                      ? "ring-2 ring-offset-2 ring-offset-white ring-[#1E3A3A]"
-                      : "hover:opacity-90"
-                  }`}
-                  style={{ backgroundColor: tag.color }}
-                >
-                  {isTagSelected(tag.name) && <Check className="h-3 w-3" />}
-                  {tag.name}
-                </button>
-              ))}
-            </div>
-
-            {/* Selected Tags Summary */}
-            {selectedTags.length > 0 && (
-              <div className="bg-[#1E3A3A]/5 p-2 rounded-lg mt-6">
-                <p className="text-sm text-[#1E3A3A]/70 mb-1.5 ml-1">
-                  Tags:
-                </p>
-                <div className="flex flex-wrap gap-1">
-                  {selectedTags.map((tag) => (
-                    <span
-                      key={tag.name}
-                      className="text-xs p-1.5 rounded-full text-white"
-                      style={{ backgroundColor: tag.color }}
-                    >
-                      {tag.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
         </div>
 
         <DialogFooter className="sm:justify-between mt-4">
@@ -233,4 +166,4 @@ export function SustainableEventModal({
       </DialogContent>
     </Dialog>
   );
-}
+};
