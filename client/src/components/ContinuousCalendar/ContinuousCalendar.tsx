@@ -20,7 +20,7 @@ const monthNames = [
 ];
 
 interface ContinuousCalendarProps {
-  addEventClick?: () => void;
+  addEventClick?: (selectedDate?: Date) => void;
   showAllEventsClick: any;
   events: Event[];
 }
@@ -130,7 +130,7 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
               today.getDate() === day;
 
             const dayEvents =
-              events?.filter(
+              events.filter(
                 (event) =>
                   day !== null &&
                   event.date.getDate() === day &&
@@ -161,7 +161,10 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
                 </span>
 
                 <button
-                  onClick={() => addEventClick && addEventClick()}
+                  onClick={() =>
+                    addEventClick &&
+                    addEventClick(new Date(year, currentMonth, day || 0))
+                  }
                   className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-slate-600/80 text-white hover:bg-green-900/90 sm:h-8 sm:w-8 cursor-pointer transition-all duration-200 ease-in-out"
                   title="Add Event"
                 >
@@ -197,7 +200,7 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
         </div>
       </div>
     );
-  }, [year, visibleMonthIndex]);
+  }, [year, visibleMonthIndex, events]);
 
   useEffect(() => {
     const calendarContainer = document.querySelector(".calendar-container");
@@ -296,7 +299,7 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
             <button
               type="button"
               className="whitespace-nowrap rounded-lg bg-gradient-to-r from-[#1E3A3A] to-green-800 px-3 py-2 text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:green-800 cursor-pointer"
-              onClick={addEventClick}
+              onClick={() => addEventClick && addEventClick(new Date())}
             >
               + Add Event
             </button>

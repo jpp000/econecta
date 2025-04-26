@@ -36,10 +36,6 @@ export const AddEventModal: React.FC<AddEventModalProps> = ({
   selectedDate = null,
   isDateEditable = true,
 }) => {
-  console.log("Selected Date:", selectedDate);
-  console.log("Is Date Editable:", isDateEditable);
-  console.log("Open State:", open);
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState<Date>(selectedDate || new Date());

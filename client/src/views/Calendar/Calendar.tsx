@@ -15,6 +15,8 @@ interface CalendarProps {
   onClickHandler: (day: number, month: number, year: number) => void;
   addEventClick: any;
   handleAddEvent: (eventData: Omit<Event, "_id">) => void;
+  handleDeleteEvent: (id: string) => void;
+  handleSaveEdit: (data: { _id: string; title: string; description?: string }) => void;
 }
 
 const Calendar = ({
@@ -28,6 +30,8 @@ const Calendar = ({
   onClickHandler,
   addEventClick,
   handleAddEvent,
+  handleDeleteEvent,
+  handleSaveEdit,
 }: CalendarProps) => {
   return (
     <div className="flex justify-center items-center w-full bg-[#1E3A3A]">
@@ -50,6 +54,8 @@ const Calendar = ({
         onOpenChange={setShowAllIsModalOpen}
         selectedDate={selectedDate}
         events={dayEvents}
+        handleDeleteEvent={handleDeleteEvent}
+        handleSaveEdit={handleSaveEdit}
       />
     </div>
   );

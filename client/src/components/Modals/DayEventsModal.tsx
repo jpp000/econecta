@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon, Leaf, Pencil, Sparkles, Trash } from "lucide-react";
+import { CalendarIcon, Leaf, Pencil, Sparkles, Trash, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +27,9 @@ interface DayEventsModalProps {
   onOpenChange: (open: boolean) => void;
   selectedDate?: Date | null;
   events: Event[];
+  handleDeleteEvent: (id: string) => void;
+  handleSaveEdit: (data: { _id: string; title: string; description?: string }) => void;
+  
 }
 
 export function DayEventsModal({
@@ -34,6 +37,8 @@ export function DayEventsModal({
   onOpenChange,
   selectedDate,
   events,
+  handleDeleteEvent,
+  handleSaveEdit
 }: DayEventsModalProps) {
   const formattedDate = selectedDate
     ? format(selectedDate, "EEEE, d 'de' MMMM 'de' yyyy", {
@@ -46,22 +51,12 @@ export function DayEventsModal({
     title: string;
     description?: string;
   }>({ title: "", description: "" });
+
   const [deleteId, setDeleteId] = useState<string | null>(null);
-
-  function handleSaveEdit(id: string) {
-    console.log("Salvar evento:", id, editData);
-    // TODO: chamar função externa ou atualizar evento no estado global
-    setEditingId(null);
-  }
-
-  function handleDeleteEvent(id: string) {
-    console.log("Excluir evento com id:", id);
-    return;
-  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[900px] p-0 overflow-hidden border-none shadow-xl rounded-xl">
+      <DialogContent className="sm:max-w-[900px] p-0 overflow-hidden border-none shadow-xl rounded-xl [&>button.absolute.top-4.right-4]:hidden">
         <div className="bg-gradient-to-r from-[#1E3A3A] to-green-800 text-white p-8">
           <DialogHeader>
             <div className="flex items-center gap-2 mb-2">
@@ -78,6 +73,12 @@ export function DayEventsModal({
                 ? "1 evento programado"
                 : `${(events || []).length} eventos programados`}
             </p>
+            <button
+              onClick={() => onOpenChange(false)}
+              className="absolute right-6 top-6 rounded-full p-2 bg-green-100 hover:bg-green-100/60 transition-all cursor-pointer"
+            >
+              <X className="h-4 w-4 text-[#1E3A3A]" />
+            </button>
           </DialogHeader>
         </div>
 
@@ -111,6 +112,12 @@ export function DayEventsModal({
                     >
                       {editingId === event._id ? (
                         <div className="flex flex-col w-full">
+                          <label
+                            className="mb-2 text-sm text-green-900"
+                            htmlFor="title"
+                          >
+                            Novo título:
+                          </label>
                           <input
                             className="mb-2 border rounded px-3 py-2 text-sm text-green-900"
                             value={editData.title}
@@ -121,8 +128,15 @@ export function DayEventsModal({
                               })
                             }
                           />
+
+                          <label
+                            className="mb-2 text-sm text-green-900"
+                            htmlFor="description"
+                          >
+                            Nova descrição:
+                          </label>
                           <textarea
-                            className="mb-2 border rounded px-3 py-2 text-sm text-green-900"
+                            className="mb-3 border rounded px-3 py-2 text-sm text-green-900"
                             value={editData.description}
                             onChange={(e) =>
                               setEditData({
@@ -143,7 +157,11 @@ export function DayEventsModal({
                             <Button
                               size="sm"
                               className="bg-gradient-to-r from-[#1E3A3A] to-green-800 text-white cursor-pointer"
-                              onClick={() => handleSaveEdit(event._id)}
+                              onClick={() => {
+                                handleSaveEdit({ _id: event._id, ...editData })
+                                setEditingId(null);
+                                setEditData({ title: "", description: "" });
+                              }}
                             >
                               Salvar
                             </Button>
@@ -205,10 +223,7 @@ export function DayEventsModal({
         </div>
       </DialogContent>
 
-      <AlertDialog
-        open={!!deleteId}
-        onOpenChange={(open) => !open && setDeleteId(null)}
-      >
+      <AlertDialog open={!!deleteId} onOpenChange={() => onOpenChange(true)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>

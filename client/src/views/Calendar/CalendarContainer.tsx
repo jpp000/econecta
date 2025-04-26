@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Calendar from "./Calendar";
 import { useNavbarStore } from "@/store/useNavbarStore";
 import toast from "react-hot-toast";
@@ -10,12 +10,13 @@ const CalendarContainer = () => {
   const [isShowAllModalOpen, setShowAllIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>();
 
-  const { events, createEvent } = useCalendarStore();
+  const { events, createEvent, getEvents, editEvent, deleteEvent } = useCalendarStore();
   const { setVariant } = useNavbarStore();
 
   useEffect(() => {
     setVariant("dark");
-  }, [setVariant]);
+    getEvents();
+  }, [setVariant, getEvents]);
 
   const onClickHandler = useCallback(
     (day: number, month: number, year: number) => {
@@ -26,14 +27,21 @@ const CalendarContainer = () => {
     [setSelectedDate, setShowAllIsModalOpen]
   );
 
-  const addEventClick = () => {    
-    setIsModalOpen(true);
-  };
+  const addEventClick = useCallback(
+    (selectedDate = null) => {
+      selectedDate ? setSelectedDate(selectedDate) : setSelectedDate(undefined);
+
+      setIsModalOpen(true);
+    },
+    [setIsModalOpen]
+  );
 
   const handleAddEvent = useCallback(
     async (eventData: Omit<Event, "_id">) => {
       try {
         const eventCreated = await createEvent(eventData);
+
+        console.log(eventCreated);
 
         setIsModalOpen(false);
         toast.success(`Evento adicionado: ${eventCreated.title}`);
@@ -44,16 +52,38 @@ const CalendarContainer = () => {
     [createEvent, setIsModalOpen]
   );
 
-  const dayEvents = useMemo(() => {
-    if (!selectedDate) return [];
-
-    return events.filter(
-      (event) =>
-        event.date.getDate() === selectedDate.getDate() &&
-        event.date.getMonth() === selectedDate.getMonth() &&
-        event.date.getFullYear() === selectedDate.getFullYear()
+  const dayEvents = events.filter((event) => {
+    const eventDate = new Date(event.date);
+    return (
+      eventDate.getDate() === selectedDate?.getDate() &&
+      eventDate.getMonth() === selectedDate?.getMonth() &&
+      eventDate.getFullYear() === selectedDate?.getFullYear()
     );
-  }, [selectedDate, events]);
+  });
+
+  const handleDeleteEvent = useCallback(
+    async (id: string) => {
+      try {
+        await deleteEvent(id);
+        toast.success("Evento deletado com sucesso");
+      } catch (error) {
+        toast.error("Erro ao deletar evento");
+      }
+    },
+    []
+  );
+
+  const handleSaveEdit = useCallback(
+    async (data: { _id: string; title: string; description?: string }) => {
+      try {
+        await editEvent(data);
+        toast.success("Evento editado com sucesso");
+      } catch (error) {
+        toast.error("Erro ao editar evento");
+      }
+    },
+    []
+  );
 
   return (
     <Calendar
@@ -68,6 +98,8 @@ const CalendarContainer = () => {
       onClickHandler={onClickHandler}
       addEventClick={addEventClick}
       handleAddEvent={handleAddEvent}
+      handleDeleteEvent={handleDeleteEvent}
+      handleSaveEdit={handleSaveEdit}
     />
   );
 };
