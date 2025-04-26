@@ -1,18 +1,21 @@
-import { Link } from "react-router-dom"
-import { HandCoins, Leaf, User, Menu } from "lucide-react"
-import { Button } from "../ui/button"
-import { useNavbarStore } from "@/store/useNavbarStore"
-import { useState } from "react"
-
+import { Link } from "react-router-dom";
+import { HandCoins, Leaf, User, Menu, LogOut } from "lucide-react";
+import { Button } from "../ui/button";
 interface NavbarProps {
-  authUser: boolean
+  authUser: boolean;
+  logout: () => void;
+  variant: "transparent" | "light" | "dark";
+  mobileMenuOpen: boolean;
+  setMobileMenuOpen: (open: boolean) => void;
 }
 
-const Navbar = ({ authUser }: NavbarProps) => {
-  const { variant } = useNavbarStore()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  // Style configurations based on variant
+const Navbar = ({
+  authUser,
+  logout,
+  variant,
+  mobileMenuOpen,
+  setMobileMenuOpen,
+}: NavbarProps) => {
   const styles = {
     navbar: {
       transparent: "bg-transparent",
@@ -45,8 +48,10 @@ const Navbar = ({ authUser }: NavbarProps) => {
       dark: "bg-white",
     },
     loginButton: {
-      transparent: "border border-[#2F4F4F] bg-white/10 text-[#2F4F4F] hover:bg-gray-200/40",
-      light: "border border-[#2F4F4F] bg-white text-[#2F4F4F] hover:bg-gray-100",
+      transparent:
+        "border border-[#2F4F4F] bg-white/10 text-[#2F4F4F] hover:bg-gray-200/40",
+      light:
+        "border border-[#2F4F4F] bg-white text-[#2F4F4F] hover:bg-gray-100",
       dark: "border border-white bg-transparent text-white hover:bg-white/10",
     },
     profileButton: {
@@ -64,22 +69,33 @@ const Navbar = ({ authUser }: NavbarProps) => {
       light: "text-[#2F4F4F]",
       dark: "text-white",
     },
-  }
+  };
 
   return (
-    <header className={`fixed px-14 w-full top-0 z-40 transition-colors duration-300 ${styles.navbar[variant]}`}>
+    <header
+      className={`fixed px-14 w-full top-0 z-40 transition-colors duration-300 ${styles.navbar[variant]}`}
+    >
       <div className="container mx-auto px-4 h-16">
         <div className="flex items-center justify-between h-full">
-          <Link to={"/"} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <Link
+            to={"/"}
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+          >
             <div className="relative">
               <div
                 className={`absolute inset-0 rounded-full transition-opacity blur-md ${styles.logoIconBlur[variant]}`}
               ></div>
-              <div className={`relative p-2.5 rounded-full transition-colors ${styles.logoIcon[variant]}`}>
+              <div
+                className={`relative p-2.5 rounded-full transition-colors ${styles.logoIcon[variant]}`}
+              >
                 <Leaf className="w-5 h-5" strokeWidth={1.5} />
               </div>
             </div>
-            <span className={`font-serif text-xl font-medium transition-colors ${styles.logo[variant]}`}>Econecta</span>
+            <span
+              className={`font-serif text-xl font-medium transition-colors ${styles.logo[variant]}`}
+            >
+              Econecta
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -113,16 +129,31 @@ const Navbar = ({ authUser }: NavbarProps) => {
 
             {!authUser && (
               <Link to={"/login"}>
-                <Button className={`transition-all cursor-pointer ${styles.loginButton[variant]}`}>Entrar</Button>
+                <Button
+                  className={`transition-all cursor-pointer ${styles.loginButton[variant]}`}
+                >
+                  Entrar
+                </Button>
               </Link>
             )}
 
             {authUser && (
-              <Link to={"/profile"}>
-                <Button className={`transition-all cursor-pointer ${styles.profileButton[variant]}`}>
-                  <User className={`size-5 ${styles.profileIcon[variant]}`} />
+              <>
+                <Link to={"/profile"}>
+                  <Button
+                    className={`transition-all cursor-pointer ${styles.profileButton[variant]}`}
+                  >
+                    <User className={`size-5 ${styles.profileIcon[variant]}`} />
+                  </Button>
+                </Link>
+
+                <Button
+                  className={`transition-all cursor-pointer ${styles.profileButton[variant]}`}
+                  onClick={logout}
+                >
+                  <LogOut className={`size-5 ${styles.profileIcon[variant]}`} />
                 </Button>
-              </Link>
+              </>
             )}
 
             {/* Mobile menu button */}
@@ -137,7 +168,11 @@ const Navbar = ({ authUser }: NavbarProps) => {
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className={`lg:hidden py-4 px-2 ${variant === "dark" ? "bg-[#1E3A3A]" : "bg-white"}`}>
+          <div
+            className={`lg:hidden py-4 px-2 ${
+              variant === "dark" ? "bg-[#1E3A3A]" : "bg-white"
+            }`}
+          >
             <nav className="flex flex-col space-y-4">
               {[
                 { to: "/about", label: "Sobre Nós" },
@@ -160,8 +195,7 @@ const Navbar = ({ authUser }: NavbarProps) => {
         )}
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default Navbar
-
+export default Navbar;

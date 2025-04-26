@@ -12,9 +12,9 @@ import AboutUsContainer from "./views/AboutUs/AboutUsContainer";
 import ProfileContainer from "./views/Profile/ProfileContainer";
 import CoursesContainer from "./views/Courses/CoursesContainer";
 import ChatsContainer from "./views/Chats/ChatsContainer";
-import Calendar from "./views/Calendar/Calendar";
 import Footer from "./components/Footer/Footer";
 import { useEffect } from "react";
+import CalendarContainer from "./views/Calendar/CalendarContainer";
 
 const App = () => {
   const { isLoading, checkAuth, isAuthenticated } = useAuthStore();
@@ -70,7 +70,7 @@ const App = () => {
         />
         <Route
           path="/calendar"
-          element={isAuthenticated ? <Calendar /> : <LoginContainer />}
+          element={isAuthenticated ? <CalendarContainer /> : <LoginContainer />}
         />
       </Routes>
 
