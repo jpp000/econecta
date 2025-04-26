@@ -1,9 +1,10 @@
 import Login from "./Login";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { LoginData, loginSchema } from "@/schemas/loginSchema";
+import { useNavbarStore } from "@/store/useNavbarStore";
 
 const LoginContainer = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +18,6 @@ const LoginContainer = () => {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       username: "",
-      email: "",
       password: "",
     },
   });
@@ -25,6 +25,12 @@ const LoginContainer = () => {
   const onSubmit = (data: LoginData) => {
     login(data);
   };
+
+  const { setVariant } = useNavbarStore();
+
+  useEffect(() => {
+    setVariant("light");
+  }, [setVariant]);
 
   return (
     <Login

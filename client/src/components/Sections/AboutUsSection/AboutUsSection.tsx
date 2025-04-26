@@ -5,8 +5,8 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
-import { Button } from "../ui/button";
-import { FeatureCard } from "../SustentableCard/SustentableCard";
+import { Button } from "../../ui/button";
+import { FeatureCard } from "../../SustentableCard/SustentableCard";
 import { useEffect } from "react";
 import { useSectionInView } from "@/hooks/useSectionInView";
 import { useNavbarStore } from "@/store/useNavbarStore";
