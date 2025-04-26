@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from './auth/auth.module';
 import { GatewayModule } from './gateway/gateway.module';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { GatewayModule } from './gateway/gateway.module';
     DatabaseModule,
     UsersModule,
     AuthModule,
-    GatewayModule
+    GatewayModule,
+    MessagesModule
   ],
 })
 export class AppModule {}

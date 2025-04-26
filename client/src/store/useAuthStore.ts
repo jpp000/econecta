@@ -2,7 +2,10 @@ import { axiosInstance } from '@/lib/axiosInstance';
 import { handleApiError } from '@/lib/handleApiError';
 import { LoginData } from '@/schemas/loginSchema';
 import { SignupData } from '@/schemas/signupSchema';
+import { io } from 'socket.io-client';
 import { create } from 'zustand';
+import { useChatStore } from './useChatStore';
+import { SOCKET_EVENTS } from '@/constants/events';
 
 type User = {
     id: string;
@@ -20,13 +23,19 @@ type AuthState = {
     login: (data: LoginData) => Promise<void>;
     signup: (data: SignupData) => Promise<void>;
     logout: () => void;
+    connectSocket: () => void;
+    disconnectSocket: () => void;
+    socket: any | null;
+    onlineUsers: string[] | null;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
     user: null,
     token: localStorage.getItem("token") || null,
     isAuthenticated: !!localStorage.getItem("token"),
     isLoading: false,
+    socket: null,
+    onlineUsers: null,
 
     checkAuth: async () => {
         set({ isLoading: true });
@@ -60,11 +69,12 @@ export const useAuthStore = create<AuthState>((set) => ({
 
             localStorage.setItem("token", token);
 
+            get().connectSocket();
+
             set({
                 user,
                 token,
                 isAuthenticated: true,
-
             });
         } catch (error: any) {
             handleApiError(error, "Login failed.");
@@ -107,4 +117,38 @@ export const useAuthStore = create<AuthState>((set) => ({
 
         });
     },
+
+    connectSocket: () => {
+        const { user, token } = get();
+    
+        if (!user || get().socket?.connected || !token) return;
+    
+        const socket = io("http://localhost:4000", {
+          auth: {
+            token,
+          },
+        });
+    
+        socket.connect();
+    
+        set({ socket });
+
+    
+        const { setSocket }: any  = useChatStore();
+
+        setSocket(socket);
+
+        socket.on(SOCKET_EVENTS.ONLINE_USERS, (usersIds) => {
+          set({ onlineUsers: usersIds });
+        });
+      },
+    
+      disconnectSocket: () => {
+        const { socket } = get();
+    
+        if (socket?.connected) {
+          socket.disconnect();
+          set({ socket: null });
+        }
+      },
 }));
