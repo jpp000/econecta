@@ -48,8 +48,6 @@ export class GatewayProvider implements OnGatewayConnection {
 
       client.join(client.data.userId as string);
     } catch (err) {
-      console.log('deu erro');
-
       this.logger.error('Error during WebSocket connection', err);
       client.disconnect();
     }
