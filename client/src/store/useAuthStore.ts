@@ -1,110 +1,102 @@
-import { axiosInstance } from '@/lib/axiosInstance';
-import { handleApiError } from '@/lib/handleApiError';
-import { LoginData } from '@/schemas/loginSchema';
-import { SignupData } from '@/schemas/signupSchema';
-import { create } from 'zustand';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { axiosInstance } from "@/lib/axiosInstance";
+import { handleApiError } from "@/lib/handleApiError";
+import { LoginData } from "@/schemas/loginSchema";
+import { SignupData } from "@/schemas/signupSchema";
 
 type User = {
-    id: string;
-    username: string;
-    email: string;
+  id: string;
+  username: string;
+  email: string;
 };
 
 type AuthState = {
-    user: User | null;
-    token: string | null;
-    isAuthenticated: boolean;
-    isLoading: boolean;
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
 
-    checkAuth: () => Promise<void>;
-    login: (data: LoginData) => Promise<void>;
-    signup: (data: SignupData) => Promise<void>;
-    logout: () => void;
+  login: (data: LoginData) => Promise<void>;
+  signup: (data: SignupData) => Promise<void>;
+  logout: () => void;
+  initializeAuth: () => Promise<void>;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
-    user: null,
-    token: localStorage.getItem("token") || null,
-    isAuthenticated: !!localStorage.getItem("token"),
-    isLoading: false,
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      token: null,
+      isAuthenticated: false,
+      isLoading: false,
 
-    checkAuth: async () => {
+      login: async (data) => {
         set({ isLoading: true });
         try {
-            const response = await axiosInstance.get("/users");
+          const response = await axiosInstance.post("/auth/login", data);
+          const { user, token } = response.data;
 
-            const user = response.data;
-
-            set({
-                user,
-                isAuthenticated: true,
-            });
-        } catch (error: any) {
-            handleApiError(error, "Please log in again.");
-            localStorage.removeItem("token");
-            set({
-                user: null,
-                token: null,
-                isAuthenticated: false,
-            });
+          set({
+            user,
+            token,
+            isAuthenticated: true,
+          });
+        } catch (error) {
+          handleApiError(error, "Erro ao fazer login.");
+          set({ user: null, token: null, isAuthenticated: false });
         } finally {
-            set({ isLoading: false, });
+          set({ isLoading: false });
         }
-    },
+      },
 
-    login: async (data: LoginData) => {
+      signup: async (data) => {
         set({ isLoading: true });
         try {
-            const response = await axiosInstance.post("/auth/login", data);
-            const { user, token } = response.data;
+          const response = await axiosInstance.post("/auth/signup", data);
+          const { user, token } = response.data;
 
-            localStorage.setItem("token", token);
-
-            set({
-                user,
-                token,
-                isAuthenticated: true,
-
-            });
-        } catch (error: any) {
-            handleApiError(error, "Login failed.");
-            localStorage.removeItem("token");
-            set({ user: null, token: null, isAuthenticated: false, });
+          set({
+            user,
+            token,
+            isAuthenticated: true,
+          });
+        } catch (error) {
+          handleApiError(error, "Erro ao fazer cadastro.");
+          set({ user: null, token: null, isAuthenticated: false });
         } finally {
-            set({ isLoading: false });
+          set({ isLoading: false });
         }
-    },
+      },
 
-    signup: async (data: SignupData) => {
+      logout: () => {
+        set({ user: null, token: null, isAuthenticated: false });
+      },
+
+      initializeAuth: async () => {
+        const { token } = useAuthStore.getState();
+        
+        if (!token) return;
+
         set({ isLoading: true });
         try {
-            const response = await axiosInstance.post("/auth/signup", data);
-            const { user, token } = response.data;
+          const response = await axiosInstance.get("/users");
+          const user = response.data;
 
-            localStorage.setItem("token", token);
-
-            set({
-                user,
-                token,
-                isAuthenticated: true,
-
-            });
-        } catch (error: any) {
-            handleApiError(error, "Signup failed.");
-            localStorage.removeItem("token");
-            set({ user: null, token: null, isAuthenticated: false, });
+          set({ user, isAuthenticated: true });
+        } catch (error) {
+          handleApiError(error, "Sessão expirada. Faça login novamente.");
+          set({ user: null, token: null, isAuthenticated: false });
         } finally {
-            set({ isLoading: false });
+          set({ isLoading: false });
         }
-    },
-
-    logout: () => {
-        localStorage.removeItem("token");
-        set({
-            user: null,
-            token: null,
-            isAuthenticated: false,
-
-        });
-    },
-}));
+      },
+    }),
+    {
+      name: "authStorage",
+      partialize: (state) => ({
+        token: state.token,
+      }),
+    }
+  )
+);
