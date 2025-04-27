@@ -7,7 +7,6 @@ interface Contact {
   name: string
   status: "online" | "offline"
   avatar: string
-  lastSeen?: string
 }
 
 interface ContactsListProps {
@@ -27,63 +26,54 @@ const contacts: Contact[] = [
     name: "Emma Thompson",
     status: "offline",
     avatar: "https://ui-avatars.com/api/?name=Emma+Thompson&background=2E7D32&color=fff",
-    lastSeen: "5m ago",
   },
   {
     id: 3,
     name: "Olivia Miller",
     status: "offline",
     avatar: "https://ui-avatars.com/api/?name=Olivia+Miller&background=6A1B9A&color=fff",
-    lastSeen: "2h ago",
   },
   {
     id: 4,
     name: "Sophia Davis",
     status: "offline",
     avatar: "https://ui-avatars.com/api/?name=Sophia+Davis&background=C62828&color=fff",
-    lastSeen: "1d ago",
   },
   {
     id: 5,
     name: "Ava Wilson",
     status: "offline",
     avatar: "https://ui-avatars.com/api/?name=Ava+Wilson&background=F57F17&color=fff",
-    lastSeen: "3h ago",
   },
   {
     id: 6,
     name: "Isabella Brown",
     status: "offline",
     avatar: "https://ui-avatars.com/api/?name=Isabella+Brown&background=00695C&color=fff",
-    lastSeen: "1h ago",
   },
   {
     id: 7,
     name: "Mia Johnson",
     status: "offline",
     avatar: "https://ui-avatars.com/api/?name=Mia+Johnson&background=283593&color=fff",
-    lastSeen: "4h ago",
   },
   {
     id: 8,
     name: "Charlotte Williams",
     status: "offline",
     avatar: "https://ui-avatars.com/api/?name=Charlotte+Williams&background=4A148C&color=fff",
-    lastSeen: "2d ago",
   },
   {
     id: 9,
     name: "Amelia Garcia",
     status: "offline",
     avatar: "https://ui-avatars.com/api/?name=Amelia+Garcia&background=1565C0&color=fff",
-    lastSeen: "5h ago",
   },
   {
     id: 10,
     name: "James Anderson",
     status: "offline",
     avatar: "https://ui-avatars.com/api/?name=James+Anderson&background=33691E&color=fff",
-    lastSeen: "1d ago",
   },
 ]
 
@@ -204,7 +194,6 @@ const ContactsList: React.FC<ContactsListProps> = ({ activeChat, onSelectChat })
               </div>
               <div>
                 <div className="font-semibold text-gray-800">{contact.name}</div>
-                <div className="text-xs text-gray-500">{contact.status === "online" ? "Online" : contact.lastSeen}</div>
               </div>
             </div>
           ))}

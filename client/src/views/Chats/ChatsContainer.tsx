@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Chats from "./Chats";
+import { useNavbarStore } from "@/store/useNavbarStore";
 
 const ChatsContainer = () => {
   const [activeChat, setActiveChat] = useState(null)
@@ -25,6 +26,12 @@ const ChatsContainer = () => {
     isPublic: boolean
     edited?: boolean
   } | null>(null)
+
+  const { setVariant } = useNavbarStore()
+
+  useEffect(() => {
+    setVariant("light")
+  }, [setVariant])
 
   const handleSendMessage = (content: any) => {
     if (editingMessage) {
