@@ -12,19 +12,16 @@ import { MessagesService } from 'src/messages/messages.service';
 import { Logger } from '@nestjs/common';
 import { MESSAGES_EVENTS } from 'src/common/constants/events';
 
-@WebSocketGateway({
+@WebSocketGateway(4000, {
   cors: {
     origin: '*',
   },
 })
-export class MessagesGateway implements OnGatewayConnection {
+export class GatewayProvider implements OnGatewayConnection {
   @WebSocketServer()
   server: Server;
 
-  private readonly sockets: Socket[] = [];
-  private readonly users: { [key: string]: Socket[] } = {};
-
-  private readonly logger = new Logger(MessagesGateway.name);
+  private readonly logger = new Logger(GatewayProvider.name);
 
   constructor(
     private readonly messagesService: MessagesService,
@@ -42,10 +39,17 @@ export class MessagesGateway implements OnGatewayConnection {
 
       const payload = await this.jwtService.verify(token);
 
-      client.data.userId = payload.sub || payload.id;
+      if (!payload.userId) {
+        client.disconnect();
+        return;
+      }
 
-      client.join(client.data.userId);
+      client.data.userId = payload.userId;
+
+      client.join(client.data.userId as string);
     } catch (err) {
+      console.log('deu erro');
+
       this.logger.error('Error during WebSocket connection', err);
       client.disconnect();
     }

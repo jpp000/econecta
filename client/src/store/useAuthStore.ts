@@ -4,6 +4,7 @@ import { axiosInstance } from "@/lib/axiosInstance";
 import { handleApiError } from "@/lib/handleApiError";
 import { LoginData } from "@/schemas/loginSchema";
 import { SignupData } from "@/schemas/signupSchema";
+import { io } from "socket.io-client";
 
 type User = {
   id: string;
@@ -14,6 +15,7 @@ type User = {
 type AuthState = {
   user: User | null;
   users: User[] | null;
+  socket: any | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -23,13 +25,16 @@ type AuthState = {
   logout: () => void;
   initializeAuth: () => Promise<void>;
   listUsers: () => Promise<void>;
+  connectSocket: () => void;
+  disconnectSocket: () => void;
 };
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       users: null,
+      socket: null,
       token: null,
       isAuthenticated: false,
       isLoading: false,
@@ -45,6 +50,7 @@ export const useAuthStore = create<AuthState>()(
             token,
             isAuthenticated: true,
           });
+          get().connectSocket();
         } catch (error) {
           handleApiError(error, "Erro ao fazer login.");
           set({ user: null, token: null, isAuthenticated: false });
@@ -64,6 +70,7 @@ export const useAuthStore = create<AuthState>()(
             token,
             isAuthenticated: true,
           });
+          get().connectSocket();
         } catch (error) {
           handleApiError(error, "Erro ao fazer cadastro.");
           set({ user: null, token: null, isAuthenticated: false });
@@ -74,6 +81,7 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => {
         set({ user: null, token: null, isAuthenticated: false });
+        get().disconnectSocket();
       },
 
       listUsers: async () => {
@@ -82,8 +90,6 @@ export const useAuthStore = create<AuthState>()(
         try {
           const response = await axiosInstance.get("/users");
           const users = response.data;
-
-          console.log("reps: ", response);
 
           set({ users });
         } catch (error) {
@@ -104,11 +110,44 @@ export const useAuthStore = create<AuthState>()(
           const user = response.data;
 
           set({ user, isAuthenticated: true });
+          get().connectSocket();
         } catch (error) {
           handleApiError(error, "Sessão expirada. Faça login novamente.");
           set({ user: null, token: null, isAuthenticated: false });
         } finally {
           set({ isLoading: false });
+        }
+      },
+
+      connectSocket: (token?: string) => {
+        const effectiveToken = token ?? get().token;
+        if (!effectiveToken) return;
+      
+        const socket = io('ws://localhost:4000', {
+          auth: { token: effectiveToken },
+          autoConnect: false,
+          reconnection: true,
+        });
+      
+        socket.on('connect', () => {
+          console.log('Conectado com socket ID:', socket.id);
+        });
+      
+        socket.on('disconnect', (reason) => {
+          console.log('Desconectado:', reason);
+        });
+      
+        socket.connect();
+        set({ socket });
+      },
+      
+    
+      disconnectSocket: () => {
+        const { socket } = get();
+    
+        if (socket?.connected) {
+          socket.disconnect();
+          set({ socket: null }); 
         }
       },
     }),
