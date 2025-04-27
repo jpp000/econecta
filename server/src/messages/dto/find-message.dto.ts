@@ -1,6 +1,6 @@
 import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
-export class GetUserDto {
+export class FindMessageDto {
   @IsString()
   @IsNotEmpty()
   @IsMongoId()
@@ -9,5 +9,5 @@ export class GetUserDto {
   @IsString()
   @IsNotEmpty()
   @IsMongoId()
-  receiverId: string;
+  messageId: string;
 }

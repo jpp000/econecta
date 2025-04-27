@@ -14,6 +14,7 @@ import CoursesContainer from "./views/Courses/CoursesContainer";
 import ChatsContainer from "./views/Chats/ChatsContainer";
 import Footer from "./components/Footer/Footer";
 import CalendarContainer from "./views/Calendar/CalendarContainer";
+import { useEffect } from "react";
 
 
 const ProtectedRoute = (Component: React.FC) => {
@@ -30,9 +31,10 @@ const ProtectedRoute = (Component: React.FC) => {
 const App = () => {
   const { isLoading, initializeAuth, isAuthenticated } = useAuthStore();
 
-  if (!isLoading && !isAuthenticated) {
+  useEffect(() => {
     initializeAuth();
   }
+  , []);
 
   if (isLoading) {
     return (
@@ -54,13 +56,13 @@ const App = () => {
           }
         />
         <Route path="/signup" element={<SignupContainer />} />
-        <Route path="/" element={ProtectedRoute(HomeContainer)} />
-        <Route path="/donations" element={ProtectedRoute(DonationsContainer)} />
-        <Route path="/about" element={ProtectedRoute(AboutUsContainer)} />
-        <Route path="/profile" element={ProtectedRoute(ProfileContainer)} />
-        <Route path="/courses" element={ProtectedRoute(CoursesContainer)} />
-        <Route path="/chats" element={ProtectedRoute(ChatsContainer)} />
-        <Route path="/calendar" element={ProtectedRoute(CalendarContainer)} />
+        <Route path="/" element={<HomeContainer />} />
+        <Route path="/donations" element={<DonationsContainer />} />
+        <Route path="/about" element={<AboutUsContainer />} />
+        <Route path="/profile" element={<ProfileContainer />} />
+        <Route path="/courses" element={<CoursesContainer />} />
+        <Route path="/chats" element={<ChatsContainer />} />
+        <Route path="/calendar" element={<CalendarContainer />} />
       </Routes>
 
       <Footer />

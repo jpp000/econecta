@@ -1,165 +1,170 @@
-import { OnModuleInit } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import {
-  ConnectedSocket,
-  MessageBody,
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  SubscribeMessage,
+  MessageBody,
+  ConnectedSocket,
+  OnGatewayConnection,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { MESSAGES_EVENTS } from 'src/common/constants/events';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
-import { SendPrivateMessageDto } from 'src/messages/dto/send-private-message.dto';
+import { JwtService } from '@nestjs/jwt';
 import { MessagesService } from 'src/messages/messages.service';
-import { User } from 'src/users/models/user.schema';
+import { Logger } from '@nestjs/common';
+import { MESSAGES_EVENTS } from 'src/common/constants/events';
 
-type SocketWithUser = Socket & {
-  user: User;
-};
-
-@WebSocketGateway(4000, {
-  cors: '*',
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+  },
 })
-export class MessagesGateway implements OnModuleInit {
+export class MessagesGateway implements OnGatewayConnection {
+  @WebSocketServer()
+  server: Server;
+
+  private readonly sockets: Socket[] = [];
+  private readonly users: { [key: string]: Socket[] } = {};
+
+  private readonly logger = new Logger(MessagesGateway.name);
+
   constructor(
     private readonly messagesService: MessagesService,
     private readonly jwtService: JwtService,
   ) {}
 
-  @WebSocketServer()
-  server: Server;
+  async handleConnection(client: Socket) {
+    try {
+      const token = client.handshake.auth?.token as string;
 
-  private connectedSockets: Map<string, string> = new Map();
+      if (!token) {
+        client.disconnect();
+        return;
+      }
 
-  middleware(socket: SocketWithUser, next: (err?: any) => void) {
-    const token = socket.handshake.headers['authorization'];
+      const payload = await this.jwtService.verify(token);
 
-    if (!token) {
-      throw new Error('Unauthorized');
+      client.data.userId = payload.sub || payload.id;
+
+      client.join(client.data.userId);
+    } catch (err) {
+      this.logger.error('Error during WebSocket connection', err);
+      client.disconnect();
     }
-
-    const user = this.jwtService.verify(token);
-
-    if (!user) {
-      throw new Error('Unauthorized');
-    }
-
-    socket.user = user;
-    next();
   }
 
-  onModuleInit() {
-    this.server
-      .use(this.middleware)
-      .on('connection', (socket: SocketWithUser) => {
-        this.connectedSockets.set(socket.user.id, socket.id);
-
-        this.server.emit(
-          MESSAGES_EVENTS.ONLINE_USERS,
-          Array.from(this.connectedSockets.values()),
-        );
-
-        socket.on('disconnect', () => {
-          this.connectedSockets.delete(socket.user.id);
-        });
-      });
-  }
-
-  @SubscribeMessage(MESSAGES_EVENTS.PUBLIC_MESSAGE)
-  async sendPublicMessage(
-    @CurrentUser() sender: User,
-    @MessageBody() { text }: { text: string },
+  @SubscribeMessage(MESSAGES_EVENTS.SEND_PRIVATE_MESSAGE)
+  async handleMessage(
+    @MessageBody()
+    { text, receiverId }: { text: string; receiverId: string },
+    @ConnectedSocket() client: Socket,
   ) {
-    const message = await this.messagesService.sendPublicMessage(sender.id, {
+    const senderId = client.data.userId;
+
+    if (!senderId) {
+      client.disconnect();
+      return;
+    }
+
+    const message = await this.messagesService.sendPrivateMessage({
       text,
-    });
-
-    this.server.emit(MESSAGES_EVENTS.PUBLIC_MESSAGE, message);
-  }
-
-  @SubscribeMessage(MESSAGES_EVENTS.PRIVATE_MESSAGE)
-  async sendPrivateMessage(
-    @CurrentUser() sender: User,
-    @MessageBody() { receiverId, text }: SendPrivateMessageDto,
-  ) {
-    await this.messagesService.sendPrivateMessage({
-      senderId: sender.id,
-      receiverId,
-      text,
-    });
-
-    const targetSocketId = this.connectedSockets.get(receiverId);
-
-    if (targetSocketId) {
-      this.server
-        .to(targetSocketId)
-        .emit(MESSAGES_EVENTS.PRIVATE_MESSAGE, text);
-    }
-  }
-
-  @SubscribeMessage(MESSAGES_EVENTS.UPDATE_PRIVATE_MESSAGE)
-  async updatePrivateMessage(
-    @MessageBody() { text, senderId, receiverId, messageId },
-  ) {
-    const updatedMessage = this.messagesService.updatePrivateMessage({
       senderId,
       receiverId,
-      messageId,
+    });
+
+    if (receiverId) {
+      this.server
+        .to(receiverId)
+        .emit(MESSAGES_EVENTS.RECEIVE_PRIVATE_MESSAGE, message);
+    }
+  }
+
+  @SubscribeMessage(MESSAGES_EVENTS.SEND_PUBLIC_MESSAGE)
+  async handlePublicMessage(
+    @MessageBody() { text }: { text: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const senderId = client.data.userId;
+
+    if (!senderId) {
+      client.disconnect();
+      return;
+    }
+
+    const message = await this.messagesService.sendPublicMessage({
+      senderId,
       text,
     });
 
-    const targetSocketId = this.connectedSockets.get(receiverId);
-
-    if (targetSocketId) {
-      this.server
-        .to(targetSocketId)
-        .emit(MESSAGES_EVENTS.PRIVATE_MESSAGE, updatedMessage);
-    }
-
-    this.server.emit(MESSAGES_EVENTS.PRIVATE_MESSAGE, updatedMessage);
+    this.server.emit(MESSAGES_EVENTS.RECEIVE_PUBLIC_MESSAGE, message);
   }
 
-  //   updatePublicMessage(
-  //     @CurrentUser() sender: User,
-  //     @MessageBody() { text, socket }: SendPrivateMessageDto,
-  //   ) {
-  //     const message = this.messagesService.updatePublicMessage(sender, {
-  //       text,
-  //       socket,
-  //     });
-  //     this.server.emit(MESSAGES_EVENTS.PUBLIC_MESSAGE, message);
-  //   }
+  @SubscribeMessage(MESSAGES_EVENTS.EDIT_MESSAGE)
+  async handleEditMessage(
+    @MessageBody()
+    { text, messageId }: { text: string; messageId: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const senderId = client.data.userId;
 
-  //   deleteMessage(
-  //     @CurrentUser() sender: User,
-  //     @MessageBody() { id, socket }: SendPrivateMessageDto,
-  //   ) {
-  //     const message = this.messagesService.deleteMessage(sender, {
-  //       id,
-  //       socket,
-  //     });
-  //     this.server.emit(MESSAGES_EVENTS.PUBLIC_MESSAGE, message);
-  //   }
+    if (!senderId) {
+      client.disconnect();
+      return;
+    }
 
-  //   getConnectedSockets() {
-  //     return this.connectedSockets;
-  //   }
+    // Check if the message belongs to the sender
 
-  //   getSocketById(socketId: string) {
-  //     return this.connectedSockets.get(socketId);
-  //   }
+    // const message = await this.messagesService.findMessage({
+    //   messageId,
+    //   userId: senderId,
+    // });
 
-  //   getSocketByUserId(userId: string) {
-  //     for (const [socketId, socket] of this.connectedSockets.entries()) {
-  //       if (socket.user.id === userId) {
-  //         return socket;
-  //       }
-  //     }
-  //     return null;
-  //   }
+    // if (!message) {
+    //   client.emit(MESSAGES_EVENTS.EDIT_MESSAGE, {
+    //     error: 'Message not found or you are not the sender',
+    //   });
+    //   return;
+    // }
 
-  //   getAllConnectedSockets() {
-  //     return Array.from(this.connectedSockets.values());
-  //   }
+    const updatedMessage = await this.messagesService.updateMessage({
+      messageId,
+      userId: senderId,
+      text,
+    });
+
+    this.server.emit(MESSAGES_EVENTS.EDIT_MESSAGE, updatedMessage);
+  }
+
+  @SubscribeMessage(MESSAGES_EVENTS.DELETE_MESSAGE)
+  async handleDeleteMessage(
+    @MessageBody()
+    { messageId }: { messageId: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const senderId = client.data.userId;
+
+    if (!senderId) {
+      client.disconnect();
+      return;
+    }
+
+    // Check if the message belongs to the sender
+
+    // const message = await this.messagesService.findMessage({
+    //   messageId,
+    //   userId: senderId,
+    // });
+
+    // if (!message) {
+    //   client.emit(MESSAGES_EVENTS.DELETE_MESSAGE, {
+    //     error: 'Message not found or you are not the sender',
+    //   });
+    //   return;
+    // }
+
+    const deletedMessage = await this.messagesService.deleteMessage({
+      messageId,
+      userId: senderId,
+    });
+
+    this.server.emit(MESSAGES_EVENTS.DELETE_MESSAGE, deletedMessage);
+  }
 }

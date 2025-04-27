@@ -1,6 +1,6 @@
 import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
-export class UpdateMessageDto {
+export class GetPrivateChatMessagesDto {
   @IsString()
   @IsNotEmpty()
   @IsMongoId()
@@ -9,9 +9,5 @@ export class UpdateMessageDto {
   @IsString()
   @IsNotEmpty()
   @IsMongoId()
-  messageId: string;
-
-  @IsString()
-  @IsNotEmpty()
-  text: string;
+  receiverId: string;
 }
