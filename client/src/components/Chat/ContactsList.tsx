@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Users, X } from "lucide-react"
+import { useNavbarStore } from "@/store/useNavbarStore"
 
 const contacts = [
   { id: 1, name: "Jane Doe", status: "online" },
@@ -19,15 +20,20 @@ const contacts = [
 const ContactsList = ({ activeChat, onSelectChat } : any) => {
   const [showOnlineOnly, setShowOnlineOnly] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const { setVariant} = useNavbarStore()
 
   const filteredContacts = showOnlineOnly ? contacts.filter((contact) => contact.status === "online") : contacts
 
   const onlineCount = contacts.filter((contact) => contact.status === "online").length
 
+  useEffect(() => {
+    setVariant("dark")
+  }, [setVariant])
+
   if (isCollapsed) {
     return (
       <div className="w-16 bg-[#1E3A3A] border-r border-gray-700 flex flex-col items-center py-4">
-        <button onClick={() => setIsCollapsed(false)} className="text-[#ece94c] hover:text-amber-300 mb-6">
+        <button onClick={() => setIsCollapsed(false)} className="text-[#ece94c] hover:text-amber-300 mb-6 cursor-pointer">
           <Users size={24} />
         </button>
         {filteredContacts.map((contact) => (
@@ -59,7 +65,7 @@ const ContactsList = ({ activeChat, onSelectChat } : any) => {
           <Users size={20} className="mr-2" />
           <span className="font-semibold">Contacts</span>
         </div>
-        <button onClick={() => setIsCollapsed(true)} className="text-gray-400 hover:text-gray-200">
+        <button onClick={() => setIsCollapsed(true)} className="text-gray-400 hover:text-gray-200 cursor-pointer">
           <X size={18} />
         </button>
       </div>
@@ -70,7 +76,7 @@ const ContactsList = ({ activeChat, onSelectChat } : any) => {
             type="checkbox"
             checked={showOnlineOnly}
             onChange={() => setShowOnlineOnly(!showOnlineOnly)}
-            className="mr-2 form-checkbox h-4 w-4 text-[#ece94c] rounded focus:ring-amber-400 focus:ring-opacity-25"
+            className="mr-2 form-checkbox h-4 w-4 text-[#ece94c] rounded focus:ring-amber-400 focus:ring-opacity-25 curso"
           />
           Show online only
           <span className="ml-1 text-xs">({onlineCount} online)</span>

@@ -76,7 +76,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-[87vh] mt-16 bg-[#1E3A3A] text-gray-200">
+    <div className="flex h-[89vh] mt-16 bg-[#1E3A3A] text-gray-200">
       <ContactsList activeChat={activeChat} onSelectChat={handleSelectChat} />
       <div className="flex flex-col flex-1 border-l border-gray-700">
         <ChatHeader activeChat={activeChat} />

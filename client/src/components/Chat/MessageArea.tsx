@@ -24,17 +24,17 @@ const MessageArea = ({ messages, onEditMessage, onDeleteMessage } : any) => {
                         <button className="text-gray-800 hover:text-gray-800 cursor-pointer">
                           <MoreVertical size={14} />
                         </button>
-                        <div className="absolute right-0 mt-1 hidden group-hover:block bg-gray-800 rounded shadow-lg z-10 cursor-pointer">
+                        <div className="absolute right-0 mt-1 hidden group-hover:block bg-gray-800 rounded shadow-lg z-10">
                           <button
                             onClick={() => onEditMessage(message)}
-                            className="flex items-center px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 w-full text-left"
+                            className="flex items-center px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 w-full text-left cursor-pointer"
                           >
                             <Edit2 size={14} className="mr-2" />
                             Edit
                           </button>
                           <button
                             onClick={() => onDeleteMessage(message.id)}
-                            className="flex items-center px-3 py-2 text-sm text-red-400 hover:bg-gray-700 w-full text-left"
+                            className="flex items-center px-3 py-2 text-sm text-red-400 hover:bg-gray-700 w-full text-left cursor-pointer"
                           >
                             <Trash2 size={14} className="mr-2" />
                             Delete

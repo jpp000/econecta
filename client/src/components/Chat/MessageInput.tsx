@@ -55,7 +55,7 @@ const MessageInput = ({ onSendMessage, editingMessage, setEditingMessage } : any
           type="submit"
           disabled={!message.trim()}
           className={`p-2 ml-2 rounded-full ${
-            message.trim() ? "text-[#ece94c] hover:text-amber-300" : "text-gray-600 cursor-not-allowed"
+            message.trim() ? "text-[#ece94c] hover:text-amber-300 cursor-pointer" : "text-gray-600 cursor-not-allowed"
           }`}
         >
           <Send size={20} />

@@ -9,9 +9,14 @@ import { UpdateUserPasswordDto } from './dto/update-user-password';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
+  @Get('me')
   getUser(@CurrentUser() user: User) {
     return user;
+  }
+
+  @Get()
+  getAllUsers() {
+    return this.usersService.findAll();
   }
 
   @Put()

@@ -105,6 +105,10 @@ export class UsersService {
     return user;
   }
 
+  async findAll() {
+    return await this.usersRepository.find({});
+  }
+
   async findByEmail(email: string) {
     return this.usersRepository.findOne({ email });
   }
