@@ -26,7 +26,7 @@ const ChatsContainer = () => {
     edited?: boolean
   } | null>(null)
 
-  const handleSendMessage = (content : any) => {
+  const handleSendMessage = (content: any) => {
     if (editingMessage) {
       // Edit existing message
       const chatKey = activeChat || "public"
@@ -55,11 +55,11 @@ const ChatsContainer = () => {
     }
   }
 
-  const handleEditMessage = (message :any) => {
+  const handleEditMessage = (message: any) => {
     setEditingMessage(message)
   }
 
-  const handleDeleteMessage = (messageId : any) => {
+  const handleDeleteMessage = (messageId: any) => {
     const chatKey = activeChat || "public"
     setMessages({
       ...messages,
@@ -67,7 +67,7 @@ const ChatsContainer = () => {
     })
   }
 
-  const handleSelectChat = (contact : any) => {
+  const handleSelectChat = (contact: any) => {
     setActiveChat(contact)
     setEditingMessage(null)
   }
