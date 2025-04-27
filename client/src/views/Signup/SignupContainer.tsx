@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Signup from "./Signup";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupData, signupSchema } from "@/schemas/signupSchema";
+import { useNavbarStore } from "@/store/useNavbarStore";
 
 const SignupContainer = () => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { isLoading, signup } = useAuthStore()
+  const { isLoading, signup } = useAuthStore();
 
   const {
     register,
@@ -23,24 +24,34 @@ const SignupContainer = () => {
       password: "",
       confirmPassword: "",
     },
-  })
+  });
 
-  const onSubmit = (data: SignupData) => {
-    signup(data)
-  }
+  const onSubmit = useCallback(
+    (data: SignupData) => {
+      signup(data);
+    },
+    [signup]
+  );
 
+  const { setVariant } = useNavbarStore();
 
-  return <Signup
-    showPassword={showPassword}
-    setShowPassword={setShowPassword}
-    showConfirmPassword={showConfirmPassword}
-    setShowConfirmPassword={setShowConfirmPassword}
-    isLoading={isLoading}
-    register={register}
-    handleSubmit={handleSubmit}
-    onSubmit={onSubmit}
-    errors={errors}
-  />;
-}
+  useEffect(() => {
+    setVariant("light");
+  }, [setVariant]);
+
+  return (
+    <Signup
+      showPassword={showPassword}
+      setShowPassword={setShowPassword}
+      showConfirmPassword={showConfirmPassword}
+      setShowConfirmPassword={setShowConfirmPassword}
+      isLoading={isLoading}
+      register={register}
+      handleSubmit={handleSubmit}
+      onSubmit={onSubmit}
+      errors={errors}
+    />
+  );
+};
 
 export default SignupContainer;

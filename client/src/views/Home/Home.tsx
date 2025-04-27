@@ -1,8 +1,8 @@
 import CardTree from "@/assets/card-tree.jpg";
-import MainSection from "@/components/MainSection/MainSection";
-import MissionSection from "@/components/MissionSection/MissionSection";
-import AboutUsSection from "@/components/AboutUsSection/AboutUsSection";
-import EnterpriseSection from "@/components/EnterpriseSection/EnterpriseSection";
+import MainSection from "@/components/Sections/MainSection/MainSection";
+import MissionSection from "@/components/Sections/MissionSection/MissionSection";
+import AboutUsSection from "@/components/Sections/AboutUsSection/AboutUsSection";
+import EnterpriseSection from "@/components/Sections/EnterpriseSection/EnterpriseSection";
 
 const Home = () => {
   const professionals = [

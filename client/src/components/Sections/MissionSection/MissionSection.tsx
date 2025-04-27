@@ -1,9 +1,9 @@
-import WorldGreen from "../../assets/world-green.png";
+import WorldGreen from "../../../assets/world-green.png";
 
 import { Sprout } from "lucide-react";
-import { CarrosselVertical } from "../CarrosselVertical/CarrosselVertical";
-import { Button } from "../ui/button";
-import PartnerLogosCarousel from "../PartnerLogosCarousel/PartnerLogosCarousel";
+import { CarrosselVertical } from "../../CarrosselVertical/CarrosselVertical";
+import { Button } from "../../ui/button";
+import PartnerLogosCarousel from "../../PartnerLogosCarousel/PartnerLogosCarousel";
 import { useEffect } from "react";
 import { useNavbarStore } from "@/store/useNavbarStore";
 
@@ -44,7 +44,7 @@ const MissionSection = () => {
         />
         <div className="h-full flex flex-col items-center justify-center">
           <h2 className="text-5xl max-w-5xl text-center">
-            Junte-se a nós na luta por um futuro mais verde e sustentável.{" "}
+            Junte-se a nós na luta por um futuro mais verde e sustentável.
             <Sprout className="size-12 inline-block" /> Acreditamos que pequenas
             ações podem fazer uma grande diferença.
           </h2>

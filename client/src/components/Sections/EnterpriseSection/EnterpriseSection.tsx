@@ -1,8 +1,8 @@
 import CardTree from "@/assets/card-tree.jpg";
 import { ArrowRight, Facebook, Hop, Linkedin, Loader, Twitter, Youtube } from "lucide-react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { InfiniteCarousel } from "../InfiniteCarousel/InfiniteCarousel";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { InfiniteCarousel } from "../../InfiniteCarousel/InfiniteCarousel";
 
 interface Professional {
   name: string;
@@ -100,25 +100,25 @@ const EnterpriseSection = ({ professionals }: EnterpriseSectionProps) => {
           <div className="flex gap-4 mt-4">
             <Button
               variant="ghost"
-              className="bg-[#F3F5F4] p-3 rounded-full hover:bg-[#D8EDE1] transition-all"
+              className="bg-[#F3F5F4] p-3 rounded-full hover:bg-[#F3F5F4]/60 transition-all cursor-pointer"
             >
               <Youtube className="size-5 text-black" />
             </Button>
             <Button
               variant="ghost"
-              className="bg-[#F3F5F4] p-3 rounded-full hover:bg-[#D8EDE1] transition-all"
+              className="bg-[#F3F5F4] p-3 rounded-full hover:bg-[#F3F5F4]/60 transition-all cursor-pointer"
             >
               <Facebook className="size-5 text-black" />
             </Button>
             <Button
               variant="ghost"
-              className="bg-[#F3F5F4] p-3 rounded-full hover:bg-[#D8EDE1] transition-all"
+              className="bg-[#F3F5F4] p-3 rounded-full hover:bg-[#F3F5F4]/60 transition-all cursor-pointer"
             >
               <Twitter className="size-5 text-black" />
             </Button>
             <Button
               variant="ghost"
-              className="bg-[#F3F5F4] p-3 rounded-full hover:bg-[#D8EDE1] transition-all"
+              className="bg-[#F3F5F4] p-3 rounded-full hover:bg-[#F3F5F4]/60 transition-all cursor-pointer"
             >
               <Linkedin className="size-5 text-black" />
             </Button>

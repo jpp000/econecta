@@ -12,16 +12,27 @@ import AboutUsContainer from "./views/AboutUs/AboutUsContainer";
 import ProfileContainer from "./views/Profile/ProfileContainer";
 import CoursesContainer from "./views/Courses/CoursesContainer";
 import ChatsContainer from "./views/Chats/ChatsContainer";
-import Calendar from "./views/Calendar/Calendar";
 import Footer from "./components/Footer/Footer";
-import { useEffect } from "react";
+import CalendarContainer from "./views/Calendar/CalendarContainer";
+
+
+const ProtectedRoute = (Component: React.FC) => {
+  const token = localStorage.getItem("token");
+  const { isAuthenticated } = useAuthStore();
+
+  if (!token || !isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+  
+  return <Component />;
+};
 
 const App = () => {
-  const { isLoading, checkAuth, isAuthenticated } = useAuthStore();
+  const { isLoading, initializeAuth, isAuthenticated } = useAuthStore();
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
+  if (!isLoading && !isAuthenticated) {
+    initializeAuth();
+  }
 
   if (isLoading) {
     return (
@@ -38,40 +49,18 @@ const App = () => {
       <Routes>
         <Route
           path="/login"
-          element={isAuthenticated ? <Navigate to="/" /> : <LoginContainer />}
+          element={
+            isAuthenticated ? <HomeContainer /> : <LoginContainer />
+          }
         />
-        <Route
-          path="/signup"
-          element={isAuthenticated ? <Navigate to="/" /> : <SignupContainer />}
-        />
-        <Route
-          path="/"
-          element={isAuthenticated ? <HomeContainer /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/donations"
-          element={isAuthenticated ? <DonationsContainer /> : <LoginContainer />}
-        />
-        <Route
-          path="/about"
-          element={isAuthenticated ? <AboutUsContainer /> : <LoginContainer />}
-        />
-        <Route
-          path="/profile"
-          element={isAuthenticated ? <ProfileContainer /> : <LoginContainer />}
-        />
-        <Route
-          path="/courses"
-          element={isAuthenticated ? <CoursesContainer /> : <LoginContainer />}
-        />
-        <Route
-          path="/chats"
-          element={isAuthenticated ? <ChatsContainer /> : <LoginContainer />}
-        />
-        <Route
-          path="/calendar"
-          element={isAuthenticated ? <Calendar /> : <LoginContainer />}
-        />
+        <Route path="/signup" element={<SignupContainer />} />
+        <Route path="/" element={ProtectedRoute(HomeContainer)} />
+        <Route path="/donations" element={ProtectedRoute(DonationsContainer)} />
+        <Route path="/about" element={ProtectedRoute(AboutUsContainer)} />
+        <Route path="/profile" element={ProtectedRoute(ProfileContainer)} />
+        <Route path="/courses" element={ProtectedRoute(CoursesContainer)} />
+        <Route path="/chats" element={ProtectedRoute(ChatsContainer)} />
+        <Route path="/calendar" element={ProtectedRoute(CalendarContainer)} />
       </Routes>
 
       <Footer />

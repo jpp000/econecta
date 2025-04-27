@@ -1,4 +1,4 @@
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { useNavbarStore } from "@/store/useNavbarStore";
 import { useEffect } from "react";
 import { useSectionInView } from "@/hooks/useSectionInView";

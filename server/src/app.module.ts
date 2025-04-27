@@ -7,6 +7,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from './auth/auth.module';
 import { GatewayModule } from './gateway/gateway.module';
 import { MessagesModule } from './messages/messages.module';
+import { CalendarModule } from './calendar/calendar.module';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { MessagesModule } from './messages/messages.module';
     UsersModule,
     AuthModule,
     GatewayModule,
-    MessagesModule
+    MessagesModule,
+    CalendarModule,
   ],
 })
 export class AppModule {}
