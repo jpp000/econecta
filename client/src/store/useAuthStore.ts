@@ -13,6 +13,7 @@ type User = {
 
 type AuthState = {
   user: User | null;
+  users: User[] | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -21,12 +22,14 @@ type AuthState = {
   signup: (data: SignupData) => Promise<void>;
   logout: () => void;
   initializeAuth: () => Promise<void>;
+  listUsers: () => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
+      users: null,
       token: null,
       isAuthenticated: false,
       isLoading: false,
@@ -73,14 +76,31 @@ export const useAuthStore = create<AuthState>()(
         set({ user: null, token: null, isAuthenticated: false });
       },
 
+      listUsers: async () => {
+        set({ isLoading: true });
+
+        try {
+          const response = await axiosInstance.get("/users");
+          const users = response.data;
+
+          console.log("reps: ", response);
+
+          set({ users });
+        } catch (error) {
+          handleApiError(error, "Erro ao listar usuários.");
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
       initializeAuth: async () => {
         const { token } = useAuthStore.getState();
-        
+
         if (!token) return;
 
         set({ isLoading: true });
         try {
-          const response = await axiosInstance.get("/users");
+          const response = await axiosInstance.get("/users/me");
           const user = response.data;
 
           set({ user, isAuthenticated: true });

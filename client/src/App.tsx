@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -15,26 +15,33 @@ import ChatsContainer from "./views/Chats/ChatsContainer";
 import Footer from "./components/Footer/Footer";
 import CalendarContainer from "./views/Calendar/CalendarContainer";
 
+import { useEffect, useState } from "react";
 
-const ProtectedRoute = (Component: React.FC) => {
-  const token = localStorage.getItem("token");
+interface PrivateRouteProps {
+  children: React.ReactNode;
+}
+
+function PrivateRoute({ children }: PrivateRouteProps) {
   const { isAuthenticated } = useAuthStore();
-
-  if (!token || !isAuthenticated) {
-    return <Navigate to="/login" />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
   }
-  
-  return <Component />;
-};
+  return <>{children}</>;
+}
 
 const App = () => {
-  const { isLoading, initializeAuth, isAuthenticated } = useAuthStore();
+  const { isAuthenticated, initializeAuth } = useAuthStore();
+  const [isInitializing, setIsInitializing] = useState(true);
 
-  if (!isLoading && !isAuthenticated) {
-    initializeAuth();
-  }
+  useEffect(() => {
+    const init = async () => {
+      await initializeAuth();
+      setIsInitializing(false);
+    };
+    init();
+  }, [initializeAuth]);
 
-  if (isLoading) {
+  if (isInitializing) {
     return (
       <div className="flex items-center justify-center h-screen bg-green-100/60">
         <Loader className="size-10 animate-spin" />
@@ -43,29 +50,85 @@ const App = () => {
   }
 
   return (
-    <div>
+    <>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          className: "bg-green-900 text-white",
+          duration: 3000,
+        }}
+      />
+
       <NavbarContainer />
 
       <Routes>
+        {/* Rotas públicas */}
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/chats" />
+            ) : (
+              <Navigate to="/home" />
+            )
+          }
+        />
         <Route
           path="/login"
           element={
-            isAuthenticated ? <HomeContainer /> : <LoginContainer />
+            isAuthenticated ? <Navigate to="/chats" /> : <LoginContainer />
           }
         />
-        <Route path="/signup" element={<SignupContainer />} />
-        <Route path="/" element={ProtectedRoute(HomeContainer)} />
-        <Route path="/donations" element={ProtectedRoute(DonationsContainer)} />
-        <Route path="/about" element={ProtectedRoute(AboutUsContainer)} />
-        <Route path="/profile" element={ProtectedRoute(ProfileContainer)} />
-        <Route path="/courses" element={ProtectedRoute(CoursesContainer)} />
-        <Route path="/chats" element={ProtectedRoute(ChatsContainer)} />
-        <Route path="/calendar" element={ProtectedRoute(CalendarContainer)} />
+        <Route
+          path="/signup"
+          element={
+            isAuthenticated ? <Navigate to="/chats" /> : <SignupContainer />
+          }
+        />
+        <Route path="/home" element={<HomeContainer />} />
+        <Route path="/about" element={<AboutUsContainer />} />
+        <Route path="/donations" element={<DonationsContainer />} />
+
+        {/* Rotas privadas */}
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <ProfileContainer />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/calendar"
+          element={
+            <PrivateRoute>
+              <CalendarContainer />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/chats"
+          element={
+            <PrivateRoute>
+              <ChatsContainer />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/courses"
+          element={
+            <PrivateRoute>
+              <CoursesContainer />
+            </PrivateRoute>
+          }
+        />
+
+        {/* 404 fallback */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
       <Footer />
-      <Toaster />
-    </div>
+    </>
   );
 };
 
