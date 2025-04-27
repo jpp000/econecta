@@ -25,7 +25,7 @@ export class MessagesGateway implements OnModuleInit {
   constructor(
     private readonly messagesService: MessagesService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -38,7 +38,7 @@ export class MessagesGateway implements OnModuleInit {
     if (!token) {
       throw new Error('Unauthorized');
     }
-    
+
     const user = this.jwtService.verify(token);
 
     if (!user) {
@@ -50,18 +50,20 @@ export class MessagesGateway implements OnModuleInit {
   }
 
   onModuleInit() {
-    this.server.use(this.middleware).on('connection', (socket: SocketWithUser) => {
-      this.connectedSockets.set(socket.user.id, socket.id);
+    this.server
+      .use(this.middleware)
+      .on('connection', (socket: SocketWithUser) => {
+        this.connectedSockets.set(socket.user.id, socket.id);
 
-      this.server.emit(
-        MESSAGES_EVENTS.ONLINE_USERS,
-        Array.from(this.connectedSockets.values()),
-      );
+        this.server.emit(
+          MESSAGES_EVENTS.ONLINE_USERS,
+          Array.from(this.connectedSockets.values()),
+        );
 
-      socket.on('disconnect', () => {
-        this.connectedSockets.delete(socket.user.id);
+        socket.on('disconnect', () => {
+          this.connectedSockets.delete(socket.user.id);
+        });
       });
-    });
   }
 
   @SubscribeMessage(MESSAGES_EVENTS.PUBLIC_MESSAGE)
@@ -116,7 +118,6 @@ export class MessagesGateway implements OnModuleInit {
     }
 
     this.server.emit(MESSAGES_EVENTS.PRIVATE_MESSAGE, updatedMessage);
-      
   }
 
   //   updatePublicMessage(

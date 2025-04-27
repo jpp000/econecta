@@ -75,7 +75,7 @@ export const useAuthStore = create<AuthState>()(
 
       initializeAuth: async () => {
         const { token } = useAuthStore.getState();
-        
+
         if (!token) return;
 
         set({ isLoading: true });

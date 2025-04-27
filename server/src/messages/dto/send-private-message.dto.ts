@@ -4,13 +4,13 @@ export class SendPrivateMessageDto {
   @IsString()
   @IsNotEmpty()
   @IsMongoId()
-  senderId: string
+  senderId: string;
 
   @IsString()
   @IsNotEmpty()
   @IsMongoId()
   receiverId: string;
-    
+
   @IsString()
   @IsNotEmpty()
   text: string;
