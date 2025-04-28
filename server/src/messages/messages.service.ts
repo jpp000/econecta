@@ -5,12 +5,16 @@ import { SendPublicMessageDto } from './dto/send-public-message.dto';
 import { GetPrivateChatMessagesDto } from './dto/get-private-chat-messages.dto';
 import { FindMessageDto } from './dto/find-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class MessagesService {
   private readonly logger = new Logger(MessagesService.name);
 
-  constructor(private readonly messagesRepository: MessagesRepository) {}
+  constructor(
+    private readonly messagesRepository: MessagesRepository,
+    private readonly usersService: UsersService,
+  ) {}
 
   async getPrivateChatMessages({
     receiverId,
@@ -19,9 +23,10 @@ export class MessagesService {
     try {
       return await this.messagesRepository.find({
         $or: [
-          { senderId: userId, receiverId },
-          { senderId: receiverId, receiverId: userId },
+          { sender: userId, receiver: receiverId },
+          { sender: receiverId, receiver: userId },
         ],
+        populate: ['sender', 'receiver'],
       });
     } catch (err) {
       this.logger.error(err);
@@ -31,7 +36,10 @@ export class MessagesService {
 
   async getPublicChatMessages() {
     try {
-      return await this.messagesRepository.find({ receiverId: null });
+      return await this.messagesRepository.find({
+        receiver: null,
+        populate: ['sender'],
+      });
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -45,9 +53,10 @@ export class MessagesService {
   }: SendPrivateMessageDto) {
     try {
       return await this.messagesRepository.create({
-        senderId,
-        receiverId,
+        sender: senderId,
+        receiver: receiverId,
         text,
+        populate: ['sender', 'receiver'],
       });
     } catch (err) {
       this.logger.error(err);
@@ -57,10 +66,27 @@ export class MessagesService {
 
   async sendPublicMessage({ senderId, text }: SendPublicMessageDto) {
     try {
-      return await this.messagesRepository.create({
-        senderId,
+      const sender = await this.usersService.findById(senderId);
+
+      if (!sender) {
+        throw new Error('Sender not found');
+      }
+
+      const messageCreated = await this.messagesRepository.create({
+        sender: senderId,
         text,
+        populate: ['sender'],
       });
+
+      return {
+        ...messageCreated,
+        sender: {
+          _id: sender._id,
+          username: sender.username,
+          email: sender.email,
+          avatar: sender.avatar,
+        },
+      };
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -71,7 +97,7 @@ export class MessagesService {
     try {
       return await this.messagesRepository.findOneAndDelete({
         _id: messageId,
-        senderId: userId,
+        sender: userId,
       });
     } catch (err) {
       this.logger.error(err);
@@ -82,8 +108,8 @@ export class MessagesService {
   async updateMessage({ messageId, userId, text }: UpdateMessageDto) {
     try {
       return await this.messagesRepository.findOneAndUpdate(
-        { senderId: userId, _id: messageId },
-        { text },
+        { sender: userId, _id: messageId },
+        { text, new: true, populate: ['sender'] },
       );
     } catch (err) {
       this.logger.error(err);

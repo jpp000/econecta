@@ -84,6 +84,12 @@ export class GatewayProvider implements OnGatewayConnection {
     @MessageBody() { text }: { text: string },
     @ConnectedSocket() client: Socket,
   ) {
+    console.log({
+      text,
+      receiverId: null,
+      senderId: client.data.userId,
+    });
+
     const senderId = client.data.userId;
 
     if (!senderId) {
@@ -95,6 +101,8 @@ export class GatewayProvider implements OnGatewayConnection {
       senderId,
       text,
     });
+
+    console.log('created', message);
 
     this.server.emit(MESSAGES_EVENTS.RECEIVE_PUBLIC_MESSAGE, message);
   }

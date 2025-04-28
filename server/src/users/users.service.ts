@@ -112,4 +112,8 @@ export class UsersService {
   async findByEmail(email: string) {
     return this.usersRepository.findOne({ email });
   }
+
+  async findById(_id: string) {
+    return this.usersRepository.findOne({ _id });
+  }
 }
