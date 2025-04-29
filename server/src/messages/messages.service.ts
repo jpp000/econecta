@@ -21,13 +21,15 @@ export class MessagesService {
     userId,
   }: GetPrivateChatMessagesDto) {
     try {
-      return await this.messagesRepository.find({
-        $or: [
-          { sender: userId, receiver: receiverId },
-          { sender: receiverId, receiver: userId },
-        ],
-        populate: ['sender', 'receiver'],
-      });
+      return await this.messagesRepository.find(
+        {
+          $or: [
+            { sender: userId, receiver: receiverId },
+            { sender: receiverId, receiver: userId },
+          ],
+        },
+        ['sender', 'receiver'],
+      );
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -36,10 +38,12 @@ export class MessagesService {
 
   async getPublicChatMessages() {
     try {
-      return await this.messagesRepository.find({
-        receiver: null,
-        populate: ['sender'],
-      });
+      return await this.messagesRepository.find(
+        {
+          receiver: null,
+        },
+        ['sender'],
+      );
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -75,13 +79,15 @@ export class MessagesService {
       const messageCreated = await this.messagesRepository.create({
         sender: senderId,
         text,
+        receiver: null,
         populate: ['sender'],
       });
 
       return {
-        ...messageCreated,
+        _id: messageCreated._id.toHexString(),
+        text: messageCreated.text,
         sender: {
-          _id: sender._id,
+          _id: sender._id.toHexString(),
           username: sender.username,
           email: sender.email,
           avatar: sender.avatar,
