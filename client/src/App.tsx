@@ -8,7 +8,6 @@ import NavbarContainer from "./components/Navbar/NavbarContainer";
 import LoginContainer from "./views/Login/LoginContainer";
 import SignupContainer from "./views/Signup/SignupContainer";
 import DonationsContainer from "./views/Donations/DonationsContainer";
-import AboutUsContainer from "./views/AboutUs/AboutUsContainer";
 import ProfileContainer from "./views/Profile/ProfileContainer";
 import CoursesContainer from "./views/Courses/CoursesContainer";
 import ChatsContainer from "./views/Chats/ChatsContainer";
@@ -86,7 +85,6 @@ const App = () => {
           }
         />
         <Route path="/home" element={<HomeContainer />} />
-        <Route path="/about" element={<AboutUsContainer />} />
         <Route path="/donations" element={<DonationsContainer />} />
 
         {/* Rotas privadas */}

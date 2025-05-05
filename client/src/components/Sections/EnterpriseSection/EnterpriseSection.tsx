@@ -3,6 +3,9 @@ import { ArrowRight, Facebook, Hop, Linkedin, Loader, Twitter, Youtube } from "l
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { InfiniteCarousel } from "../../InfiniteCarousel/InfiniteCarousel";
+import { useEffect } from "react";
+import { useSectionInView } from "@/hooks/useSectionInView";
+import { useNavbarStore } from "@/store/useNavbarStore";
 
 interface Professional {
   name: string;
@@ -15,8 +18,17 @@ interface EnterpriseSectionProps {
 }
 
 const EnterpriseSection = ({ professionals }: EnterpriseSectionProps) => {
+  const { setVariant } = useNavbarStore();
+    const { ref, isInView } = useSectionInView(0.4);
+  
+    useEffect(() => {
+      if (isInView) {
+        setVariant("transparent");
+      }
+    }, [isInView, setVariant]);
+
   return (
-    <section className="min-h-screen flex flex-col items-center bg-green-100/30 text-green-950">
+    <section ref={ref} className="min-h-screen flex flex-col items-center bg-green-100/30 text-green-950">
       <div className="max-w-4xl text-center mt-30">
         <h2 className="text-5xl font-semibold">
           Our teams the <Hop className="size-12 inline-block" /> driving force

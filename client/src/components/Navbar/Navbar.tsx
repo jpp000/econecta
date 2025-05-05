@@ -104,7 +104,9 @@ const Navbar = ({
           <nav className="hidden lg:flex items-center space-x-8">
             {(isInHomePage
               ? [
-                  { to: "/about", label: "Sobre nós" },
+                  { link: "#about", label: "Sobre nós" },
+                  { link: "#mission", label: "Nossa Missão" },
+                  { link: "#enterprise", label: "Empresa" },
                   { to: "/chats", label: "Acessar Plataforma" },
                 ]
               : [
@@ -112,18 +114,31 @@ const Navbar = ({
                   { to: "/courses", label: "Cursos" },
                   { to: "/chats", label: "Chats" },
                 ]
-            ).map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`group relative text-sm font-medium transition-colors ${styles.navLink[variant]}`}
-              >
-                {label}
-                <span
-                  className={`absolute left-0 -bottom-1 w-full h-[2px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-in-out ${styles.navLinkUnderline[variant]}`}
-                ></span>
-              </Link>
-            ))}
+            ).map(({ to, link, label }) =>
+              to ? (
+                <Link
+                  key={to}
+                  to={to}
+                  className={`group relative text-sm font-medium transition-colors ${styles.navLink[variant]}`}
+                >
+                  {label}
+                  <span
+                    className={`absolute left-0 -bottom-1 w-full h-[2px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-in-out ${styles.navLinkUnderline[variant]}`}
+                  ></span>
+                </Link>
+              ) : (
+                <a
+                  key={link}
+                  href={link}
+                  className={`group relative text-sm font-medium transition-colors ${styles.navLink[variant]}`}
+                >
+                  {label}
+                  <span
+                    className={`absolute left-0 -bottom-1 w-full h-[2px] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-in-out ${styles.navLinkUnderline[variant]}`}
+                  ></span>
+                </a>
+              )
+            )}
           </nav>
 
           <div className="flex items-center gap-4">
@@ -183,7 +198,7 @@ const Navbar = ({
             <nav className="flex flex-col space-y-4">
               {(isInHomePage
                 ? [
-                    { to: "/about", label: "Sobre nós" },
+                    { link: "#about", label: "Sobre nós" },
                     { to: "/chats", label: "Acessar Plataforma" },
                   ]
                 : [
@@ -191,16 +206,27 @@ const Navbar = ({
                     { to: "/courses", label: "Cursos" },
                     { to: "/chats", label: "Chats" },
                   ]
-              ).map(({ to, label }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  className={`px-4 py-2 rounded-md ${styles.navLink[variant]}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {label}
-                </Link>
-              ))}
+              ).map(({ to, label, link }) =>
+                to ? (
+                  <Link
+                    key={to}
+                    to={to}
+                    className={`px-4 py-2 rounded-md ${styles.navLink[variant]}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link}
+                    href={link}
+                    className={`px-4 py-2 rounded-md ${styles.navLink[variant]}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {label}
+                  </a>
+                )
+              )}
             </nav>
           </div>
         )}

@@ -27,11 +27,17 @@ const Home = () => {
     <div>
       <MainSection />
 
-      <MissionSection />
+      <div id="mission">
+        <MissionSection />
+      </div>
 
-      <AboutUsSection />
+      <div id="about">
+        <AboutUsSection />
+      </div>
 
-      <EnterpriseSection professionals={professionals} />
+      <div id="enterprise">
+        <EnterpriseSection professionals={professionals} />
+      </div>
     </div>
   );
 };
