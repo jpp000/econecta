@@ -328,7 +328,7 @@ const Donations = ({
           {testimonials.map((testimonial: any, index: number) => (
             <div
               key={index}
-              className="bg-white p-6 rounded-lg shadow-sm border"
+              className="h-[200px] w-[700px] bg-white p-6 rounded-lg shadow-sm border m-auto flex flex-col justify-between"
             >
               <p className="text-gray-600 mb-4 italic">"{testimonial.quote}"</p>
               <div className="flex items-center">
