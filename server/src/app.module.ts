@@ -5,6 +5,8 @@ import { DatabaseModule } from './common/database/database.module';
 import { UsersModule } from './users/users.module';
 import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from './auth/auth.module';
+import { GatewayModule } from './gateway/gateway.module';
+import { MessagesModule } from './messages/messages.module';
 import { CalendarModule } from './calendar/calendar.module';
 
 @Module({
@@ -32,6 +34,8 @@ import { CalendarModule } from './calendar/calendar.module';
     DatabaseModule,
     UsersModule,
     AuthModule,
+    GatewayModule,
+    MessagesModule,
     CalendarModule,
   ],
 })

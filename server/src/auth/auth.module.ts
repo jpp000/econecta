@@ -8,9 +8,26 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [JwtModule, PassportModule, UsersModule],
+  imports: [
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+        signOptions: {
+          expiresIn: configService.get<number>(
+            'JWT_ACCESS_TOKEN_EXPIRATION_MS',
+          ),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    PassportModule,
+    UsersModule,
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,

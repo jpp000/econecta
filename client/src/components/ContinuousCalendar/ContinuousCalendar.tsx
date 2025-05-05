@@ -299,7 +299,7 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({
             <button
               type="button"
               className="whitespace-nowrap rounded-lg bg-gradient-to-r from-[#1E3A3A] to-green-800 px-3 py-2 text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:green-800 cursor-pointer"
-              onClick={() => addEventClick && addEventClick(new Date())}
+              onClick={() => addEventClick && addEventClick()}
             >
               + Add Event
             </button>
