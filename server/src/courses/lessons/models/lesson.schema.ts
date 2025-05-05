@@ -1,22 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { AbstractDocument } from 'src/common/database/abstract.schema';
-import { Lesson } from '../lessons/models/lesson.schema';
 
 @Schema({ versionKey: false, timestamps: true })
-export class Course extends AbstractDocument {
+export class Lesson extends AbstractDocument {
+  @Prop({ type: Types.ObjectId, ref: 'Course', required: true })
+  courseId: Types.ObjectId;
+
   @Prop({ required: true })
   title: string;
 
   @Prop()
   description: string;
-
-  @Prop({
-    ref: 'Lesson',
-    type: [Types.ObjectId],
-    required: true,
-  })
-  lessons: Lesson[];
 }
 
-export const CourseSchema = SchemaFactory.createForClass(Course);
+export const LessonSchema = SchemaFactory.createForClass(Lesson);
