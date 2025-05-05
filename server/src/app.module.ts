@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { GatewayModule } from './gateway/gateway.module';
 import { MessagesModule } from './messages/messages.module';
 import { CalendarModule } from './calendar/calendar.module';
+import { CoursesModule } from './courses/courses.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CalendarModule } from './calendar/calendar.module';
     GatewayModule,
     MessagesModule,
     CalendarModule,
+    CoursesModule,
   ],
 })
 export class AppModule {}
