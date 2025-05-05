@@ -7,6 +7,7 @@ interface NavbarProps {
   variant: "transparent" | "light" | "dark";
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
+  isInHomePage?: boolean;
 }
 
 const Navbar = ({
@@ -15,6 +16,7 @@ const Navbar = ({
   variant,
   mobileMenuOpen,
   setMobileMenuOpen,
+  isInHomePage,
 }: NavbarProps) => {
   const styles = {
     navbar: {
@@ -100,12 +102,17 @@ const Navbar = ({
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            {[
-              { to: "/about", label: "Sobre Nós" },
-              { to: "/calendar", label: "Agende" },
-              { to: "/courses", label: "Cursos" },
-              { to: "/chats", label: "Chats" },
-            ].map(({ to, label }) => (
+            {(isInHomePage
+              ? [
+                  { to: "/about", label: "Sobre nós" },
+                  { to: "/chats", label: "Acessar Plataforma" },
+                ]
+              : [
+                  { to: "/calendar", label: "Agende" },
+                  { to: "/courses", label: "Cursos" },
+                  { to: "/chats", label: "Chats" },
+                ]
+            ).map(({ to, label }) => (
               <Link
                 key={to}
                 to={to}
@@ -174,13 +181,17 @@ const Navbar = ({
             }`}
           >
             <nav className="flex flex-col space-y-4">
-              {[
-                { to: "/about", label: "Sobre Nós" },
-                { to: "/calendar", label: "Agende" },
-                { to: "/courses", label: "Cursos" },
-                { to: "/chats", label: "Chats" },
-                { to: "/donations", label: "Faça sua doação" },
-              ].map(({ to, label }) => (
+              {(isInHomePage
+                ? [
+                    { to: "/about", label: "Sobre nós" },
+                    { to: "/chats", label: "Acessar Plataforma" },
+                  ]
+                : [
+                    { to: "/calendar", label: "Agende" },
+                    { to: "/courses", label: "Cursos" },
+                    { to: "/chats", label: "Chats" },
+                  ]
+              ).map(({ to, label }) => (
                 <Link
                   key={to}
                   to={to}
