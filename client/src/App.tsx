@@ -120,6 +120,22 @@ const App = () => {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/courses/:courseId"
+          element={
+            <PrivateRoute>
+              <CoursesContainer />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/courses/:courseId/lessons/:lessonId"
+          element={
+            <PrivateRoute>
+              <CoursesContainer />
+            </PrivateRoute>
+          }
+        />
 
         {/* 404 fallback */}
         <Route path="*" element={<Navigate to="/" />} />
