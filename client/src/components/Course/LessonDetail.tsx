@@ -1,15 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Clock, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface Lesson {
   id: string;
   title: string;
   description: string;
-  duration: string;
-  content: string;
   videoUrl?: string;
   completed: boolean;
 }
@@ -34,26 +32,6 @@ const mockCourse: Course = {
       id: "1",
       title: "O que é Sustentabilidade?",
       description: "Conceitos fundamentais e importância da sustentabilidade",
-      duration: "45 min",
-      content: `
-        <h2>Introdução</h2>
-        <p>A sustentabilidade é um conceito fundamental que busca equilibrar o desenvolvimento econômico, social e ambiental. Nesta aula, vamos explorar os princípios básicos da sustentabilidade e sua importância no mundo atual.</p>
-        
-        <h2>Objetivos da Aula</h2>
-        <ul>
-          <li>Compreender o conceito de sustentabilidade</li>
-          <li>Identificar os três pilares da sustentabilidade</li>
-          <li>Reconhecer a importância das práticas sustentáveis</li>
-        </ul>
-
-        <h2>Conteúdo Principal</h2>
-        <p>A sustentabilidade é baseada em três pilares principais:</p>
-        <ol>
-          <li><strong>Sustentabilidade Ambiental:</strong> Preservação dos recursos naturais e ecossistemas</li>
-          <li><strong>Sustentabilidade Social:</strong> Equidade social e bem-estar das comunidades</li>
-          <li><strong>Sustentabilidade Econômica:</strong> Desenvolvimento econômico responsável</li>
-        </ol>
-      `,
       videoUrl: "https://example.com/video1",
       completed: true,
     },
@@ -61,8 +39,6 @@ const mockCourse: Course = {
       id: "2",
       title: "Desenvolvimento Sustentável",
       description: "Entendendo os pilares do desenvolvimento sustentável",
-      duration: "60 min",
-      content: "Conteúdo da aula 2...",
       videoUrl: "https://example.com/video2",
       completed: false,
     },
@@ -111,14 +87,10 @@ export default function LessonDetail({
         </Button>
 
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">{lesson.title}</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            {lesson.title}
+          </h1>
           <p className="text-lg text-gray-600 mb-6">{lesson.description}</p>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              <span>{lesson.duration}</span>
-            </div>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
@@ -131,18 +103,12 @@ export default function LessonDetail({
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-sm">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-6">Conteúdo da Aula</h2>
-                <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: lesson.content }} />
-              </CardContent>
-            </Card>
           </div>
           {/* Sidebar */}
-          <div>
-            <Card className="sticky top-6 shadow-sm">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Aulas do Curso</h2>
+          <div className="mt-[-45px]">
+            <h2 className="text-xl font-semibold mb-4">Aulas do Curso</h2>
+            <Card className="sticky top-6 shadow-sm overflow-y-auto max-h-[60vh]">
+              <CardContent className="p-6 pt-0">
                 <div className="space-y-4">
                   {course.lessons.map((l, index) => (
                     <div
@@ -179,10 +145,6 @@ export default function LessonDetail({
                             {l.title}
                           </h3>
                           <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              <span>{l.duration}</span>
-                            </div>
                             {l.completed && (
                               <span className="flex items-center gap-1 text-green-600">
                                 <CheckCircle2 className="w-3 h-3" />
@@ -195,31 +157,30 @@ export default function LessonDetail({
                     </div>
                   ))}
                 </div>
-
-                <div className="mt-8 pt-6 border-t">
-                  <h3 className="font-medium mb-4">Progresso do Curso</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span className="font-medium">Aulas Concluídas</span>
-                        <span className="text-green-600 font-medium">
-                          {course.lessons.filter((l) => l.completed).length}{" "}
-                          de {course.lessons.length}
-                        </span>
-                      </div>
-                      <Progress
-                        value={
-                          (course.lessons.filter((l) => l.completed).length /
-                            course.lessons.length) *
-                          100
-                        }
-                        className="h-2"
-                      />
-                    </div>
-                  </div>
-                </div>
               </CardContent>
             </Card>
+            <div className="mt-8 pt-6 border-t">
+              <h3 className="font-medium mb-4">Progresso do Curso</h3>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="font-medium">Aulas Concluídas</span>
+                    <span className="text-green-600 font-medium">
+                      {course.lessons.filter((l) => l.completed).length} de{" "}
+                      {course.lessons.length}
+                    </span>
+                  </div>
+                  <Progress
+                    value={
+                      (course.lessons.filter((l) => l.completed).length /
+                        course.lessons.length) *
+                      100
+                    }
+                    className="h-2"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

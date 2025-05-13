@@ -2,13 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Clock, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { BookOpen, ArrowLeft, CheckCircle2 } from "lucide-react";
 
 interface Lesson {
   id: string;
   title: string;
   description: string;
-  duration: string;
   completed: boolean;
   videoUrl?: string;
 }
@@ -17,12 +16,7 @@ interface Course {
   id: string;
   title: string;
   description: string;
-  duration: string;
-  students: number;
   lessons: Lesson[];
-  image: string;
-  category: string;
-  progress: number;
 }
 
 interface CourseDetailProps {
@@ -34,17 +28,11 @@ const mockCourse: Course = {
   id: "1",
   title: "Introdução à Sustentabilidade",
   description: "Aprenda os fundamentos da sustentabilidade e como aplicá-los no dia a dia. Este curso abrange desde conceitos básicos até práticas avançadas de sustentabilidade.",
-  duration: "4 semanas",
-  students: 1234,
-  image: "/course1.jpg",
-  category: "Sustentabilidade",
-  progress: 35,
   lessons: [
     {
       id: "1",
       title: "O que é Sustentabilidade?",
       description: "Conceitos fundamentais e importância da sustentabilidade",
-      duration: "45 min",
       completed: true,
       videoUrl: "https://example.com/video1"
     },
@@ -52,7 +40,6 @@ const mockCourse: Course = {
       id: "2",
       title: "Desenvolvimento Sustentável",
       description: "Entendendo os pilares do desenvolvimento sustentável",
-      duration: "60 min",
       completed: true,
       videoUrl: "https://example.com/video2"
     },
@@ -60,7 +47,6 @@ const mockCourse: Course = {
       id: "3",
       title: "Práticas Sustentáveis no Dia a Dia",
       description: "Como implementar práticas sustentáveis em sua rotina",
-      duration: "50 min",
       completed: false,
       videoUrl: "https://example.com/video3"
     },
@@ -96,10 +82,6 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                 <BookOpen className="w-4 h-4" />
                 <span>{course.lessons.length} aulas</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                <span>{course.duration}</span>
-              </div>
             </div>
           </div>
 
@@ -128,10 +110,6 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                             <h3 className="font-medium text-gray-900">{lesson.title}</h3>
                             <p className="text-sm text-gray-600 mt-1">{lesson.description}</p>
                             <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                              <div className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                <span>{lesson.duration}</span>
-                              </div>
                               {lesson.completed && (
                                 <span className="flex items-center gap-1 text-green-600">
                                   <CheckCircle2 className="w-3 h-3" />
@@ -172,10 +150,6 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                         <div className="flex items-center gap-2">
                           <BookOpen className="w-4 h-4" />
                           <span>{course.lessons.length} aulas</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          <span>{course.duration}</span>
                         </div>
                       </div>
                     </div>
