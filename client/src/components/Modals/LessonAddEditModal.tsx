@@ -31,6 +31,7 @@ export default function LessonAddEditModal({ open, onClose, onSubmit, initialTit
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(title, videoUrl, description);
+    window.location.reload();
   };
 
   return (

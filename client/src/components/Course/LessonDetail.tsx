@@ -5,6 +5,8 @@ import { ArrowLeft, CheckCircle, Edit, Trash2 } from "lucide-react";
 import { useLessonsStore } from "@/store/useLessonsStore";
 import LessonAddEditModal from '@/components/Modals/LessonAddEditModal';
 import LessonDeleteModal from '@/components/Modals/LessonDeleteModal';
+import YouTube from 'react-youtube';
+import { getYouTubeVideoId } from "@/lib/utils";
 
 interface LessonDetailProps {
   courseId: string;
@@ -21,9 +23,18 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
   const [description, setDescription] = useState("");
   const [updating, setUpdating] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [videoId, setVideoId] = useState("");
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     getLessonById(lessonId);
+  
+    const videoId = getYouTubeVideoId(lesson?.videoUrl || "");
+  
+    if (videoId) {
+      setVideoId(videoId);
+    }
+    
   }, [lessonId, getLessonById]);
 
   useEffect(() => {
@@ -33,6 +44,11 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
       setDescription(lesson.description || "");
     }
   }, [lesson]);
+
+  const handleVideoError = (event: any) => {
+    console.error('YouTube Player Error:', event);
+    setVideoError(true);
+  };
 
   if (isLoading && !lesson) {
     return (
@@ -94,14 +110,24 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
           <Card className="mb-8">
             <CardContent className="p-6">
               <div className="aspect-video bg-gray-900 rounded-lg mb-6 overflow-hidden">
-                {lesson.videoUrl ? (
-                  <iframe
+                {lesson.videoUrl && !videoError ? (
+                  <YouTube
+                    videoId={videoId}
+                    id={videoId}
                     className="w-full h-full"
-                    src={lesson.videoUrl}
                     title={lesson.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
+                    loading="eager"
+                    opts={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    onEnd={() => completeLesson(lessonId)}
+                    onError={handleVideoError}
+                  />
+                ) : videoError ? (
+                  <div className="flex items-center justify-center h-full text-red-500">
+                    Erro ao carregar o vídeo. Por favor, tente novamente mais tarde.
+                  </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-gray-500">
                     Nenhum vídeo disponível
