@@ -2,10 +2,19 @@ import { useNavigate, useParams } from "react-router-dom";
 import Courses from "./Courses";
 import LessonDetail from "@/components/Course/LessonDetail";
 import CourseDetail from "@/components/Course/CourseDetail";
+import { useCoursesStore } from "@/store/useCoursesStore";
 
 export default function CoursesContainer() {
   const navigate = useNavigate();
   const { courseId, lessonId } = useParams();
+  const { 
+    getCourses,
+    createCourse,
+    courses,
+    isLoading,
+    error,
+    clearError
+  } = useCoursesStore();
 
   // Navegação
   const handleCourseSelect = (courseId: string) => {
@@ -42,6 +51,12 @@ export default function CoursesContainer() {
   return (
     <Courses
       onCourseSelect={handleCourseSelect}
+      courses={courses}
+      isLoading={isLoading}
+      error={error}
+      getCourses={getCourses}
+      createCourse={createCourse}
+      clearError={clearError}
     />
   );
 }

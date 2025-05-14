@@ -2,16 +2,29 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useCoursesStore } from "@/store/useCoursesStore";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Course } from "@/interfaces/course";
 
 interface CoursesProps {
   onCourseSelect: (courseId: string) => void;
+  courses: Course[];
+  isLoading: boolean;
+  error: string | null;
+  getCourses: () => Promise<void>;
+  createCourse: ({ title, description }: Omit<Course, "_id" | "lessons">) => Promise<void>;
+  clearError: () => void;
 }
 
-export default function Courses({ onCourseSelect }: CoursesProps) {
-  const { courses, isLoading, getCourses, error, createCourse } = useCoursesStore();
+export default function Courses({ 
+  onCourseSelect, 
+  courses, 
+  isLoading, 
+  error, 
+  getCourses, 
+  createCourse,
+  clearError
+}: CoursesProps) {
   const [showModal, setShowModal] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -50,7 +63,12 @@ export default function Courses({ onCourseSelect }: CoursesProps) {
             </Button>
           </div>
 
-          {error && <div className="text-red-600 mb-4">{error}</div>}
+          {error && (
+            <div className="text-red-600 mb-4 flex justify-between items-center">
+              <span>{error}</span>
+              <Button variant="ghost" size="sm" onClick={clearError}>Fechar</Button>
+            </div>
+          )}
 
           {isLoading ? (
             <div className="text-center text-gray-500">Carregando cursos...</div>

@@ -1,4 +1,4 @@
-import { IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class CreateLessonDto {
   @IsMongoId()
@@ -11,4 +11,9 @@ export class CreateLessonDto {
   @IsString()
   @IsOptional()
   description: string;
+  
+  @IsString()
+  @IsNotEmpty()
+  @IsUrl()
+  videoUrl: string;
 }

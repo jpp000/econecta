@@ -12,6 +12,12 @@ export class Lesson extends AbstractDocument {
 
   @Prop()
   description: string;
+
+  @Prop({ required: true })
+  videoUrl: string;
+
+  @Prop({ default: false })
+  completed: boolean;
 }
 
 export const LessonSchema = SchemaFactory.createForClass(Lesson);

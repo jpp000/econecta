@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
 } from '@nestjs/common';
@@ -31,7 +31,7 @@ export class LessonsController {
     return this.lessonsService.findOne(getLessonDto);
   }
 
-  @Patch(':lessonId')
+  @Put(':lessonId')
   update(
     @Param() getLessonDto: GetLessonDto,
     @Body() updateLessonDto: UpdateLessonDto,
@@ -40,6 +40,11 @@ export class LessonsController {
       lessonId: getLessonDto.lessonId,
       ...updateLessonDto,
     });
+  }
+
+  @Put(':lessonId/complete')
+  complete(@Param() getLessonDto: GetLessonDto) {
+    return this.lessonsService.complete(getLessonDto);
   }
 
   @Delete(':lessonId')

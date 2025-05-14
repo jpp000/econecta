@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class UpdateLessonDto {
   @IsString()
@@ -8,4 +8,9 @@ export class UpdateLessonDto {
   @IsString()
   @IsOptional()
   description?: string;
+  
+  @IsString()
+  @IsOptional()
+  @IsUrl()
+  videoUrl?: string;
 }

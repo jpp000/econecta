@@ -42,13 +42,14 @@ export class LessonsService {
     lessonId,
     title,
     description,
+    videoUrl,
   }: GetLessonDto & UpdateLessonDto) {
     try {
       await this.findOne({ lessonId });
 
       return await this.lessonsRepository.findOneAndUpdate(
         { _id: lessonId },
-        { title, description },
+        { title, description, videoUrl },
       );
     } catch (error) {
       this.logger.error(error);
@@ -60,6 +61,17 @@ export class LessonsService {
       return this.lessonsRepository.findOneAndDelete({
         _id: getLessonDto.lessonId,
       });
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  complete(getLessonDto: GetLessonDto) {
+    try {
+      return this.lessonsRepository.findOneAndUpdate(
+        { _id: getLessonDto.lessonId },
+        { completed: true },
+      );
     } catch (error) {
       this.logger.error(error);
     }
