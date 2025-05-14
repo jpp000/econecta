@@ -10,4 +10,14 @@ export class CoursesRepository extends AbstractRepository<Course> {
   constructor(@InjectModel(Course.name) courseModel: Model<Course>) {
     super(courseModel);
   }
+
+  async findAll() {
+    return this.model.find({}).populate('lessons').exec();
+  }
+
+  async addLesson(courseId: string, lessonId: string) {
+    return this.model.findByIdAndUpdate(courseId, {
+      $push: { lessons: lessonId },
+    });
+  }
 }

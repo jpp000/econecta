@@ -3,16 +3,27 @@ import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { LessonsRepository } from './lessons.repository';
 import { GetLessonDto } from './dto/get-lesson.dto';
+import { CoursesRepository } from '../courses.repository';
 
 @Injectable()
 export class LessonsService {
   private readonly logger: Logger = new Logger(LessonsService.name);
 
-  constructor(private readonly lessonsRepository: LessonsRepository) {}
+  constructor(
+    private readonly lessonsRepository: LessonsRepository,
+    private readonly coursesRepository: CoursesRepository,
+  ) {}
 
   async create(createLessonDto: CreateLessonDto) {
     try {
-      return await this.lessonsRepository.create(createLessonDto);
+      const lesson = await this.lessonsRepository.create(createLessonDto);
+
+      await this.coursesRepository.addLesson(
+        createLessonDto.courseId,
+        lesson._id.toString(),
+      );
+
+      return lesson;
     } catch (error) {
       this.logger.error(error);
     }

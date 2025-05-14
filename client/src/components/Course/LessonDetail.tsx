@@ -3,9 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, CheckCircle, Edit, Trash2 } from "lucide-react";
 import { useLessonsStore } from "@/store/useLessonsStore";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import LessonAddEditModal from '@/components/Modals/LessonAddEditModal';
+import LessonDeleteModal from '@/components/Modals/LessonDeleteModal';
 
 interface LessonDetailProps {
   courseId: string;
@@ -13,7 +12,7 @@ interface LessonDetailProps {
   onBack: () => void;
 }
 
-export default function LessonDetail({ courseId, lessonId, onBack }: LessonDetailProps) {
+export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
   const { lesson, getLessonById, updateLesson, deleteLesson, completeLesson, isLoading, error } = useLessonsStore();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -34,22 +33,6 @@ export default function LessonDetail({ courseId, lessonId, onBack }: LessonDetai
       setDescription(lesson.description || "");
     }
   }, [lesson]);
-
-  const handleEditSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setUpdating(true);
-    await updateLesson(lessonId, title, videoUrl, description);
-    setUpdating(false);
-    setShowEditModal(false);
-  };
-
-  const handleDeleteConfirm = async () => {
-    setDeleting(true);
-    await deleteLesson(lessonId);
-    setDeleting(false);
-    setShowDeleteModal(false);
-    onBack();
-  };
 
   if (isLoading && !lesson) {
     return (
@@ -154,79 +137,35 @@ export default function LessonDetail({ courseId, lessonId, onBack }: LessonDetai
         </div>
       </div>
 
-      {/* Modal de edição */}
-      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Editar Aula</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleEditSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="title" className="text-sm font-medium">Título</label>
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Título da aula"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="videoUrl" className="text-sm font-medium">URL do Vídeo</label>
-              <Input
-                id="videoUrl"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://example.com/video.mp4"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="description" className="text-sm font-medium">Descrição</label>
-              <Textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Descrição da aula"
-                rows={3}
-              />
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setShowEditModal(false)}>
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={updating}>
-                {updating ? "Salvando..." : "Salvar alterações"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <LessonAddEditModal
+        open={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onSubmit={async (title, videoUrl, description) => {
+          setUpdating(true);
+          await updateLesson(lessonId, title, videoUrl, description);
+          setUpdating(false);
+          setShowEditModal(false);
+        }}
+        initialTitle={title}
+        initialVideoUrl={videoUrl}
+        initialDescription={description}
+        isLoading={updating}
+        isEditMode={true}
+      />
 
-      {/* Modal de confirmação para exclusão */}
-      <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Excluir Aula</DialogTitle>
-          </DialogHeader>
-          <div className="py-3">
-            <p>Tem certeza que deseja excluir a aula <strong>"{lesson.title}"</strong>? Esta ação não pode ser desfeita.</p>
-          </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setShowDeleteModal(false)}>
-              Cancelar
-            </Button>
-            <Button 
-              type="button" 
-              variant="destructive" 
-              onClick={handleDeleteConfirm} 
-              disabled={deleting}
-            >
-              {deleting ? "Excluindo..." : "Excluir Aula"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <LessonDeleteModal
+        open={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={async () => {
+          setDeleting(true);
+          await deleteLesson(lessonId);
+          setDeleting(false);
+          setShowDeleteModal(false);
+          onBack();
+        }}
+        lessonTitle={lesson.title}
+        isLoading={deleting}
+      />
     </div>
   );
 }

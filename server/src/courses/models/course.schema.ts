@@ -11,12 +11,8 @@ export class Course extends AbstractDocument {
   @Prop()
   description: string;
 
-  @Prop({
-    ref: 'Lesson',
-    type: [Types.ObjectId],
-    required: true,
-  })
-  lessons: Lesson[];
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Lesson' }] })
+  lessons: Types.ObjectId[];
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

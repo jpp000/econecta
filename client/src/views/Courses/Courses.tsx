@@ -83,9 +83,6 @@ export default function Courses({
                   onClick={() => onCourseSelect(course._id)}
                 >
                   <CardContent className="p-6">
-                    <div className="absolute top-4 right-4 bg-green-700 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {course.description || "Curso"}
-                    </div>
                     <h2 className="text-xl font-bold text-green-900 mb-2">{course.title}</h2>
                     <p className="text-green-800 mb-4 line-clamp-2">{course.description}</p>
                     <div className="flex items-center gap-4 text-sm text-green-900 mb-4">

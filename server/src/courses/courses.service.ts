@@ -32,7 +32,7 @@ export class CoursesService {
   }
 
   findAll() {
-    return this.coursesRepository.find({});
+    return this.coursesRepository.findAll();
   }
 
   async findOne({ courseId }: GetCourseDto) {
