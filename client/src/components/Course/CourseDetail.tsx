@@ -160,7 +160,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
             {/* Main Content */}
             <div className="lg:col-span-2">
               <Card className="shadow-sm">
-                <CardContent className="p-6">
+                <CardContent className="py-2 px-6">
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-semibold">Conteúdo do Curso</h2>
                     <Button
@@ -176,7 +176,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                       Este curso ainda não possui aulas.
                     </p>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-4 overflow-y-auto max-h-[calc(50vh-100px)]">
                       {lessons.map((lesson, index) => (
                         <div
                           key={lesson._id}
@@ -251,7 +251,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
             {/* Sidebar */}
             <div>
               <Card className="sticky top-6 shadow-sm">
-                <CardContent className="p-6">
+                <CardContent className="py-2 px-6">
                   <h2 className="text-xl font-semibold mb-4">
                     Progresso do Curso
                   </h2>

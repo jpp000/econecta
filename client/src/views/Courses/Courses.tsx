@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Course } from "@/interfaces/course";
+import { useNavbarStore } from "@/store/useNavbarStore";
 
 interface CoursesProps {
   onCourseSelect: (courseId: string) => void;
@@ -29,9 +30,11 @@ export default function Courses({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [creating, setCreating] = useState(false);
+  const { setVariant } = useNavbarStore();
 
   useEffect(() => {
     getCourses();
+    setVariant("light");
   }, [getCourses]);
 
   const handleSubmit = async (e: React.FormEvent) => {
