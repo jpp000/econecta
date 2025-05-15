@@ -85,7 +85,7 @@ export default function Courses({
                   className="cursor-pointer transition-all hover:shadow-lg bg-white"
                   onClick={() => onCourseSelect(course._id)}
                 >
-                  <CardContent className="p-6">
+                  <CardContent className="px-6 py-2">
                     <h2 className="text-xl font-bold text-green-900 mb-2">{course.title}</h2>
                     <p className="text-green-800 mb-4 line-clamp-2">{course.description}</p>
                     <div className="flex items-center gap-4 text-sm text-green-900 mb-4">

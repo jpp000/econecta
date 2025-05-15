@@ -3,6 +3,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
+import { z } from 'zod';
+import { getYouTubeVideoId } from '@/lib/utils';
 
 interface LessonAddEditModalProps {
   open: boolean;
@@ -14,6 +16,17 @@ interface LessonAddEditModalProps {
   isLoading: boolean;
   isEditMode: boolean;
 }
+
+const lessonsFormSchema = z.object({
+  title: z.string().min(1),
+  videoUrl: z.string().url().refine((url) => {
+    const videoId = getYouTubeVideoId(url);
+    return videoId !== null;
+  }, {
+    message: 'URL do vídeo inválida',
+  }),
+  description: z.string().optional(),
+});
 
 export default function LessonAddEditModal({ open, onClose, onSubmit, initialTitle = '', initialVideoUrl = '', initialDescription = '', isLoading, isEditMode }: LessonAddEditModalProps) {
   const [title, setTitle] = useState(initialTitle);
@@ -30,6 +43,12 @@ export default function LessonAddEditModal({ open, onClose, onSubmit, initialTit
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const formData = { title, videoUrl, description };
+    const result = lessonsFormSchema.safeParse(formData);
+    if (!result.success) {
+      alert(result.error.errors.map(err => err.message).join('\n'));
+      return;
+    }
     onSubmit(title, videoUrl, description);
     window.location.reload();
   };
@@ -57,7 +76,7 @@ export default function LessonAddEditModal({ open, onClose, onSubmit, initialTit
               id="lessonVideoUrl"
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
-              placeholder="https://example.com/video.mp4"
+              placeholder="Link do vídeo do YouTube"
               required
             />
           </div>

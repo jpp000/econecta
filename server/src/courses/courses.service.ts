@@ -36,7 +36,7 @@ export class CoursesService {
   }
 
   async findOne({ courseId }: GetCourseDto) {
-    const course = await this.coursesRepository.findOne({ _id: courseId });
+    const course = await this.coursesRepository.findOneWithLessons(courseId);
 
     if (!course) {
       throw new NotFoundException('Course not found');
@@ -53,8 +53,8 @@ export class CoursesService {
     try {
       await this.findOne({ courseId });
 
-      return await this.coursesRepository.findOneAndUpdate(
-        { _id: courseId },
+      return await this.coursesRepository.findOneAndUpdateWithLessons(
+        courseId,
         { title, description },
       );
     } catch (error) {

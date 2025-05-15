@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, CheckCircle, Edit, Trash2 } from "lucide-react";
 import { useLessonsStore } from "@/store/useLessonsStore";
-import LessonAddEditModal from '@/components/Modals/LessonAddEditModal';
-import LessonDeleteModal from '@/components/Modals/LessonDeleteModal';
-import YouTube from 'react-youtube';
+import LessonAddEditModal from "@/components/Modals/LessonAddEditModal";
+import LessonDeleteModal from "@/components/Modals/LessonDeleteModal";
+import YouTube from "react-youtube";
 import { getYouTubeVideoId } from "@/lib/utils";
+import { useNavbarStore } from "@/store/useNavbarStore";
 
 interface LessonDetailProps {
   courseId: string;
@@ -15,7 +16,16 @@ interface LessonDetailProps {
 }
 
 export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
-  const { lesson, getLessonById, updateLesson, deleteLesson, completeLesson, isLoading, error } = useLessonsStore();
+  const {
+    lesson,
+    getLessonById,
+    updateLesson,
+    deleteLesson,
+    completeLesson,
+    isLoading,
+    error,
+  } = useLessonsStore();
+  const { setVariant } = useNavbarStore();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [title, setTitle] = useState("");
@@ -28,13 +38,12 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
 
   useEffect(() => {
     getLessonById(lessonId);
-  
+    setVariant("light");
     const videoId = getYouTubeVideoId(lesson?.videoUrl || "");
-  
+
     if (videoId) {
       setVideoId(videoId);
     }
-    
   }, [lessonId, getLessonById]);
 
   useEffect(() => {
@@ -46,7 +55,7 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
   }, [lesson]);
 
   const handleVideoError = (event: any) => {
-    console.error('YouTube Player Error:', event);
+    console.error("YouTube Player Error:", event);
     setVideoError(true);
   };
 
@@ -82,22 +91,26 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
 
           <div className="mb-8 flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">{lesson.title}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                {lesson.title}
+              </h1>
               {lesson.description && (
-                <p className="text-lg text-gray-600 mb-6">{lesson.description}</p>
+                <p className="text-lg text-gray-600 mb-6">
+                  {lesson.description}
+                </p>
               )}
             </div>
             <div className="flex gap-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="flex items-center gap-2"
                 onClick={() => setShowEditModal(true)}
               >
                 <Edit className="w-4 h-4" />
                 Editar
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
                 onClick={() => setShowDeleteModal(true)}
               >
@@ -126,7 +139,8 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
                   />
                 ) : videoError ? (
                   <div className="flex items-center justify-center h-full text-red-500">
-                    Erro ao carregar o vídeo. Por favor, tente novamente mais tarde.
+                    Erro ao carregar o vídeo. Por favor, tente novamente mais
+                    tarde.
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-gray-500">
@@ -150,12 +164,14 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
               <div className="prose prose-green max-w-none">
                 <h2>Conteúdo da Aula</h2>
                 <p>
-                  {lesson.description || "Esta aula não possui uma descrição detalhada."}
+                  {lesson.description ||
+                    "Esta aula não possui uma descrição detalhada."}
                 </p>
 
                 <h3>Materiais Complementares</h3>
                 <p>
-                  Links, referências e materiais adicionais podem ser listados aqui.
+                  Links, referências e materiais adicionais podem ser listados
+                  aqui.
                 </p>
               </div>
             </CardContent>

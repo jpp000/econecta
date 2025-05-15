@@ -18,6 +18,7 @@ import CourseEditModal from "@/components/Modals/CourseEditModal";
 import CourseDeleteModal from "@/components/Modals/CourseDeleteModal";
 import LessonAddEditModal from "@/components/Modals/LessonAddEditModal";
 import LessonDeleteModal from "@/components/Modals/LessonDeleteModal";
+import { useNavbarStore } from "@/store/useNavbarStore";
 
 interface CourseDetailProps {
   courseId: string;
@@ -35,7 +36,6 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
     deleteCourse,
   } = useCoursesStore();
   const {
-    lessons,
     getLessonsByCourse,
     createLesson,
     updateLesson,
@@ -43,6 +43,8 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
     isLoading: isLoadingLessons,
     error: lessonError,
   } = useLessonsStore();
+
+  const { setVariant } = useNavbarStore();
 
   // Estados para modais de curso
   const [showEditModal, setShowEditModal] = useState(false);
@@ -65,6 +67,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
   useEffect(() => {
     getCourseById(courseId);
     getLessonsByCourse(courseId);
+    setVariant("light");
   }, [courseId, getCourseById, getLessonsByCourse]);
 
   const handleLessonClick = (lessonId: string) => {
@@ -105,9 +108,11 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
   }
 
   // Calcular progresso baseado nas aulas concluídas (quando implementar essa funcionalidade)
-  const completedLessons = lessons.filter((lesson) => lesson.completed).length;
-  const progressValue = lessons.length
-    ? (completedLessons / lessons.length) * 100
+  const completedLessons = course.lessons.filter(
+    (lesson) => lesson.completed
+  ).length;
+  const progressValue = course.lessons.length
+    ? (completedLessons / course.lessons.length) * 100
     : 0;
 
   return (
@@ -132,7 +137,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
               <div className="flex items-center gap-4 text-sm text-gray-600">
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-4 h-4" />
-                  <span>{lessons.length} aulas</span>
+                  <span>{course.lessons.length} aulas</span>
                 </div>
               </div>
             </div>
@@ -171,13 +176,13 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                       Adicionar Aula
                     </Button>
                   </div>
-                  {lessons.length === 0 ? (
+                  {course.lessons.length === 0 ? (
                     <p className="text-gray-500">
                       Este curso ainda não possui aulas.
                     </p>
                   ) : (
                     <div className="space-y-4 overflow-y-auto max-h-[calc(50vh-100px)]">
-                      {lessons.map((lesson, index) => (
+                      {course.lessons.map((lesson, index) => (
                         <div
                           key={lesson._id}
                           className="p-4 rounded-lg transition-colors hover:bg-gray-50 border border-gray-100"
@@ -260,7 +265,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                       <div className="flex justify-between text-sm mb-2">
                         <span className="font-medium">Aulas Concluídas</span>
                         <span className="text-green-600 font-medium">
-                          {completedLessons} de {lessons.length}
+                          {completedLessons} de {course.lessons.length}
                         </span>
                       </div>
                       <Progress value={progressValue} className="h-2" />
@@ -270,7 +275,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                       <div className="space-y-2 text-sm text-gray-600">
                         <div className="flex items-center gap-2">
                           <BookOpen className="w-4 h-4" />
-                          <span>{lessons.length} aulas</span>
+                          <span>{course.lessons.length} aulas</span>
                         </div>
                       </div>
                     </div>
@@ -315,7 +320,12 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
         onClose={() => setShowAddLessonModal(false)}
         onSubmit={async (lessonTitle, lessonVideoUrl, lessonDescription) => {
           setAddingLesson(true);
-          await createLesson(courseId, lessonTitle, lessonVideoUrl, lessonDescription);
+          await createLesson(
+            courseId,
+            lessonTitle,
+            lessonVideoUrl,
+            lessonDescription
+          );
           setAddingLesson(false);
           setShowAddLessonModal(false);
           setLessonTitle("");
@@ -333,7 +343,12 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
         onSubmit={async (lessonTitle, lessonVideoUrl, lessonDescription) => {
           if (!currentLessonId) return;
           setUpdatingLesson(true);
-          await updateLesson(currentLessonId, lessonTitle, lessonVideoUrl, lessonDescription);
+          await updateLesson(
+            currentLessonId,
+            lessonTitle,
+            lessonVideoUrl,
+            lessonDescription
+          );
           setUpdatingLesson(false);
           setShowEditLessonModal(false);
           setCurrentLessonId(null);
