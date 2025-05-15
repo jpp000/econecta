@@ -15,6 +15,8 @@ services:
       - server/.env
     depends_on:
       - db
+    environment:
+      - NODE_ENV=development
   
   client:
     build:
@@ -27,9 +29,16 @@ services:
       - /app/node_modules
     depends_on:
       - server
+    environment:
+      - NODE_ENV=development
 
   db:
-    image: mongo
+    image: mongo:latest
     container_name: mongo
     ports:
       - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
