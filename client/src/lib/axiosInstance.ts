@@ -1,8 +1,9 @@
+import { env } from '@/constants/env';
 import { useAuthStore } from '@/store/useAuthStore';
 import axios from 'axios'
 
 export const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: env.apiUrl,
     headers: {
         'Content-Type': 'application/json',
     }

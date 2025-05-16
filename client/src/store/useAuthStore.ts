@@ -5,6 +5,7 @@ import { handleApiError } from "@/lib/handleApiError";
 import type { LoginData } from "@/schemas/loginSchema";
 import type { SignupData } from "@/schemas/signupSchema";
 import { io, type Socket } from "socket.io-client";
+import { env } from "@/constants/env";
 
 type User = {
   _id: string;
@@ -152,7 +153,7 @@ export const useAuthStore = create<AuthState>()(
         if (!token) return;
 
         try {
-          const socket = io("ws://localhost:4000", {
+          const socket = io(env.socketUrl, {
             auth: { token },
             autoConnect: true,
             reconnection: true,

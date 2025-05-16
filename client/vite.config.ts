@@ -11,4 +11,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  define: {
+    'process.env': {
+      VITE_API_URL: JSON.stringify(process.env.VITE_API_URL),
+      VITE_WS_SERVER_URL: JSON.stringify(process.env.VITE_WS_SERVER_URL),
+    },
+  },
 })
