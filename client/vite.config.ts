@@ -17,7 +17,4 @@ export default defineConfig({
       VITE_WS_SERVER_URL: JSON.stringify(process.env.VITE_WS_SERVER_URL),
     },
   },
-  server: {
-    allowedHosts: ['econecta-server.onrender.com'],
-  },
 })

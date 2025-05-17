@@ -120,6 +120,9 @@ export const useAuthStore = create<AuthState>()(
 
         set({ isLoading: true });
         try {
+          console.log("vite api url", import.meta.env.VITE_API_URL);
+          console.log("axios base url", axiosInstance.defaults.baseURL);
+
           const response = await axiosInstance.get("/users/me");
           const user = response.data;
 
