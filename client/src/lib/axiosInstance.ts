@@ -2,6 +2,8 @@ import { env } from '@/constants/env';
 import { useAuthStore } from '@/store/useAuthStore';
 import axios from 'axios'
 
+console.log("vite api url", import.meta.env.VITE_API_URL);
+
 export const axiosInstance = axios.create({
     baseURL: env.apiUrl,
     headers: {
