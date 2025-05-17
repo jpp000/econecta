@@ -18,6 +18,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ['econecta-client.onrender.com'],
+    allowedHosts: ['econecta-server.onrender.com'],
   },
 })
