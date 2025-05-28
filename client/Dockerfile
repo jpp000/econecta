@@ -19,10 +19,14 @@ COPY . .
 
 RUN pnpm build
 
-FROM nginx:alpine AS prod
+FROM node:alpine AS prod
 
-COPY --from=build /app/dist /usr/share/nginx/html
+WORKDIR /app
 
-EXPOSE 80
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 4173
+
+CMD ["npm", "run", "preview", "--", "--host"]
