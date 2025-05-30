@@ -4,11 +4,12 @@ WORKDIR /app
 
 COPY package.json package-lock.json* ./
 
-RUN npm install
+RUN npm i -g pnpm
+RUN pnpm i
 
 COPY . .
 
-RUN npm run build
+RUN pnpm run build
 
 FROM nginx:stable-alpine
 
