@@ -1,23 +1,24 @@
-FROM node:alpine AS builder
+FROM node:alpine AS deps
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+COPY package.json pnpm-lock.yaml ./
 
-RUN npm i -g pnpm
-RUN pnpm i
+RUN corepack enable && corepack prepare pnpm@latest --activate && pnpm install --frozen-lockfile
 
+FROM node:alpine AS build
+
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN pnpm run build
+RUN npm run build
 
-FROM nginx:stable-alpine
+FROM nginx:alpine AS prod
 
-RUN rm -rf /etc/nginx/conf.d
-
+COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d
-
-COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 
