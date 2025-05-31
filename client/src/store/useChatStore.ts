@@ -33,6 +33,13 @@ export const useChatStore = create<ChatStore>((set) => ({
 
   setSelectedChat: async (chat: ChatUser | null) => {
     set({ selectedChat: chat });
+
+    if (chat?._id) {
+      await useChatStore.getState().getPrivateChatMessages(chat._id);
+      return;
+    }
+
+    await useChatStore.getState().getPublicChatMessages();
   },
 
   setError: (error) => {
@@ -98,6 +105,8 @@ export const useChatStore = create<ChatStore>((set) => ({
     try {
       const socket = useAuthStore.getState().socket;
       if (!socket) throw new Error("Socket not connected");
+
+      console.log({ messagePayload });
 
       socket.emit(MESSAGES_EVENTS.SEND_PRIVATE_MESSAGE, messagePayload);
     } catch (error) {

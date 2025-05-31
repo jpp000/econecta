@@ -32,7 +32,7 @@ function PrivateRoute({ children }: PrivateRouteProps) {
 const App = () => {
   const { isAuthenticated, initializeAuth } = useAuthStore();
   const [isInitializing, setIsInitializing] = useState(true);
-  const { subscribeMessage, unsubscribeMessage } = useChatStore();
+  const { subscribeMessage } = useChatStore();
 
   useEffect(() => {
     const init = async () => {
@@ -41,11 +41,7 @@ const App = () => {
       subscribeMessage();
     };
     init();
-
-    return () => {
-      unsubscribeMessage();
-    };
-  }, [initializeAuth, subscribeMessage, unsubscribeMessage]);
+  }, [initializeAuth, subscribeMessage]);
 
   if (isInitializing) {
     return (

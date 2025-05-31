@@ -14,6 +14,6 @@ export interface PublicMessagePayload {
 }
 
 export interface PrivateMessagePayload {
-  receiver: ChatUser;
+  receiverId: string;
   text: string;
 }

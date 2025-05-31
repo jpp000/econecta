@@ -86,8 +86,6 @@ export class GatewayProvider implements OnGatewayConnection {
   ) {
     const senderId = client.data.userId;
 
-    console.log({ text, senderId });
-
     if (!senderId) {
       client.disconnect();
       return;

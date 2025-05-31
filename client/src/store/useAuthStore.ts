@@ -21,7 +21,7 @@ interface AuthState {
   signup: (data: SignupData) => Promise<void>;
   logout: () => void;
   initializeAuth: () => Promise<void>;
-  listUsers: () => Promise<void>;
+  listContacts: () => Promise<void>;
   connectSocket: () => void;
   disconnectSocket: () => void;
 };
@@ -93,11 +93,11 @@ export const useAuthStore = create<AuthState>()(
         });
       },
 
-      listUsers: async () => {
+      listContacts: async () => {
         set({ isLoading: true });
 
         try {
-          const response = await axiosInstance.get("/users");
+          const response = await axiosInstance.get("/users/contacts");
           const users = response.data;
 
           set({ users });

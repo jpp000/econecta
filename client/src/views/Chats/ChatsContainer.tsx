@@ -3,6 +3,7 @@ import Chats from "./Chats";
 import { useNavbarStore } from "@/store/useNavbarStore";
 import { ChatUser } from "@/interfaces/message.interface";
 import { useChatStore } from "@/store/useChatStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const ChatsContainer = () => {
   const {
@@ -11,23 +12,27 @@ const ChatsContainer = () => {
     sendPublicMessage,
     setSelectedChat,
     selectedChat,
+    getPrivateChatMessages,
+    getPublicChatMessages
   } = useChatStore();
-
+  const { listContacts } = useAuthStore();
   const { setVariant } = useNavbarStore();
 
   useEffect(() => {
     const getMessages = async () => {
+      await listContacts();
+
       if (selectedChat?._id) {
-        await useChatStore.getState().getPrivateChatMessages(selectedChat._id);
+        await getPrivateChatMessages(selectedChat._id);
         return;
       }
 
-      await useChatStore.getState().getPublicChatMessages();
+      await getPublicChatMessages();
     };
     getMessages();
 
     setVariant("light");
-  }, [setVariant]);
+  }, [setVariant, listContacts, getPrivateChatMessages, getPublicChatMessages, selectedChat]);
 
   const handleSendMessage = (text: string, receiver: ChatUser | null) => {
     // if (editingMessage) {
@@ -45,7 +50,7 @@ const ChatsContainer = () => {
     if (!text) return;
 
     return receiver?._id
-      ? sendPrivateMessage({ receiver, text })
+      ? sendPrivateMessage({ receiverId: receiver._id, text })
       : sendPublicMessage({ text });
   };
 

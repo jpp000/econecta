@@ -1,23 +1,29 @@
-import type React from "react"
-import { useState } from "react"
-import { Users, X, Search } from "lucide-react"
-import { ChatUser } from "@/interfaces/message.interface"
-import { useAuthStore } from "@/store/useAuthStore"
+import type React from "react";
+import { useState } from "react";
+import { Users, X, Search } from "lucide-react";
+import { ChatUser } from "@/interfaces/message.interface";
+import { useAuthStore } from "@/store/useAuthStore";
+import Avatar from "@/assets/avatar.png";
 
 interface ContactsListProps {
-  activeChat: ChatUser | null
-  onSelectChat: (chat: ChatUser | null) => void
+  activeChat: ChatUser | null;
+  onSelectChat: (chat: ChatUser | null) => void;
 }
 
-const ContactsList: React.FC<ContactsListProps> = ({ activeChat, onSelectChat }) => {
+const ContactsList: React.FC<ContactsListProps> = ({
+  activeChat,
+  onSelectChat,
+}) => {
   // const [showOnlineOnly, setShowOnlineOnly] = useState<boolean>(false)
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
-  const [searchTerm, setSearchTerm] = useState<string>("")
-  const { users: contacts } = useAuthStore()
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const { users: contacts } = useAuthStore();
 
   const filteredContacts = contacts
     // ?.filter((contact) => (showOnlineOnly ? contact.status === "online" : true))
-    ?.filter((contact) => contact.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    ?.filter((contact) =>
+      contact.username.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   // const onlineCount = contacts.filter((contact) => contact.status === "online").length
 
@@ -38,15 +44,24 @@ const ContactsList: React.FC<ContactsListProps> = ({ activeChat, onSelectChat })
         {filteredContacts?.map((contact) => (
           <div
             key={contact._id}
-            className={`relative w-10 h-10 rounded-full mb-3 cursor-pointer overflow-hidden border-2 transition-all duration-200 transform hover:scale-110 ${activeChat === contact ? "border-green-500 shadow-lg shadow-green-100" : "border-transparent"
-              }`}
-            onClick={() => onSelectChat({ _id: contact._id, username: contact.username })}
+            className={`relative w-10 h-10 rounded-full mb-3 cursor-pointer overflow-hidden border-2 transition-all duration-200 transform hover:scale-110 ${
+              activeChat === contact
+                ? "border-green-500 shadow-lg shadow-green-100"
+                : "border-transparent"
+            }`}
+            onClick={() =>
+              onSelectChat({ _id: contact._id, username: contact.username })
+            }
           >
-            <img src={"/placeholder.svg"} alt={contact.username} className="w-full h-full object-cover" />
+            <img
+              src={Avatar}
+              alt={contact.username}
+              className="w-full h-full object-cover"
+            />
           </div>
         ))}
       </div>
-    )
+    );
   }
 
   return (
@@ -73,7 +88,10 @@ const ContactsList: React.FC<ContactsListProps> = ({ activeChat, onSelectChat })
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-gray-100 text-gray-800 rounded-full px-4 py-2 pl-9 focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
           />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={14} />
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+            size={14}
+          />
         </div>
         {/* <label className="flex items-center text-sm text-gray-600 mt-2">
           <input
@@ -90,8 +108,11 @@ const ContactsList: React.FC<ContactsListProps> = ({ activeChat, onSelectChat })
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         <div className="py-2">
           <div
-            className={`flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${activeChat === null ? "bg-green-50 border-l-4 border-green-500" : ""
-              }`}
+            className={`flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${
+              activeChat === null
+                ? "bg-green-50 border-l-4 border-green-500"
+                : ""
+            }`}
             onClick={() => onSelectChat(null)}
           >
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold mr-3 shadow-md">
@@ -106,13 +127,18 @@ const ContactsList: React.FC<ContactsListProps> = ({ activeChat, onSelectChat })
           {filteredContacts?.map((contact) => (
             <div
               key={contact._id}
-              className={`flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${activeChat === contact ? "bg-green-50 border-l-4 border-green-500" : ""
-                }`}
-              onClick={() => onSelectChat({ _id: contact._id, username: contact.username })}
+              className={`flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${
+                activeChat?.username === contact.username
+                  ? "bg-green-50 border-l-4 border-green-500"
+                  : ""
+              }`}
+              onClick={() =>
+                onSelectChat({ _id: contact._id, username: contact.username })
+              }
             >
               <div className="relative mr-3">
                 <img
-                  src={"/placeholder.svg"}
+                  src={Avatar}
                   alt={contact.username}
                   className="w-10 h-10 rounded-full shadow-sm"
                 />
@@ -123,14 +149,16 @@ const ContactsList: React.FC<ContactsListProps> = ({ activeChat, onSelectChat })
                 )} */}
               </div>
               <div>
-                <div className="font-semibold text-gray-800">{contact.username}</div>
+                <div className="font-semibold text-gray-800">
+                  {contact.username}
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ContactsList
+export default ContactsList;
