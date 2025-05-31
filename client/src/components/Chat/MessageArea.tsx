@@ -1,24 +1,17 @@
 import type React from "react"
 import { useRef, useEffect } from "react"
-import { Edit2, Trash2, MoreVertical } from "lucide-react"
-
-interface Message {
-  id: number
-  sender: string
-  content: string
-  timestamp: string
-  isPublic: boolean
-  edited?: boolean
-}
+import { Message } from "@/interfaces/message.interface"
+import { useAuthStore } from "@/store/useAuthStore"
 
 interface MessageAreaProps {
   messages: Message[]
-  onEditMessage: (message: Message) => void
-  onDeleteMessage: (messageId: number) => void
+  // onEditMessage: (message: Message) => void
+  // onDeleteMessage: (messageId: number) => void
 }
 
-const MessageArea: React.FC<MessageAreaProps> = ({ messages, onEditMessage, onDeleteMessage }) => {
+const MessageArea: React.FC<MessageAreaProps> = ({ messages }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const { user } = useAuthStore()
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -34,13 +27,13 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, onEditMessage, onDe
         {messages && messages.length > 0 ? (
           messages.map((message) => (
             <div
-              key={message.id}
-              className={`flex ${message.sender === "You" ? "justify-end" : "justify-start"} animate-fadeIn`}
+              key={message._id}
+              className={`flex ${message.sender._id === user?._id ? "justify-end" : "justify-start"} animate-fadeIn`}
             >
               <div
                 className={`
                   max-w-[80%] rounded-lg p-3 shadow-sm
-                  ${message.sender === "You"
+                  ${message.sender._id === user?._id
                     ? "bg-green-500 text-white rounded-br-none"
                     : "bg-white border border-gray-200 text-gray-800 rounded-bl-none"
                   }
@@ -48,53 +41,24 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, onEditMessage, onDe
               >
                 <div className="flex justify-between items-start mb-1">
                   <span
-                    className={`font-semibold text-sm ${message.sender === "You" ? "text-white" : "text-green-600"}`}
+                    className={`font-semibold text-sm ${message.sender._id === user?._id ? "text-white" : "text-green-600"}`}
                   >
-                    {message.sender}
+                    {message.sender.username}
                   </span>
-                  <div className="flex items-center ml-2">
-                    <span className={`text-xs ${message.sender === "You" ? "text-green-100" : "text-gray-500"}`}>
-                      {message.timestamp}
-                    </span>
-
-                    {message.sender === "You" && (
-                      <div className="relative group ml-2">
-                        <button className="text-white hover:text-green-100 transition-colors duration-200">
-                          <MoreVertical size={14} />
-                        </button>
-                        <div className="absolute right-0 mt-1 hidden group-hover:block bg-white rounded shadow-lg z-10 border border-gray-200 overflow-hidden">
-                          <button
-                            onClick={() => onEditMessage(message)}
-                            className="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left transition-colors duration-150"
-                          >
-                            <Edit2 size={14} className="mr-2 text-green-600" />
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => onDeleteMessage(message.id)}
-                            className="flex items-center px-3 py-2 text-sm text-red-500 hover:bg-gray-100 w-full text-left transition-colors duration-150"
-                          >
-                            <Trash2 size={14} className="mr-2" />
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
                 </div>
                 <p
-                  className={`text-sm break-words leading-relaxed ${message.sender === "You" ? "text-white" : "text-gray-800"}`}
+                  className={`text-sm break-words leading-relaxed ${message.sender._id === user?._id ? "text-white" : "text-gray-800"}`}
                 >
-                  {message.content}
+                  {message.text}
                 </p>
-                {message.edited && (
+                {/* {message.edited && (
                   <span
-                    className={`text-xs opacity-70 italic mt-1 inline-block ${message.sender === "You" ? "text-green-100" : "text-gray-500"
+                    className={`text-xs opacity-70 italic mt-1 inline-block ${message.sender._id === user?._id ? "text-green-100" : "text-gray-500"
                       }`}
                   >
                     (edited)
                   </span>
-                )}
+                )} */}
               </div>
             </div>
           ))

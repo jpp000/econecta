@@ -1,92 +1,64 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Chats from "./Chats";
 import { useNavbarStore } from "@/store/useNavbarStore";
+import { ChatUser } from "@/interfaces/message.interface";
+import { useChatStore } from "@/store/useChatStore";
 
 const ChatsContainer = () => {
-  const [activeChat, setActiveChat] = useState(null)
-  const [messages, setMessages] = useState({
-    public: [
-      { id: 1, sender: "Jane Doe", content: "Hello everyone!", timestamp: "10:30 AM", isPublic: true },
-      { id: 2, sender: "You", content: "Welcome to the public chat!", timestamp: "10:32 AM", isPublic: true },
-    ],
-    "Emma Thompson": [
-      { id: 1, sender: "Emma Thompson", content: "Hi there!", timestamp: "09:45 AM", isPublic: false },
-      { id: 2, sender: "You", content: "Hello Emma, how are you?", timestamp: "09:47 AM", isPublic: false },
-    ],
-    "Jane Doe": [
-      { id: 1, sender: "Jane Doe", content: "Can you help me with something?", timestamp: "11:20 AM", isPublic: false },
-      { id: 2, sender: "You", content: "Sure, what do you need?", timestamp: "11:22 AM", isPublic: false },
-    ],
-  })
-  const [editingMessage, setEditingMessage] = useState<{
-    id: number
-    sender: string
-    content: string
-    timestamp: string
-    isPublic: boolean
-    edited?: boolean
-  } | null>(null)
+  const { messages, sendPrivateMessage, sendPublicMessage, setSelectedChat, selectedChat } = useChatStore()
 
-  const { setVariant } = useNavbarStore()
+  const { setVariant } = useNavbarStore();
 
   useEffect(() => {
-    setVariant("light")
-  }, [setVariant])
+    setVariant("light");
+  }, [setVariant]);
 
-  const handleSendMessage = (content: any) => {
-    if (editingMessage) {
-      // Edit existing message
-      const chatKey = activeChat || "public"
-      setMessages({
-        ...messages,
-        [chatKey]: messages[chatKey].map((msg) =>
-          msg.id === editingMessage.id ? { ...msg, content, edited: true } : msg,
-        ),
-      })
-      setEditingMessage(null)
-    } else {
-      // Send new message
-      const newMessage = {
-        id: Date.now(),
-        sender: "You",
-        content,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        isPublic: activeChat === null,
-      }
+  const handleSendMessage = (text: string, receiver: ChatUser | null) => {
+    // if (editingMessage) {
+    //   const editedMessage = messages?.find((msg) =>
+    //     msg._id === editingMessage?._id ? { ...msg, text } : msg
+    //   );
 
-      const chatKey = activeChat || "public"
-      setMessages({
-        ...messages,
-        [chatKey]: [...(messages[chatKey] || []), newMessage],
-      })
-    }
-  }
+    //   setMessages({
+    //     ...messages,
+    //   });
+    //   setEditingMessage(null);
+    //   return;
+    // }    
 
-  const handleEditMessage = (message: any) => {
-    setEditingMessage(message)
-  }
+    if(!text) return;
 
-  const handleDeleteMessage = (messageId: any) => {
-    const chatKey = activeChat || "public"
-    setMessages({
-      ...messages,
-      [chatKey]: messages[chatKey].filter((msg) => msg.id !== messageId),
-    })
-  }
+    return receiver?._id ? sendPrivateMessage({ receiver, text }) : sendPublicMessage({ text })
+  };
 
-  const handleSelectChat = (contact: any) => {
-    setActiveChat(contact)
-    setEditingMessage(null)
-  }
-  return <Chats
-    activeChat={activeChat}
-    messages={messages}
-    editingMessage={editingMessage}
-    handleSendMessage={handleSendMessage}
-    handleEditMessage={handleEditMessage}
-    handleDeleteMessage={handleDeleteMessage}
-    handleSelectChat={handleSelectChat}
-    setEditingMessage={setEditingMessage} />
-}
+  // const handleEditMessage = (message: Message) => {
+  //   setEditingMessage(message);
+  // };
+
+  // const handleDeleteMessage = (index: number) => {
+  //   const updatedMessages = messages.split(index, 1);
+  //   setMessages({
+  //     ...updatedMessages,
+  //   });
+  // };
+
+  const handleSelectChat = (chat: ChatUser | null) => {
+    setSelectedChat(chat);
+    // setEditingMessage(null);
+  };
+
+  return (
+    <Chats
+      activeChat={selectedChat}
+      messages={messages}
+      // editingMessage={editingMessage}
+      handleSendMessage={handleSendMessage}
+      // handleEditMessage={handleEditMessage}
+      // handleDeleteMessage={handleDeleteMessage}
+      handleSelectChat={handleSelectChat}
+      // setEditingMessage={setEditingMessage}
+    />
+  );
+};
 
 export default ChatsContainer;

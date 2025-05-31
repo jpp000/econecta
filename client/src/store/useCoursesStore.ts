@@ -68,8 +68,6 @@ export const useCoursesStore = create<CoursesState>((set) => ({
   updateCourse: async (id: string, { title, description }: Partial<Omit<Course, "_id" | "lessons">>) => {
     set({ isLoading: true, error: null });
     try {
-      console.log({ id, title, description });
-
       const res = await axiosInstance.put(`/courses/${id}`, { title, description });
       
       const courses = useCoursesStore.getState().courses;

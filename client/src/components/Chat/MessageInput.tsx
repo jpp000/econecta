@@ -1,49 +1,36 @@
 import type React from "react"
-import { useState, useEffect, useRef } from "react"
-import { Send, X } from "lucide-react"
-
-interface Message {
-  id: number
-  sender: string
-  content: string
-  timestamp: string
-  isPublic: boolean
-  edited?: boolean
-}
+import { useState, useRef } from "react"
+import { Send } from "lucide-react"
+import { ChatUser } from "@/interfaces/message.interface"
+import { useChatStore } from "@/store/useChatStore"
 
 interface MessageInputProps {
-  onSendMessage: (content: string) => void
-  editingMessage: Message | null
-  setEditingMessage: React.Dispatch<React.SetStateAction<Message | null>>
+  onSendMessage: (text: string, receiver: ChatUser | null) => void
+  // editingMessage: Message | null
+  // setEditingMessage: React.Dispatch<React.SetStateAction<Message | null>>
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, editingMessage, setEditingMessage }) => {
+const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   const [message, setMessage] = useState<string>("")
   const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (editingMessage) {
-      setMessage(editingMessage.content)
-      inputRef.current?.focus()
-    }
-  }, [editingMessage])
+  const { selectedChat } = useChatStore()
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault()
     if (message.trim()) {
-      onSendMessage(message.trim())
+      onSendMessage(message.trim(), selectedChat)
       setMessage("")
     }
   }
 
-  const cancelEditing = (): void => {
-    setEditingMessage(null)
-    setMessage("")
-  }
+  // const cancelEditing = (): void => {
+  //   // setEditingMessage(null)
+  //   setMessage("")
+  // }
 
   return (
     <div className="p-4 border-t border-gray-200 bg-white">
-      {editingMessage && (
+      {/* {editingMessage && (
         <div className="flex items-center justify-between mb-2 px-3 py-2 bg-green-50 rounded text-sm border-l-4 border-green-500 animate-fadeIn">
           <span className="text-gray-700">
             <span className="text-green-600 font-semibold">Editing message:</span>{" "}
@@ -57,7 +44,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, editingMessa
             <X size={16} />
           </button>
         </div>
-      )}
+      )} */}
       <form onSubmit={handleSubmit} className="flex items-center bg-gray-100 rounded-full px-3 py-1 shadow-sm">
         <input
           ref={inputRef}

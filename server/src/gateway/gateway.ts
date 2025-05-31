@@ -84,11 +84,7 @@ export class GatewayProvider implements OnGatewayConnection {
     @MessageBody() { text }: { text: string },
     @ConnectedSocket() client: Socket,
   ) {
-    console.log({
-      text,
-      receiverId: null,
-      senderId: client.data.userId,
-    });
+    console.log('askdnakda');
 
     const senderId = client.data.userId;
 
@@ -101,8 +97,6 @@ export class GatewayProvider implements OnGatewayConnection {
       senderId,
       text,
     });
-
-    console.log('created', message);
 
     this.server.emit(MESSAGES_EVENTS.RECEIVE_PUBLIC_MESSAGE, message);
   }

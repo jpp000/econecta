@@ -6,14 +6,9 @@ import type { LoginData } from "@/schemas/loginSchema";
 import type { SignupData } from "@/schemas/signupSchema";
 import { io, type Socket } from "socket.io-client";
 import { env } from "@/constants/env";
+import { User } from "@/interfaces/user.interface";
 
-type User = {
-  _id: string;
-  username: string;
-  email: string;
-};
-
-type AuthState = {
+interface AuthState {
   user: User | null;
   users: User[] | null;
   socket: Socket | null;

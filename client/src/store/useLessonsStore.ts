@@ -49,8 +49,6 @@ export const useLessonsStore = create<LessonsState>((set, get) => ({
   createLesson: async (courseId, title, videoUrl, description) => {
     set({ isLoading: true, error: null });
     try {
-      console.log({ courseId, title, videoUrl, description });
-
       const res = await axiosInstance.post('/lessons', { courseId, title, videoUrl, description });
       const newLesson = res.data;
       

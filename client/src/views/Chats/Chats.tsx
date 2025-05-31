@@ -7,39 +7,35 @@ interface ChatProps {
   activeChat: any;
   handleSelectChat: any;
   messages: any;
-  handleEditMessage: any;
-  handleDeleteMessage: any;
   handleSendMessage: any;
-  editingMessage: any;
-  setEditingMessage: any;
+  handleEditMessage?: any;
+  handleDeleteMessage?: any;
+  editingMessage?: any;
+  setEditingMessage?: any;
 }
 
 const Chats = ({
   activeChat,
-  handleSelectChat,
   messages,
-  handleEditMessage,
-  handleDeleteMessage,
   handleSendMessage,
-  editingMessage,
-  setEditingMessage,
+  handleSelectChat
 }: ChatProps) => {
   return (
-    <div className="flex h-[87vh] mt-16 bg-[#1E3A3A] text-gray-200">
+    <div className="flex h-[calc(100vh-4rem)] mt-16 bg-[#1E3A3A] text-gray-200">
       <ContactsList activeChat={activeChat} onSelectChat={handleSelectChat} />
-      <div className="flex flex-col flex-1  border-gray-700">
+      <div className="flex flex-1 flex-col border-gray-700">
         <ChatHeader activeChat={activeChat} toggleMobileMenu={function (): void {
           throw new Error("Function not implemented.");
         }} isMobileMenuOpen={false} />
         <MessageArea
-          messages={activeChat ? messages[activeChat] || [] : messages.public}
-          onEditMessage={handleEditMessage}
-          onDeleteMessage={handleDeleteMessage}
+          messages={messages}
+          // onEditMessage={handleEditMessage}
+          // onDeleteMessage={handleDeleteMessage}
         />
         <MessageInput
           onSendMessage={handleSendMessage}
-          editingMessage={editingMessage}
-          setEditingMessage={setEditingMessage}
+          // editingMessage={editingMessage}
+          // setEditingMessage={setEditingMessage}
         />
       </div>
     </div>

@@ -27,8 +27,6 @@ export const useCalendarStore = create<CalendarStore>((set) => ({
 
     set({ events });
 
-    console.log(events);
-
     return events;
   },
 

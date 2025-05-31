@@ -2,39 +2,21 @@ import { create } from "zustand";
 import { useAuthStore } from "./useAuthStore";
 import { MESSAGES_EVENTS } from "@/constants/events";
 import { axiosInstance } from "@/lib/axiosInstance";
-
-interface PublicMessagePayload {
-  text: string;
-}
-
-interface PrivateMessagePayload {
-  receiverId: string;
-  text: string;
-}
-
-interface Message {
-  _id?: string;
-  text: string;
-  senderId: string;
-  receiverId?: string | null;
-  createdAt: string;
-  edited?: boolean;
-}
+import { ChatUser, Message, PrivateMessagePayload, PublicMessagePayload } from "@/interfaces/message.interface";
 
 interface ChatStore {
   messages: Message[];
   isLoading: boolean;
-  selectedChat: string | null;
+  selectedChat: ChatUser | null;
   error: string | null;
 
-  setSelectedChat: (chat: string | null) => void;
+  setSelectedChat: (chat: ChatUser | null) => void;
   getPublicChatMessages: () => Promise<void>;
   getPrivateChatMessages: (receiverId: string) => Promise<void>;
   sendPublicMessage: (messagePayload: PublicMessagePayload) => Promise<void>;
   sendPrivateMessage: (messagePayload: PrivateMessagePayload) => Promise<void>;
   subscribeMessage: () => void;
   unsubscribeMessage: () => void;
-  clearMessages: () => void;
   setError: (error: string | null) => void;
 }
 
@@ -44,12 +26,8 @@ export const useChatStore = create<ChatStore>((set) => ({
   selectedChat: null,
   error: null,
 
-  setSelectedChat: (chat) => {
+  setSelectedChat: (chat: ChatUser | null) => {
     set({ selectedChat: chat });
-  },
-
-  clearMessages: () => {
-    set({ messages: [] });
   },
 
   setError: (error) => {
@@ -96,26 +74,12 @@ export const useChatStore = create<ChatStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const socket = useAuthStore.getState().socket;
+
       if (!socket) {
         throw new Error("Socket not connected");
       }
 
       socket.emit(MESSAGES_EVENTS.SEND_PUBLIC_MESSAGE, messagePayload);
-
-      const user = useAuthStore.getState().user;
-
-      if (!user) return;
-
-      const optimisticMessage: Message = {
-        text: messagePayload.text,
-        senderId: user._id,
-        receiverId: null,
-        createdAt: new Date().toISOString(),
-      };
-
-      set((state) => ({
-        messages: [...state.messages, optimisticMessage],
-      }));
     } catch (error) {
       console.error("Error sending public message:", error);
       set({ error: "Failed to send message" });
@@ -131,20 +95,6 @@ export const useChatStore = create<ChatStore>((set) => ({
       if (!socket) throw new Error("Socket not connected");
 
       socket.emit(MESSAGES_EVENTS.SEND_PRIVATE_MESSAGE, messagePayload);
-
-      const user = useAuthStore.getState().user;
-      if (!user) return;
-
-      const optimisticMessage: Message = {
-        text: messagePayload.text,
-        senderId: user._id,
-        receiverId: messagePayload.receiverId,
-        createdAt: new Date().toISOString(),
-      };
-
-      set((state) => ({
-        messages: [...state.messages, optimisticMessage],
-      }));
     } catch (error) {
       console.error("Error sending private message:", error);
       set({ error: "Failed to send message" });
