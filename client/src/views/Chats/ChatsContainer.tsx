@@ -5,11 +5,27 @@ import { ChatUser } from "@/interfaces/message.interface";
 import { useChatStore } from "@/store/useChatStore";
 
 const ChatsContainer = () => {
-  const { messages, sendPrivateMessage, sendPublicMessage, setSelectedChat, selectedChat } = useChatStore()
+  const {
+    messages,
+    sendPrivateMessage,
+    sendPublicMessage,
+    setSelectedChat,
+    selectedChat,
+  } = useChatStore();
 
   const { setVariant } = useNavbarStore();
 
   useEffect(() => {
+    const getMessages = async () => {
+      if (selectedChat?._id) {
+        await useChatStore.getState().getPrivateChatMessages(selectedChat._id);
+        return;
+      }
+
+      await useChatStore.getState().getPublicChatMessages();
+    };
+    getMessages();
+
     setVariant("light");
   }, [setVariant]);
 
@@ -24,11 +40,13 @@ const ChatsContainer = () => {
     //   });
     //   setEditingMessage(null);
     //   return;
-    // }    
+    // }
 
-    if(!text) return;
+    if (!text) return;
 
-    return receiver?._id ? sendPrivateMessage({ receiver, text }) : sendPublicMessage({ text })
+    return receiver?._id
+      ? sendPrivateMessage({ receiver, text })
+      : sendPublicMessage({ text });
   };
 
   // const handleEditMessage = (message: Message) => {

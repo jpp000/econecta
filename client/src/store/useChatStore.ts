@@ -2,7 +2,12 @@ import { create } from "zustand";
 import { useAuthStore } from "./useAuthStore";
 import { MESSAGES_EVENTS } from "@/constants/events";
 import { axiosInstance } from "@/lib/axiosInstance";
-import { ChatUser, Message, PrivateMessagePayload, PublicMessagePayload } from "@/interfaces/message.interface";
+import {
+  ChatUser,
+  Message,
+  PrivateMessagePayload,
+  PublicMessagePayload,
+} from "@/interfaces/message.interface";
 
 interface ChatStore {
   messages: Message[];
@@ -10,7 +15,7 @@ interface ChatStore {
   selectedChat: ChatUser | null;
   error: string | null;
 
-  setSelectedChat: (chat: ChatUser | null) => void;
+  setSelectedChat: (chat: ChatUser | null) => Promise<void>;
   getPublicChatMessages: () => Promise<void>;
   getPrivateChatMessages: (receiverId: string) => Promise<void>;
   sendPublicMessage: (messagePayload: PublicMessagePayload) => Promise<void>;
@@ -26,7 +31,7 @@ export const useChatStore = create<ChatStore>((set) => ({
   selectedChat: null,
   error: null,
 
-  setSelectedChat: (chat: ChatUser | null) => {
+  setSelectedChat: async (chat: ChatUser | null) => {
     set({ selectedChat: chat });
   },
 

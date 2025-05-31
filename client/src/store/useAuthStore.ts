@@ -120,8 +120,6 @@ export const useAuthStore = create<AuthState>()(
 
           set({ user, isAuthenticated: true });
 
-          console.log("User data:", user);
-
           setTimeout(() => {
             get().connectSocket();
           }, 500);
