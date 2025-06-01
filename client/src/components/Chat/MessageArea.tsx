@@ -32,18 +32,18 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages }) => {
             >
               <div
                 className={`
-                  max-w-[80%] rounded-lg p-3 shadow-sm
+                  max-w-130 rounded-lg p-3 shadow-sm
                   ${message.sender._id === user?._id
                     ? "bg-green-500 text-white rounded-br-none"
                     : "bg-white border border-gray-200 text-gray-800 rounded-bl-none"
                   }
                 `}
               >
-                <div className="flex justify-between items-start mb-1">
+                <div className="flex min-w-30 max-w-130 justify-between mb-1">
                   <span
                     className={`font-semibold text-sm ${message.sender._id === user?._id ? "text-white" : "text-green-600"}`}
                   >
-                    {message.sender.username}
+                    {message.sender._id === user?._id ? "Você" : message.sender.username}
                   </span>
                 </div>
                 <p
