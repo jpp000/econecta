@@ -6,14 +6,10 @@ import type { LoginData } from "@/schemas/loginSchema";
 import type { SignupData } from "@/schemas/signupSchema";
 import { io, type Socket } from "socket.io-client";
 import { env } from "@/constants/env";
+import { User } from "@/interfaces/user.interface";
+import { MESSAGES_EVENTS } from "@/constants/events";
 
-type User = {
-  _id: string;
-  username: string;
-  email: string;
-};
-
-type AuthState = {
+interface AuthState {
   user: User | null;
   users: User[] | null;
   socket: Socket | null;
@@ -21,15 +17,17 @@ type AuthState = {
   isAuthenticated: boolean;
   isLoading: boolean;
   socketConnected: boolean;
+  onlineUsers: string[];
 
   login: (data: LoginData) => Promise<void>;
   signup: (data: SignupData) => Promise<void>;
   logout: () => void;
   initializeAuth: () => Promise<void>;
-  listUsers: () => Promise<void>;
+  listContacts: () => Promise<void>;
   connectSocket: () => void;
   disconnectSocket: () => void;
-};
+  setOnlineUsers: (users: string[]) => void;
+}
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -41,6 +39,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
       socketConnected: false,
+      onlineUsers: [],
 
       login: async (data) => {
         set({ isLoading: true });
@@ -98,11 +97,11 @@ export const useAuthStore = create<AuthState>()(
         });
       },
 
-      listUsers: async () => {
+      listContacts: async () => {
         set({ isLoading: true });
 
         try {
-          const response = await axiosInstance.get("/users");
+          const response = await axiosInstance.get("/users/contacts");
           const users = response.data;
 
           set({ users });
@@ -125,11 +124,15 @@ export const useAuthStore = create<AuthState>()(
 
           set({ user, isAuthenticated: true });
 
-          console.log("User data:", user);
+          get().connectSocket();
 
-          setTimeout(() => {
-            get().connectSocket();
-          }, 500);
+          const socket = get().socket;
+
+          if (socket) {
+            socket.on(MESSAGES_EVENTS.USERS_ONLINE, (users: string[]) => {
+              set({ onlineUsers: users });
+            });
+          }
         } catch (error) {
           handleApiError(error, "Sessão expirada. Faça login novamente.");
           set({ user: null, token: null, isAuthenticated: false });
@@ -162,8 +165,11 @@ export const useAuthStore = create<AuthState>()(
           });
 
           socket.on("connect", () => {
-            console.log("Connected with socket ID:", socket.id);
             set({ socketConnected: true });
+          });
+
+          socket.on(MESSAGES_EVENTS.USERS_ONLINE, (users: string[]) => {
+            set({ onlineUsers: users });
           });
 
           socket.on("disconnect", (reason) => {
@@ -198,6 +204,8 @@ export const useAuthStore = create<AuthState>()(
           set({ socket: null, socketConnected: false });
         }
       },
+
+      setOnlineUsers: (users) => set({ onlineUsers: users }),
     }),
     {
       name: "authStorage",

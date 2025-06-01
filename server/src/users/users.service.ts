@@ -105,8 +105,16 @@ export class UsersService {
     return user;
   }
 
-  async findAll() {
-    return await this.usersRepository.find({});
+  async findAllContacts({ id }: { id: string }) {
+    const users = await this.usersRepository.find({});
+
+    const filteredUserContactsIds = users.filter(
+      (user) => user._id.toHexString() !== id,
+    );
+
+    return await this.usersRepository.find({
+      _id: { $in: filteredUserContactsIds },
+    });
   }
 
   async findByEmail(email: string) {

@@ -1,37 +1,24 @@
 import type React from "react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef } from "react"
 import { Send, X } from "lucide-react"
-
-interface Message {
-  id: number
-  sender: string
-  content: string
-  timestamp: string
-  isPublic: boolean
-  edited?: boolean
-}
+import { ChatUser, Message } from "@/interfaces/message.interface"
+import { useChatStore } from "@/store/useChatStore"
 
 interface MessageInputProps {
-  onSendMessage: (content: string) => void
+  onSendMessage: (text: string, receiver: ChatUser | null) => void
   editingMessage: Message | null
-  setEditingMessage: React.Dispatch<React.SetStateAction<Message | null>>
+  setEditingMessage: (message: Message | null) => void
 }
 
 const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, editingMessage, setEditingMessage }) => {
   const [message, setMessage] = useState<string>("")
   const inputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (editingMessage) {
-      setMessage(editingMessage.content)
-      inputRef.current?.focus()
-    }
-  }, [editingMessage])
+  const { selectedChat } = useChatStore()
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault()
     if (message.trim()) {
-      onSendMessage(message.trim())
+      onSendMessage(message.trim(), selectedChat)
       setMessage("")
     }
   }
@@ -46,9 +33,9 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, editingMessa
       {editingMessage && (
         <div className="flex items-center justify-between mb-2 px-3 py-2 bg-green-50 rounded text-sm border-l-4 border-green-500 animate-fadeIn">
           <span className="text-gray-700">
-            <span className="text-green-600 font-semibold">Editing message:</span>{" "}
-            {editingMessage.content.substring(0, 50)}
-            {editingMessage.content.length > 50 ? "..." : ""}
+            <span className="text-green-600 font-semibold">Editando Messagem:</span>{" "}
+            {editingMessage.text.substring(0, 50)}
+            {editingMessage.text.length > 50 ? "..." : ""}
           </span>
           <button
             onClick={cancelEditing}
@@ -64,7 +51,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, editingMessa
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type a message..."
+          placeholder="Digite a mensagem..."
           className="flex-1 bg-transparent text-gray-800 px-3 py-2 focus:outline-none"
         />
         <button

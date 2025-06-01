@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { handleApiError } from '@/lib/handleApiError';
-import type { Lesson } from '@/interfaces/course';
+import type { Lesson } from '@/interfaces/course.interface';
 import toast from 'react-hot-toast';
 
 interface LessonsState {
@@ -49,8 +49,6 @@ export const useLessonsStore = create<LessonsState>((set, get) => ({
   createLesson: async (courseId, title, videoUrl, description) => {
     set({ isLoading: true, error: null });
     try {
-      console.log({ courseId, title, videoUrl, description });
-
       const res = await axiosInstance.post('/lessons', { courseId, title, videoUrl, description });
       const newLesson = res.data;
       

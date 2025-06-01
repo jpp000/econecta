@@ -79,7 +79,6 @@ const ProfilePage = () => {
   const handleProfileUpdate = async (data: any) => {
     try {
       // In a real app, you would send this data to your API
-      console.log("Updating profile with:", data)
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000))

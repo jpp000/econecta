@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axiosInstance";
 import { handleApiError } from "@/lib/handleApiError";
-import type { Course } from "@/interfaces/course";
+import type { Course } from "@/interfaces/course.interface";
 
 export type Lesson = {
   _id: string;
@@ -68,8 +68,6 @@ export const useCoursesStore = create<CoursesState>((set) => ({
   updateCourse: async (id: string, { title, description }: Partial<Omit<Course, "_id" | "lessons">>) => {
     set({ isLoading: true, error: null });
     try {
-      console.log({ id, title, description });
-
       const res = await axiosInstance.put(`/courses/${id}`, { title, description });
       
       const courses = useCoursesStore.getState().courses;

@@ -1,8 +1,9 @@
 import type React from "react"
 import { Menu, X } from "lucide-react"
+import { ChatUser } from "@/interfaces/message.interface"
 
 interface ChatHeaderProps {
-  activeChat: string | null
+  activeChat: ChatUser | null
   toggleMobileMenu: () => void
   isMobileMenuOpen: boolean
 }
@@ -19,7 +20,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ activeChat, toggleMobileMenu, i
         </button>
         <div className="flex items-center">
           <div className="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></div>
-          <span className="text-green-600 font-semibold text-xl">{activeChat ? activeChat : "Public Chat"}</span>
+          <span className="text-green-600 font-semibold text-xl">{activeChat ? activeChat.username : "Public Chat"}</span>
         </div>
       </div>
     </div>

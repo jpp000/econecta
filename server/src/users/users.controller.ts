@@ -14,9 +14,9 @@ export class UsersController {
     return user;
   }
 
-  @Get()
-  getAllUsers() {
-    return this.usersService.findAll();
+  @Get('contacts')
+  getAllUsers(@CurrentUser() user: User) {
+    return this.usersService.findAllContacts({ id: user._id.toHexString() });
   }
 
   @Put()

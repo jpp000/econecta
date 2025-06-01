@@ -5,6 +5,7 @@ import {
   MessageBody,
   ConnectedSocket,
   OnGatewayConnection,
+  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
@@ -17,11 +18,14 @@ import { MESSAGES_EVENTS } from 'src/common/constants/events';
     origin: '*',
   },
 })
-export class GatewayProvider implements OnGatewayConnection {
+export class GatewayProvider
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
   private readonly logger = new Logger(GatewayProvider.name);
+  private onlineUsers = new Set<string>();
 
   constructor(
     private readonly messagesService: MessagesService,
@@ -47,10 +51,26 @@ export class GatewayProvider implements OnGatewayConnection {
       client.data.userId = payload.userId;
 
       client.join(client.data.userId as string);
+
+      this.onlineUsers.add(client.data.userId as string);
+
+      this.server.emit(
+        MESSAGES_EVENTS.USERS_ONLINE,
+        Array.from(this.onlineUsers),
+      );
     } catch (err) {
       this.logger.error('Error during WebSocket connection', err);
       client.disconnect();
     }
+  }
+
+  handleDisconnect(client: Socket) {
+    this.onlineUsers.delete(client.data.userId as string);
+
+    this.server.emit(
+      MESSAGES_EVENTS.USERS_ONLINE,
+      Array.from(this.onlineUsers),
+    );
   }
 
   @SubscribeMessage(MESSAGES_EVENTS.SEND_PRIVATE_MESSAGE)
@@ -75,6 +95,7 @@ export class GatewayProvider implements OnGatewayConnection {
     if (receiverId) {
       this.server
         .to(receiverId)
+        .to(senderId as string)
         .emit(MESSAGES_EVENTS.RECEIVE_PRIVATE_MESSAGE, message);
     }
   }
@@ -84,12 +105,6 @@ export class GatewayProvider implements OnGatewayConnection {
     @MessageBody() { text }: { text: string },
     @ConnectedSocket() client: Socket,
   ) {
-    console.log({
-      text,
-      receiverId: null,
-      senderId: client.data.userId,
-    });
-
     const senderId = client.data.userId;
 
     if (!senderId) {
@@ -101,8 +116,6 @@ export class GatewayProvider implements OnGatewayConnection {
       senderId,
       text,
     });
-
-    console.log('created', message);
 
     this.server.emit(MESSAGES_EVENTS.RECEIVE_PUBLIC_MESSAGE, message);
   }
@@ -120,33 +133,19 @@ export class GatewayProvider implements OnGatewayConnection {
       return;
     }
 
-    // Check if the message belongs to the sender
-
-    // const message = await this.messagesService.findMessage({
-    //   messageId,
-    //   userId: senderId,
-    // });
-
-    // if (!message) {
-    //   client.emit(MESSAGES_EVENTS.EDIT_MESSAGE, {
-    //     error: 'Message not found or you are not the sender',
-    //   });
-    //   return;
-    // }
-
     const updatedMessage = await this.messagesService.updateMessage({
       messageId,
       userId: senderId,
       text,
     });
 
-    this.server.emit(MESSAGES_EVENTS.EDIT_MESSAGE, updatedMessage);
+    this.server.emit(MESSAGES_EVENTS.EDITED_MESSAGE, updatedMessage);
   }
 
   @SubscribeMessage(MESSAGES_EVENTS.DELETE_MESSAGE)
   async handleDeleteMessage(
     @MessageBody()
-    { messageId }: { messageId: string },
+    messageId: string,
     @ConnectedSocket() client: Socket,
   ) {
     const senderId = client.data.userId;
@@ -156,25 +155,11 @@ export class GatewayProvider implements OnGatewayConnection {
       return;
     }
 
-    // Check if the message belongs to the sender
-
-    // const message = await this.messagesService.findMessage({
-    //   messageId,
-    //   userId: senderId,
-    // });
-
-    // if (!message) {
-    //   client.emit(MESSAGES_EVENTS.DELETE_MESSAGE, {
-    //     error: 'Message not found or you are not the sender',
-    //   });
-    //   return;
-    // }
-
-    const deletedMessage = await this.messagesService.deleteMessage({
+    const deletedMessageId = await this.messagesService.deleteMessage({
       messageId,
       userId: senderId,
     });
 
-    this.server.emit(MESSAGES_EVENTS.DELETE_MESSAGE, deletedMessage);
+    this.server.emit(MESSAGES_EVENTS.DELETED_MESSAGE, deletedMessageId);
   }
 }

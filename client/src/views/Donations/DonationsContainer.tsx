@@ -11,17 +11,6 @@ const DonationsContainer = () => {
     { value: 0, label: "Outro" },
   ];
 
-  const paymentMethods = [
-    {
-      id: "pix",
-      name: "Pix",
-      icon: (
-        <div className="w-5 h-5 flex items-center justify-center text-s font-bold">
-          Pix
-        </div>
-      ),
-    },
-  ];
   const testimonials = [
     {
       name: "Ana Silva",
@@ -44,42 +33,12 @@ const DonationsContainer = () => {
   ];
   const [selectedAmount, setSelectedAmount] = useState(25);
   const [customAmount, setCustomAmount] = useState("");
-  const [formData, setFormData] = useState({
-    address: "",
-    city: "",
-    state: "",
-    zip: "",
-  });
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
   const handleAmountSelect = (amount: number) => {
     setSelectedAmount(amount);
     if (amount > 0) {
       setCustomAmount("");
     }
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const donationAmount =
-      selectedAmount === 0 ? Number.parseFloat(customAmount) : selectedAmount;
-
-    if (isNaN(donationAmount) || donationAmount <= 0) {
-      alert("Por favor, insira um valor de doação válido maior que 0.");
-      return;
-    }
-
-    console.log({
-      amount: donationAmount,
-      ...formData,
-    });
-    alert("Doação processada com sucesso! Obrigado pela sua contribuição.");
   };
 
   const { setVariant } = useNavbarStore();
@@ -91,15 +50,11 @@ const DonationsContainer = () => {
   return (
     <Donations
       testimonials={testimonials}
-      handleInputChange={handleInputChange}
       handleAmountSelect={handleAmountSelect}
-      handleSubmit={handleSubmit}
       donationAmounts={donationAmounts}
-      paymentMethods={paymentMethods}
       selectedAmount={selectedAmount}
       customAmount={customAmount}
       setCustomAmount={setCustomAmount}
-      formData={formData}
     />
   );
 };

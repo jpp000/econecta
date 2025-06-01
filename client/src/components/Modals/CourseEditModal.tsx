@@ -1,8 +1,14 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface CourseEditModalProps {
   open: boolean;
@@ -13,7 +19,14 @@ interface CourseEditModalProps {
   isLoading: boolean;
 }
 
-export default function CourseEditModal({ open, onClose, onSubmit, initialTitle, initialDescription, isLoading }: CourseEditModalProps) {
+export default function CourseEditModal({
+  open,
+  onClose,
+  onSubmit,
+  initialTitle,
+  initialDescription,
+  isLoading,
+}: CourseEditModalProps) {
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
 
@@ -26,11 +39,16 @@ export default function CourseEditModal({ open, onClose, onSubmit, initialTitle,
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Editar Curso</DialogTitle>
+          <DialogTitle className="text-green-950">Editar Curso</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="title" className="text-sm font-medium">Título</label>
+            <label
+              htmlFor="title"
+              className="text-sm font-medium text-green-950"
+            >
+              Título
+            </label>
             <Input
               id="title"
               value={title}
@@ -40,7 +58,12 @@ export default function CourseEditModal({ open, onClose, onSubmit, initialTitle,
             />
           </div>
           <div className="space-y-2">
-            <label htmlFor="description" className="text-sm font-medium">Descrição</label>
+            <label
+              htmlFor="description"
+              className="text-sm font-medium text-green-950"
+            >
+              Descrição
+            </label>
             <Textarea
               id="description"
               value={description}
@@ -50,10 +73,19 @@ export default function CourseEditModal({ open, onClose, onSubmit, initialTitle,
             />
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="cursor-pointer"
+            >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="bg-[#2F4F4F] hover:bg-[#2F4F4F]/90 cursor-pointer"
+            >
               {isLoading ? "Salvando..." : "Salvar alterações"}
             </Button>
           </DialogFooter>
@@ -61,4 +93,4 @@ export default function CourseEditModal({ open, onClose, onSubmit, initialTitle,
       </DialogContent>
     </Dialog>
   );
-} 
+}

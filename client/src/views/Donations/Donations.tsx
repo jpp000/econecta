@@ -1,30 +1,22 @@
 import { InfiniteCarousel } from "@/components/InfiniteCarousel/InfiniteCarousel";
-import { Leaf, Check, ChevronDown, Lock } from "lucide-react";
+import { Leaf, Check } from "lucide-react";
 
 interface DonationProps {
   testimonials: any;
-  handleInputChange: any;
   handleAmountSelect: any;
-  handleSubmit: any;
   donationAmounts: any;
-  paymentMethods: any;
   selectedAmount: number;
   customAmount: string;
   setCustomAmount: any;
-  formData: any;
 }
 
 const Donations = ({
   testimonials,
-  handleInputChange,
   handleAmountSelect,
-  handleSubmit,
   donationAmounts,
-  paymentMethods,
   selectedAmount,
   customAmount,
   setCustomAmount,
-  formData,
 }: DonationProps) => {
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 bg-green-100/30">
@@ -134,27 +126,24 @@ const Donations = ({
                   Informações de pagamento
                 </h2>
                 <p className="text-sm text-gray-500">
-                  Escolha seu método de pagamento preferido
+                  Faça seu pagamento via pix
                 </p>
               </div>
 
               <div className="px-6 py-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form className="space-y-6">
                   {/* Payment Method Selection */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Método de pagamento
                     </label>
                     <div className="grid grid-cols-1 gap-3">
-                      {paymentMethods.map((method: any) => (
-                        <button
-                          key={method.id}
-                          type="button"
-                          className="flex items-center justify-center gap-2 py-3 px-4 rounded-md border text-sm font-medium bg-[#2F4F4F] text-white border-[#2F4F4F]"
-                        >
-                          {method.icon}
-                        </button>
-                      ))}
+                      <button
+                        type="button"
+                        className="flex items-center justify-center gap-2 py-3 px-4 rounded-md border text-sm font-medium bg-[#2F4F4F] text-white border-[#2F4F4F]"
+                      >
+                        Pix
+                      </button>
                     </div>
                   </div>
 
@@ -188,129 +177,6 @@ const Donations = ({
                         Copiar
                       </button>
                     </div>
-                  </div>
-
-                  {/* Address Information */}
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-3">
-                      Endereço de cobrança
-                    </h3>
-                    <div className="grid grid-cols-1 gap-4">
-                      <div>
-                        <label
-                          htmlFor="address"
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          Endereço
-                        </label>
-                        <input
-                          type="text"
-                          id="address"
-                          name="address"
-                          value={formData.address}
-                          onChange={handleInputChange}
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#2F4F4F] focus:border-[#2F4F4F] sm:text-sm"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label
-                            htmlFor="city"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                          >
-                            Cidade
-                          </label>
-                          <input
-                            type="text"
-                            id="city"
-                            name="city"
-                            value={formData.city}
-                            onChange={handleInputChange}
-                            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#2F4F4F] focus:border-[#2F4F4F] sm:text-sm"
-                          />
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="state"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                          >
-                            Estado
-                          </label>
-                          <div className="relative">
-                            <select
-                              id="state"
-                              name="state"
-                              value={formData.state}
-                              onChange={handleInputChange}
-                              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#2F4F4F] focus:border-[#2F4F4F] sm:text-sm appearance-none"
-                            >
-                              <option value="">Selecione</option>
-                              <option value="AC">Acre</option>
-                              <option value="AL">Alagoas</option>
-                              <option value="AP">Amapá</option>
-                              <option value="AM">Amazonas</option>
-                              <option value="BA">Bahia</option>
-                              <option value="CE">Ceará</option>
-                              <option value="DF">Distrito Federal</option>
-                              <option value="ES">Espírito Santo</option>
-                              <option value="GO">Goiás</option>
-                              <option value="MA">Maranhão</option>
-                              <option value="MT">Mato Grosso</option>
-                              <option value="MS">Mato Grosso do Sul</option>
-                              <option value="MG">Minas Gerais</option>
-                              <option value="PA">Pará</option>
-                              <option value="PB">Paraíba</option>
-                              <option value="PR">Paraná</option>
-                              <option value="PE">Pernambuco</option>
-                              <option value="PI">Piauí</option>
-                              <option value="RJ">Rio de Janeiro</option>
-                              <option value="RN">Rio Grande do Norte</option>
-                              <option value="RS">Rio Grande do Sul</option>
-                              <option value="RO">Rondônia</option>
-                              <option value="RR">Roraima</option>
-                              <option value="SC">Santa Catarina</option>
-                              <option value="SP">São Paulo</option>
-                              <option value="SE">Sergipe</option>
-                              <option value="TO">Tocantins</option>
-                              {/* Add more states as needed */}
-                            </select>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                              <ChevronDown className="h-4 w-4 text-gray-400" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="zip"
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          CEP
-                        </label>
-                        <input
-                          type="text"
-                          id="zip"
-                          name="zip"
-                          value={formData.zip}
-                          onChange={handleInputChange}
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#2F4F4F] focus:border-[#2F4F4F] sm:text-sm"
-                          placeholder="00000-000"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="px-6 py-6 border-t flex flex-col">
-                    <button
-                      type="submit"
-                      className="w-full bg-[#ece94c] hover:bg-[#ece94c]/90 text-black font-medium py-3 rounded-md flex items-center justify-center gap-2"
-                    >
-                      <Lock className="w-4 h-4" />
-                      Finalizar doação
-                    </button>
-                    <p className="text-xs text-gray-500 mt-3 text-center">
-                      Suas informações de pagamento são seguras e criptografadas
-                    </p>
                   </div>
                 </form>
               </div>

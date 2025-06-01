@@ -36,9 +36,6 @@ export class CoursesController {
     @Param() getCourseDto: GetCourseDto,
     @Body() updateCourseDto: UpdateCourseDto,
   ) {
-    console.log({ getCourseDto, updateCourseDto });
-    
-
     return this.coursesService.update({
       courseId: getCourseDto.courseId,
       ...updateCourseDto,

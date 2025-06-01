@@ -41,8 +41,6 @@ const CalendarContainer = () => {
       try {
         const eventCreated = await createEvent(eventData);
 
-        console.log(eventCreated);
-
         setIsModalOpen(false);
         toast.success(`Evento adicionado: ${eventCreated.title}`);
       } catch (error) {

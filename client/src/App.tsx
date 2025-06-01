@@ -15,6 +15,7 @@ import Footer from "./components/Footer/Footer";
 import CalendarContainer from "./views/Calendar/CalendarContainer";
 
 import { useEffect, useState } from "react";
+import { useChatStore } from "./store/useChatStore";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -31,14 +32,16 @@ function PrivateRoute({ children }: PrivateRouteProps) {
 const App = () => {
   const { isAuthenticated, initializeAuth } = useAuthStore();
   const [isInitializing, setIsInitializing] = useState(true);
+  const { subscribeMessage } = useChatStore();
 
   useEffect(() => {
     const init = async () => {
       await initializeAuth();
       setIsInitializing(false);
+      subscribeMessage();
     };
     init();
-  }, [initializeAuth]);
+  }, [initializeAuth, subscribeMessage]);
 
   if (isInitializing) {
     return (
