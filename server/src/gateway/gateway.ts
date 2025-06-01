@@ -5,6 +5,7 @@ import {
   MessageBody,
   ConnectedSocket,
   OnGatewayConnection,
+  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
@@ -17,11 +18,14 @@ import { MESSAGES_EVENTS } from 'src/common/constants/events';
     origin: '*',
   },
 })
-export class GatewayProvider implements OnGatewayConnection {
+export class GatewayProvider
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
   private readonly logger = new Logger(GatewayProvider.name);
+  private onlineUsers = new Set<string>();
 
   constructor(
     private readonly messagesService: MessagesService,
@@ -47,10 +51,26 @@ export class GatewayProvider implements OnGatewayConnection {
       client.data.userId = payload.userId;
 
       client.join(client.data.userId as string);
+
+      this.onlineUsers.add(client.data.userId as string);
+
+      this.server.emit(
+        MESSAGES_EVENTS.USERS_ONLINE,
+        Array.from(this.onlineUsers),
+      );
     } catch (err) {
       this.logger.error('Error during WebSocket connection', err);
       client.disconnect();
     }
+  }
+
+  handleDisconnect(client: Socket) {
+    this.onlineUsers.delete(client.data.userId as string);
+
+    this.server.emit(
+      MESSAGES_EVENTS.USERS_ONLINE,
+      Array.from(this.onlineUsers),
+    );
   }
 
   @SubscribeMessage(MESSAGES_EVENTS.SEND_PRIVATE_MESSAGE)

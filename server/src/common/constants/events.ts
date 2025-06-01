@@ -7,4 +7,5 @@ export const MESSAGES_EVENTS = {
   EDITED_MESSAGE: 'message:edited',
   DELETE_MESSAGE: 'message:delete',
   DELETED_MESSAGE: 'message:deleted',
+  USERS_ONLINE: 'users:online',
 };

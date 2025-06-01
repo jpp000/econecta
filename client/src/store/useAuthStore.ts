@@ -7,6 +7,7 @@ import type { SignupData } from "@/schemas/signupSchema";
 import { io, type Socket } from "socket.io-client";
 import { env } from "@/constants/env";
 import { User } from "@/interfaces/user.interface";
+import { MESSAGES_EVENTS } from "@/constants/events";
 
 interface AuthState {
   user: User | null;
@@ -16,6 +17,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   socketConnected: boolean;
+  onlineUsers: string[];
 
   login: (data: LoginData) => Promise<void>;
   signup: (data: SignupData) => Promise<void>;
@@ -24,7 +26,8 @@ interface AuthState {
   listContacts: () => Promise<void>;
   connectSocket: () => void;
   disconnectSocket: () => void;
-};
+  setOnlineUsers: (users: string[]) => void;
+}
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -36,6 +39,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: false,
       socketConnected: false,
+      onlineUsers: [],
 
       login: async (data) => {
         set({ isLoading: true });
@@ -121,6 +125,14 @@ export const useAuthStore = create<AuthState>()(
           set({ user, isAuthenticated: true });
 
           get().connectSocket();
+
+          const socket = get().socket;
+
+          if (socket) {
+            socket.on(MESSAGES_EVENTS.USERS_ONLINE, (users: string[]) => {
+              set({ onlineUsers: users });
+            });
+          }
         } catch (error) {
           handleApiError(error, "Sessão expirada. Faça login novamente.");
           set({ user: null, token: null, isAuthenticated: false });
@@ -153,8 +165,11 @@ export const useAuthStore = create<AuthState>()(
           });
 
           socket.on("connect", () => {
-            console.log("Connected with socket ID:", socket.id);
             set({ socketConnected: true });
+          });
+
+          socket.on(MESSAGES_EVENTS.USERS_ONLINE, (users: string[]) => {
+            set({ onlineUsers: users });
           });
 
           socket.on("disconnect", (reason) => {
@@ -189,6 +204,8 @@ export const useAuthStore = create<AuthState>()(
           set({ socket: null, socketConnected: false });
         }
       },
+
+      setOnlineUsers: (users) => set({ onlineUsers: users }),
     }),
     {
       name: "authStorage",

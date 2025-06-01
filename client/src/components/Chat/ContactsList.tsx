@@ -14,18 +14,18 @@ const ContactsList: React.FC<ContactsListProps> = ({
   activeChat,
   onSelectChat,
 }) => {
-  // const [showOnlineOnly, setShowOnlineOnly] = useState<boolean>(false)
+  const [showOnlineOnly, setShowOnlineOnly] = useState<boolean>(false)
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { users: contacts } = useAuthStore();
+  const { users: contacts, onlineUsers } = useAuthStore();
 
   const filteredContacts = contacts
-    // ?.filter((contact) => (showOnlineOnly ? contact.status === "online" : true))
-    ?.filter((contact) =>
-      contact.username.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  ?.filter((contact) => (showOnlineOnly ? onlineUsers.includes(contact._id) : true))
+  ?.filter((contact) =>
+    contact.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  // const onlineCount = contacts.filter((contact) => contact.status === "online").length
+  const onlineCount = onlineUsers.length - 1;
 
   if (isCollapsed) {
     return (
@@ -37,29 +37,37 @@ const ContactsList: React.FC<ContactsListProps> = ({
           >
             <Users size={24} />
           </button>
-          {/* <div className="mt-2 px-2 py-1 bg-green-100 rounded-full">
+          <div className="mt-2 px-2 py-1 bg-green-100 rounded-full">
             <span className="text-xs text-green-600">{onlineCount}</span>
-          </div> */}
-        </div>
-        {filteredContacts?.map((contact) => (
-          <div
-            key={contact._id}
-            className={`relative w-10 h-10 rounded-full mb-3 cursor-pointer overflow-hidden border-2 transition-all duration-200 transform hover:scale-110 ${
-              activeChat === contact
-                ? "border-green-500 shadow-lg shadow-green-100"
-                : "border-transparent"
-            }`}
-            onClick={() =>
-              onSelectChat({ _id: contact._id, username: contact.username })
-            }
-          >
-            <img
-              src={Avatar}
-              alt={contact.username}
-              className="w-full h-full object-cover"
-            />
           </div>
-        ))}
+        </div>
+        {filteredContacts?.map((contact) => {
+          const isOnline = onlineUsers.includes(contact._id);
+          return (
+            <div
+              key={contact._id}
+              className={`relative w-10 h-10 rounded-full mb-3 cursor-pointer overflow-hidden border-2 transition-all duration-200 transform hover:scale-110 ${
+                activeChat === contact
+                  ? "border-green-500 shadow-lg shadow-green-100"
+                  : "border-transparent"
+              }`}
+              onClick={() =>
+                onSelectChat({ _id: contact._id, username: contact.username })
+              }
+            >
+              <img
+                src={Avatar}
+                alt={contact.username}
+                className="w-full h-full object-cover"
+              />
+              <div
+                className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                  isOnline ? "bg-green-500" : "bg-gray-300"
+                }`}
+              ></div>
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -93,7 +101,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
             size={14}
           />
         </div>
-        {/* <label className="flex items-center text-sm text-gray-600 mt-2">
+        <label className="flex items-center text-sm text-gray-600 mt-4">
           <input
             type="checkbox"
             checked={showOnlineOnly}
@@ -102,7 +110,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
           />
           Show online only
           <span className="ml-1 text-xs">({onlineCount} online)</span>
-        </label> */}
+        </label>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
@@ -119,42 +127,45 @@ const ContactsList: React.FC<ContactsListProps> = ({
               P
             </div>
             <div>
-              <div className="font-semibold text-green-600">Public Chat</div>
-              <div className="text-xs text-gray-500">Everyone</div>
+              <div className="font-semibold text-green-600">Chat Público</div>
+              <div className="text-xs text-gray-500">Todos</div>
             </div>
           </div>
 
-          {filteredContacts?.map((contact) => (
-            <div
-              key={contact._id}
-              className={`flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${
-                activeChat?.username === contact.username
-                  ? "bg-green-50 border-l-4 border-green-500"
-                  : ""
-              }`}
-              onClick={() =>
-                onSelectChat({ _id: contact._id, username: contact.username })
-              }
-            >
-              <div className="relative mr-3">
-                <img
-                  src={Avatar}
-                  alt={contact.username}
-                  className="w-10 h-10 rounded-full shadow-sm"
-                />
-                {/* {contact.status === "online" ? (
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                ) : (
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-gray-300 rounded-full border-2 border-white"></div>
-                )} */}
-              </div>
-              <div>
-                <div className="font-semibold text-gray-800">
-                  {contact.username}
+          {filteredContacts?.map((contact) => {
+            const isOnline = onlineUsers.includes(contact._id);
+            return (
+              <div
+                key={contact._id}
+                className={`flex items-center px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors duration-200 ${
+                  activeChat?.username === contact.username
+                    ? "bg-green-50 border-l-4 border-green-500"
+                    : ""
+                }`}
+                onClick={() =>
+                  onSelectChat({ _id: contact._id, username: contact.username })
+                }
+              >
+                <div className="relative mr-3">
+                  <img
+                    src={Avatar}
+                    alt={contact.username}
+                    className="w-10 h-10 rounded-full shadow-sm"
+                  />
+                  <div
+                    className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                      isOnline ? "bg-green-500" : "bg-gray-300"
+                    }`}
+                  ></div>
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-800">
+                    {contact.username}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
