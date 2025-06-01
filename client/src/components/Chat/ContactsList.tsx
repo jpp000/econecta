@@ -33,7 +33,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
         <div className="flex flex-col items-center mb-6">
           <button
             onClick={() => setIsCollapsed(false)}
-            className="text-green-600 hover:text-green-700 transition-colors duration-200"
+            className="text-green-600 hover:text-green-700 transition-colors duration-200 cursor-pointer"
           >
             <Users size={24} />
           </button>
@@ -77,7 +77,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
       <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-green-50">
         <div className="flex items-center text-green-600">
           <Users size={20} className="mr-2" />
-          <span className="font-semibold">Contacts</span>
+          <span className="font-semibold">Contatos</span>
         </div>
         <button
           onClick={() => setIsCollapsed(true)}
@@ -91,7 +91,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
         <div className="relative">
           <input
             type="text"
-            placeholder="Search contacts..."
+            placeholder="Procurar contatos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-gray-100 text-gray-800 rounded-full px-4 py-2 pl-9 focus:outline-none focus:ring-1 focus:ring-green-500 text-sm"
@@ -108,7 +108,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
             onChange={() => setShowOnlineOnly(!showOnlineOnly)}
             className="mr-2 h-4 w-4 text-green-500 rounded focus:ring-green-400 focus:ring-opacity-25 cursor-pointer"
           />
-          Show online only
+          Mostrar apenas online
           <span className="ml-1 text-xs">({onlineCount} online)</span>
         </label>
       </div>

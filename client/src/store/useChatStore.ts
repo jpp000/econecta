@@ -178,9 +178,16 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     }
 
     socket.on(MESSAGES_EVENTS.RECEIVE_PRIVATE_MESSAGE, (message: Message) => {
-      set((state) => ({
-        messages: [...state.messages, message],
-      }));
+      const selectedChat = get().selectedChat
+
+      console.log({ selectedChat, message });
+
+      if(selectedChat) {
+        set((state) => ({
+          messages: [...state.messages, message],
+        }));
+      }
+
     });
 
     socket.on(MESSAGES_EVENTS.RECEIVE_PUBLIC_MESSAGE, (message: Message) => {

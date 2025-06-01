@@ -128,8 +128,6 @@ export class GatewayProvider
   ) {
     const senderId = client.data.userId;
 
-    console.log({ text, messageId, senderId });
-
     if (!senderId) {
       client.disconnect();
       return;
@@ -151,7 +149,6 @@ export class GatewayProvider
     @ConnectedSocket() client: Socket,
   ) {
     const senderId = client.data.userId;
-    console.log({ messageId, senderId });
 
     if (!senderId) {
       client.disconnect();
