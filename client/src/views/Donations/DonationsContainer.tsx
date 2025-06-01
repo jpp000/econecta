@@ -75,10 +75,6 @@ const DonationsContainer = () => {
       return;
     }
 
-    console.log({
-      amount: donationAmount,
-      ...formData,
-    });
     alert("Doação processada com sucesso! Obrigado pela sua contribuição.");
   };
 

@@ -191,9 +191,13 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     });
 
     socket.on(MESSAGES_EVENTS.RECEIVE_PUBLIC_MESSAGE, (message: Message) => {
-      set((state) => ({
-        messages: [...state.messages, message],
-      }));
+      const { selectedChat } = get();
+
+      if(!selectedChat) {
+        set((state) => ({
+          messages: [...state.messages, message],
+        }));
+      }
     });
 
     socket.on(MESSAGES_EVENTS.EDITED_MESSAGE, (editedMessage: Message) => {

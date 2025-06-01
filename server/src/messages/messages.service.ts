@@ -126,8 +126,6 @@ export class MessagesService {
         sender: userId,
       });
 
-      console.log({ message });
-
       if (!message) {
         throw new ConflictException(
           'You are not the sender or message does not exists',
