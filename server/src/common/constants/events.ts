@@ -4,5 +4,7 @@ export const MESSAGES_EVENTS = {
   RECEIVE_PRIVATE_MESSAGE: 'message:receive:private',
   RECEIVE_PUBLIC_MESSAGE: 'message:receive:public',
   EDIT_MESSAGE: 'message:edit',
+  EDITED_MESSAGE: 'message:edited',
   DELETE_MESSAGE: 'message:delete',
+  DELETED_MESSAGE: 'message:deleted',
 };

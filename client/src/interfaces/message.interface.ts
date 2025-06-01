@@ -9,11 +9,16 @@ export interface Message {
   receiver?: ChatUser;
 }
 
-export interface PublicMessagePayload {
+export interface SendPublicMessagePayload {
   text: string;
 }
 
-export interface PrivateMessagePayload {
+export interface SendPrivateMessagePayload {
   receiverId: string;
   text: string;
+}
+
+export interface EditMessagePayload {
+  messageId: string
+  text: string
 }

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { MessagesRepository } from './messages.repository';
 import { SendPrivateMessageDto } from './dto/send-private-message.dto';
 import { SendPublicMessageDto } from './dto/send-public-message.dto';
@@ -6,6 +6,7 @@ import { GetPrivateChatMessagesDto } from './dto/get-private-chat-messages.dto';
 import { FindMessageDto } from './dto/find-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/models/user.schema';
 
 interface MessageResponseDto {
   _id: string;
@@ -130,12 +131,44 @@ export class MessagesService {
     }
   }
 
-  async updateMessage({ messageId, userId, text }: UpdateMessageDto) {
+  async updateMessage({
+    messageId,
+    userId,
+    text,
+  }: UpdateMessageDto): Promise<MessageResponseDto> {
     try {
-      return await this.messagesRepository.findOneAndUpdate(
+      const updatedMessage = await this.messagesRepository.findOneAndUpdate(
         { sender: userId, _id: messageId },
-        { text, new: true, populate: ['sender'] },
+        { text, new: true },
       );
+
+      if (!updatedMessage) {
+        throw new NotFoundException('You are not the sender');
+      }
+
+      const sender = await this.usersService.getUser({
+        _id: userId,
+      });
+
+      let receiver: User | null = null;
+
+      if (updatedMessage.receiver) {
+        receiver = await this.usersService.getUser({
+          _id: updatedMessage.receiver?.toHexString(),
+        });
+      }
+
+      return {
+        _id: updatedMessage._id.toHexString(),
+        text: updatedMessage.text,
+        sender: { _id: sender._id.toHexString(), username: sender.username },
+        receiver: receiver
+          ? {
+              _id: receiver?._id.toHexString(),
+              username: receiver?.username,
+            }
+          : undefined,
+      };
     } catch (err) {
       this.logger.error(err);
       throw err;

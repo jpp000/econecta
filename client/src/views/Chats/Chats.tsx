@@ -2,23 +2,27 @@ import ContactsList from "../../components/Chat/ContactsList"
 import ChatHeader from "../../components/Chat/ChatHeader"
 import MessageArea from "../../components/Chat/MessageArea"
 import MessageInput from "../../components/Chat/MessageInput"
+import { ChatUser, Message } from "@/interfaces/message.interface";
 
 interface ChatProps {
-  activeChat: any;
-  handleSelectChat: any;
-  messages: any;
-  handleSendMessage: any;
-  handleEditMessage?: any;
+  activeChat: ChatUser | null;
+  messages: Message[];
+  handleSendMessage: (text: string, receiver: ChatUser | null) => void;
+  handleSelectChat: (chat: ChatUser | null) => void;
+  editingMessage: Message | null;
+  setEditingMessage: (message: Message | null) => void;
+  handleEditMessage?: (message: Message | null) => void;
   handleDeleteMessage?: any;
-  editingMessage?: any;
-  setEditingMessage?: any;
 }
 
 const Chats = ({
   activeChat,
   messages,
   handleSendMessage,
-  handleSelectChat
+  handleSelectChat,
+  handleEditMessage,
+  editingMessage,
+  setEditingMessage
 }: ChatProps) => {
   return (
     <div className="flex h-[calc(100vh-4rem)] mt-16 bg-[#1E3A3A] text-gray-200">
@@ -29,13 +33,13 @@ const Chats = ({
         }} isMobileMenuOpen={false} />
         <MessageArea
           messages={messages}
-          // onEditMessage={handleEditMessage}
+          onEditMessage={handleEditMessage}
           // onDeleteMessage={handleDeleteMessage}
         />
         <MessageInput
           onSendMessage={handleSendMessage}
-          // editingMessage={editingMessage}
-          // setEditingMessage={setEditingMessage}
+          editingMessage={editingMessage}
+          setEditingMessage={setEditingMessage}
         />
       </div>
     </div>

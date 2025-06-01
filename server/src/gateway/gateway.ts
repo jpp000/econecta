@@ -97,8 +97,6 @@ export class GatewayProvider implements OnGatewayConnection {
       text,
     });
 
-    console.log({ message });
-
     this.server.emit(MESSAGES_EVENTS.RECEIVE_PUBLIC_MESSAGE, message);
   }
 
@@ -110,24 +108,12 @@ export class GatewayProvider implements OnGatewayConnection {
   ) {
     const senderId = client.data.userId;
 
+    console.log({ text, messageId, senderId });
+
     if (!senderId) {
       client.disconnect();
       return;
     }
-
-    // Check if the message belongs to the sender
-
-    // const message = await this.messagesService.findMessage({
-    //   messageId,
-    //   userId: senderId,
-    // });
-
-    // if (!message) {
-    //   client.emit(MESSAGES_EVENTS.EDIT_MESSAGE, {
-    //     error: 'Message not found or you are not the sender',
-    //   });
-    //   return;
-    // }
 
     const updatedMessage = await this.messagesService.updateMessage({
       messageId,
@@ -135,7 +121,9 @@ export class GatewayProvider implements OnGatewayConnection {
       text,
     });
 
-    this.server.emit(MESSAGES_EVENTS.EDIT_MESSAGE, updatedMessage);
+    console.log({ updatedMessage });
+
+    this.server.emit(MESSAGES_EVENTS.EDITED_MESSAGE, updatedMessage);
   }
 
   @SubscribeMessage(MESSAGES_EVENTS.DELETE_MESSAGE)
