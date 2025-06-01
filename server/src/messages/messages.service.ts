@@ -169,9 +169,9 @@ export class MessagesService {
 
       let receiver: User | null = null;
 
-      if (updatedMessage.receiver) {
+      if (updatedMessage.receiver?._id) {
         receiver = await this.usersService.getUser({
-          _id: updatedMessage.receiver?.toHexString(),
+          _id: updatedMessage.receiver?.toHexString?.(),
         });
       }
 
