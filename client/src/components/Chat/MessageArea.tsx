@@ -144,9 +144,9 @@ const MessageArea: React.FC<MessageAreaProps> = ({
                   />
                 </svg>
               </div>
-              <p className="text-gray-600 text-sm">No messages yet</p>
+              <p className="text-gray-600 text-sm">Sem mensagens ainda</p>
               <p className="text-gray-500 text-xs mt-2">
-                Start the conversation by sending a message
+                Começe uma conversa enviando uma mensagem
               </p>
             </div>
           </div>

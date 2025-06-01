@@ -91,7 +91,7 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
 
           <div className="mb-8 flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              <h1 className="text-3xl font-bold text-green-900 mb-4">
                 {lesson.title}
               </h1>
               {lesson.description && (
@@ -103,7 +103,7 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 cursor-pointer"
                 onClick={() => setShowEditModal(true)}
               >
                 <Edit className="w-4 h-4" />
@@ -111,7 +111,7 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
               </Button>
               <Button
                 variant="outline"
-                className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer"
                 onClick={() => setShowDeleteModal(true)}
               >
                 <Trash2 className="w-4 h-4" />

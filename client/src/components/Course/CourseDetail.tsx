@@ -92,7 +92,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
 
   if (isLoading && !course) {
     return (
-      <div className="flex-1 flex justify-center items-center min-h-screen mt-16">
+      <div className="flex-1 flex justify-center items-center h-[calc(100vh-7rem)] mt-16">
         <p className="text-gray-500">Carregando curso...</p>
       </div>
     );
@@ -100,9 +100,9 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
 
   if (error || !course) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center min-h-screen mt-16">
+      <div className="flex-1 flex flex-col items-center justify-center h-[calc(100vh-7rem)] mt-16">
         <p className="text-red-500 mb-4">{error || "Curso não encontrado"}</p>
-        <Button onClick={onBack}>Voltar para Cursos</Button>
+        <Button onClick={onBack} className="cursor-pointer">Voltar para Cursos</Button>
       </div>
     );
   }
@@ -116,12 +116,12 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
     : 0;
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen mt-16">
+    <div className="flex-1 flex flex-col h-[calc(100vh-7rem)] mt-16">
       <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
           <Button
             variant="ghost"
-            className="mb-8 flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            className="mb-8 flex items-center gap-2 text-gray-600 hover:text-gray-900 cursor-pointer"
             onClick={onBack}
           >
             <ArrowLeft className="w-4 h-4" />
@@ -130,7 +130,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
 
           <div className="mb-8 flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              <h1 className="text-3xl font-bold text-green-900 mb-4">
                 {course.title}
               </h1>
               <p className="text-lg text-gray-600 mb-6">{course.description}</p>
@@ -144,7 +144,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 cursor-pointer"
                 onClick={() => setShowEditModal(true)}
               >
                 <Edit className="w-4 h-4" />
@@ -152,7 +152,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
               </Button>
               <Button
                 variant="outline"
-                className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer"
                 onClick={() => setShowDeleteModal(true)}
               >
                 <Trash2 className="w-4 h-4" />
@@ -167,10 +167,10 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
               <Card className="shadow-sm">
                 <CardContent className="py-2 px-6">
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-semibold">Conteúdo do Curso</h2>
+                    <h2 className="text-xl text-green-950 font-semibold">Conteúdo do Curso</h2>
                     <Button
                       onClick={() => setShowAddLessonModal(true)}
-                      className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+                      className="flex items-center gap-2 bg-[#2F4F4F] hover:bg-[#2F4F4F]/90 cursor-pointer"
                     >
                       <PlusCircle className="w-4 h-4" />
                       Adicionar Aula
@@ -191,7 +191,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                             <div
                               className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
                                 lesson.completed
-                                  ? "bg-green-500"
+                                  ? "bg-[#2F4F4F]"
                                   : "bg-white border border-gray-300"
                               }`}
                             >
@@ -211,7 +211,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                                 {lesson.description}
                               </p>
                               {lesson.videoUrl && (
-                                <p className="text-xs text-green-600 mt-1">
+                                <p className="text-xs text-[#2F4F4F] mt-1">
                                   Vídeo disponível
                                 </p>
                               )}
@@ -239,7 +239,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleLessonClick(lesson._id)}
-                                className="ml-2"
+                                className="ml-2 cursor-pointer"
                               >
                                 Ver Aula
                               </Button>
@@ -257,21 +257,21 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
             <div>
               <Card className="sticky top-6 shadow-sm">
                 <CardContent className="py-2 px-6">
-                  <h2 className="text-xl font-semibold mb-4">
+                  <h2 className="text-xl font-semibold mb-4 text-green-950">
                     Progresso do Curso
                   </h2>
                   <div className="space-y-6">
                     <div>
                       <div className="flex justify-between text-sm mb-2">
-                        <span className="font-medium">Aulas Concluídas</span>
-                        <span className="text-green-600 font-medium">
+                        <span className="font-medium text-green-950">Aulas Concluídas</span>
+                        <span className="text-[#2F4F4F] font-medium">
                           {completedLessons} de {course.lessons.length}
                         </span>
                       </div>
                       <Progress value={progressValue} className="h-2" />
                     </div>
                     <div className="pt-4 border-t">
-                      <h3 className="font-medium mb-2">Informações do Curso</h3>
+                      <h3 className="font-medium mb-2 text-green-950">Informações do Curso</h3>
                       <div className="space-y-2 text-sm text-gray-600">
                         <div className="flex items-center gap-2">
                           <BookOpen className="w-4 h-4" />
