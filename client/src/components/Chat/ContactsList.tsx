@@ -29,7 +29,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
 
   if (isCollapsed) {
     return (
-      <div className="w-16 bg-gray-50 border-r border-gray-200 flex flex-col items-center py-4 min-h-[100vh]">
+      <div className="w-16 bg-gray-50 border-r border-gray-200 flex flex-col items-center py-4">
         <div className="flex flex-col items-center mb-6">
           <button
             onClick={() => setIsCollapsed(false)}
@@ -73,7 +73,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
   }
 
   return (
-    <div className="w-72 bg-white border-r border-gray-200 flex flex-col min-h-[100vh]">
+    <div className="w-72 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-green-50">
         <div className="flex items-center text-green-600">
           <Users size={20} className="mr-2" />

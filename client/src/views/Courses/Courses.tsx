@@ -48,7 +48,7 @@ export default function Courses({
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen border-2 border-slate-50 mt-16">
+    <div className="h-[calc(100vh-7rem)] flex-1 flex flex-col border-2 border-slate-50 mt-16">
       <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
           <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">

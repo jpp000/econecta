@@ -26,7 +26,7 @@ const Chats = ({
   handleDeleteMessage
 }: ChatProps) => {
   return (
-    <div className="flex h-[calc(100vh-4rem)] mt-16 bg-[#1E3A3A] text-gray-200">
+    <div className="flex h-[calc(100vh-7rem)] mt-16 bg-[#1E3A3A] text-gray-200">
       <ContactsList activeChat={activeChat} onSelectChat={handleSelectChat} />
       <div className="flex flex-1 flex-col border-gray-700">
         <ChatHeader activeChat={activeChat} toggleMobileMenu={function (): void {
