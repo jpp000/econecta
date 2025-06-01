@@ -75,6 +75,7 @@ export class GatewayProvider implements OnGatewayConnection {
     if (receiverId) {
       this.server
         .to(receiverId)
+        .to(senderId as string)
         .emit(MESSAGES_EVENTS.RECEIVE_PRIVATE_MESSAGE, message);
     }
   }
@@ -95,6 +96,8 @@ export class GatewayProvider implements OnGatewayConnection {
       senderId,
       text,
     });
+
+    console.log({ message });
 
     this.server.emit(MESSAGES_EVENTS.RECEIVE_PUBLIC_MESSAGE, message);
   }

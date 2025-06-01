@@ -7,6 +7,13 @@ import { FindMessageDto } from './dto/find-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { UsersService } from 'src/users/users.service';
 
+interface MessageResponseDto {
+  _id: string;
+  text: string;
+  sender: { _id: string; username: string };
+  receiver?: { _id: string; username: string };
+}
+
 @Injectable()
 export class MessagesService {
   private readonly logger = new Logger(MessagesService.name);
@@ -54,21 +61,36 @@ export class MessagesService {
     senderId,
     receiverId,
     text,
-  }: SendPrivateMessageDto) {
+  }: SendPrivateMessageDto): Promise<MessageResponseDto> {
     try {
-      return await this.messagesRepository.create({
+      const messageCreated = await this.messagesRepository.create({
         sender: senderId,
         receiver: receiverId,
         text,
-        populate: ['sender', 'receiver'],
       });
+
+      const sender = await this.usersService.getUser({ _id: senderId });
+      const receiver = await this.usersService.getUser({ _id: receiverId });
+
+      return {
+        _id: messageCreated._id.toHexString(),
+        text: messageCreated.text,
+        sender: { _id: sender._id.toHexString(), username: sender.username },
+        receiver: {
+          _id: receiver._id.toHexString(),
+          username: receiver.username,
+        },
+      };
     } catch (err) {
       this.logger.error(err);
       throw err;
     }
   }
 
-  async sendPublicMessage({ senderId, text }: SendPublicMessageDto) {
+  async sendPublicMessage({
+    senderId,
+    text,
+  }: SendPublicMessageDto): Promise<MessageResponseDto> {
     try {
       const sender = await this.usersService.findById(senderId);
 
@@ -80,7 +102,6 @@ export class MessagesService {
         sender: senderId,
         text,
         receiver: null,
-        populate: ['sender'],
       });
 
       return {
@@ -89,8 +110,6 @@ export class MessagesService {
         sender: {
           _id: sender._id.toHexString(),
           username: sender.username,
-          email: sender.email,
-          avatar: sender.avatar,
         },
       };
     } catch (err) {

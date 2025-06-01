@@ -106,8 +106,6 @@ export const useChatStore = create<ChatStore>((set) => ({
       const socket = useAuthStore.getState().socket;
       if (!socket) throw new Error("Socket not connected");
 
-      console.log({ messagePayload });
-
       socket.emit(MESSAGES_EVENTS.SEND_PRIVATE_MESSAGE, messagePayload);
     } catch (error) {
       console.error("Error sending private message:", error);
@@ -124,7 +122,7 @@ export const useChatStore = create<ChatStore>((set) => ({
       return;
     }
 
-    socket.on(MESSAGES_EVENTS.RECEIVE_PRIVATE_MESSAGE, (message: Message) => {
+    socket.on(MESSAGES_EVENTS.RECEIVE_PRIVATE_MESSAGE, (message: Omit<Message, 'receiver'>) => {
       set((state) => ({
         messages: [...state.messages, message],
       }));

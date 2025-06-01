@@ -120,9 +120,7 @@ export const useAuthStore = create<AuthState>()(
 
           set({ user, isAuthenticated: true });
 
-          setTimeout(() => {
-            get().connectSocket();
-          }, 500);
+          get().connectSocket();
         } catch (error) {
           handleApiError(error, "Sessão expirada. Faça login novamente.");
           set({ user: null, token: null, isAuthenticated: false });
