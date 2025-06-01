@@ -121,43 +121,28 @@ export class GatewayProvider implements OnGatewayConnection {
       text,
     });
 
-    console.log({ updatedMessage });
-
     this.server.emit(MESSAGES_EVENTS.EDITED_MESSAGE, updatedMessage);
   }
 
   @SubscribeMessage(MESSAGES_EVENTS.DELETE_MESSAGE)
   async handleDeleteMessage(
     @MessageBody()
-    { messageId }: { messageId: string },
+    messageId: string,
     @ConnectedSocket() client: Socket,
   ) {
     const senderId = client.data.userId;
+    console.log({ messageId, senderId });
 
     if (!senderId) {
       client.disconnect();
       return;
     }
 
-    // Check if the message belongs to the sender
-
-    // const message = await this.messagesService.findMessage({
-    //   messageId,
-    //   userId: senderId,
-    // });
-
-    // if (!message) {
-    //   client.emit(MESSAGES_EVENTS.DELETE_MESSAGE, {
-    //     error: 'Message not found or you are not the sender',
-    //   });
-    //   return;
-    // }
-
-    const deletedMessage = await this.messagesService.deleteMessage({
+    const deletedMessageId = await this.messagesService.deleteMessage({
       messageId,
       userId: senderId,
     });
 
-    this.server.emit(MESSAGES_EVENTS.DELETE_MESSAGE, deletedMessage);
+    this.server.emit(MESSAGES_EVENTS.DELETED_MESSAGE, deletedMessageId);
   }
 }

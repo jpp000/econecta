@@ -11,8 +11,8 @@ interface ChatProps {
   handleSelectChat: (chat: ChatUser | null) => void;
   editingMessage: Message | null;
   setEditingMessage: (message: Message | null) => void;
-  handleEditMessage?: (message: Message | null) => void;
-  handleDeleteMessage?: any;
+  handleEditMessage: (message: Message | null) => void;
+  handleDeleteMessage: (messageId: string) => void;
 }
 
 const Chats = ({
@@ -22,7 +22,8 @@ const Chats = ({
   handleSelectChat,
   handleEditMessage,
   editingMessage,
-  setEditingMessage
+  setEditingMessage,
+  handleDeleteMessage
 }: ChatProps) => {
   return (
     <div className="flex h-[calc(100vh-4rem)] mt-16 bg-[#1E3A3A] text-gray-200">
@@ -34,7 +35,7 @@ const Chats = ({
         <MessageArea
           messages={messages}
           onEditMessage={handleEditMessage}
-          // onDeleteMessage={handleDeleteMessage}
+          onDeleteMessage={handleDeleteMessage}
         />
         <MessageInput
           onSendMessage={handleSendMessage}

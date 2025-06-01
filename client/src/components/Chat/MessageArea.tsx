@@ -5,8 +5,8 @@ import { useAuthStore } from "@/store/useAuthStore"
 
 interface MessageAreaProps {
   messages: Message[]
-  onEditMessage?: (message: Message) => void
-  onDeleteMessage?: (messageId: string) => void
+  onEditMessage: (message: Message) => void
+  onDeleteMessage: (messageId: string) => void
 }
 
 const MessageArea: React.FC<MessageAreaProps> = ({ messages, onEditMessage, onDeleteMessage }) => {
@@ -74,7 +74,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, onEditMessage, onDe
                     <div className="absolute top-8 right-2 bg-white border border-gray-200 rounded-lg shadow-md z-10">
                       <button
                         onClick={() => {
-                          onEditMessage?.(message)
+                          onEditMessage(message)
                           setOpenMenuId(null)
                         }}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
@@ -83,7 +83,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages, onEditMessage, onDe
                       </button>
                       <button
                         onClick={() => {
-                          onDeleteMessage?.(message._id)
+                          onDeleteMessage(message._id)
                           setOpenMenuId(null)
                         }}
                         className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"

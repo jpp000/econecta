@@ -22,6 +22,7 @@ interface ChatStore {
   sendPublicMessage: (messagePayload: SendPublicMessagePayload) => void;
   sendPrivateMessage: (messagePayload: SendPrivateMessagePayload) => void;
   editMessage: (editMessagePayload: EditMessagePayload) => void;
+  deleteMessage: (messageId: string) => void;
   subscribeMessage: () => void;
   unsubscribeMessage: () => void;
   setError: (error: string | null) => void;
@@ -121,8 +122,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
       const { messages } = get();
       const currentUserId = useAuthStore.getState().user?._id;
-      
-      
+
       const message = messages.find(
         (message) =>
           message._id === editMessagePayload.messageId &&
@@ -133,7 +133,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         throw new Error("User is not the sender of the message");
       }
 
-      if(message.text === editMessagePayload.text) return;
+      if (message.text === editMessagePayload.text) return;
 
       socket.emit(MESSAGES_EVENTS.EDIT_MESSAGE, editMessagePayload);
     } catch {
@@ -151,11 +151,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
       const { messages } = get();
       const currentUserId = useAuthStore.getState().user?._id;
-      
+
       const userIsSender = messages.find(
         (message) =>
-          message._id === messageId &&
-          message.sender._id === currentUserId
+          message._id === messageId && message.sender._id === currentUserId
       );
 
       if (!userIsSender) {
@@ -191,28 +190,32 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     });
 
     socket.on(MESSAGES_EVENTS.EDITED_MESSAGE, (editedMessage: Message) => {
-      const { messages } = get()
-      const messageIdx = messages.findIndex((message) => message._id === editedMessage._id)
+      const { messages } = get();
+      const messageIdx = messages.findIndex(
+        (message) => message._id === editedMessage._id
+      );
 
-      const newMessages = messages
+      const newMessages = messages;
 
-      newMessages.splice(messageIdx, 1)
-      newMessages.push(editedMessage)
+      newMessages.splice(messageIdx, 1);
+      newMessages.push(editedMessage);
 
-      set({ messages: newMessages })
+      set({ messages: newMessages });
     });
 
-    // socket.on(MESSAGES_EVENTS.DELETED_MESSAGE, (messageId: string) => {
-    //   const index = get().messages.findIndex(
-    //     (message) => message._id === messageId
-    //   );
+    socket.on(MESSAGES_EVENTS.DELETED_MESSAGE, (messageId: string) => {
+      const { messages } = get();
 
-    //   if (index === -1) return;
+      const index = messages.findIndex((message) => message._id === messageId);
 
-    //   set((state) => ({
-    //     messages: state.messages.splice(index, 1),
-    //   }));
-    // });
+      if (index === -1) return;
+
+      const updatedMessages = messages;
+
+      updatedMessages.splice(index, 1);
+
+      set({ messages: updatedMessages });
+    });
   },
 
   unsubscribeMessage: () => {

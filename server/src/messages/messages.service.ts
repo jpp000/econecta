@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { MessagesRepository } from './messages.repository';
 import { SendPrivateMessageDto } from './dto/send-private-message.dto';
 import { SendPublicMessageDto } from './dto/send-public-message.dto';
@@ -119,12 +119,27 @@ export class MessagesService {
     }
   }
 
-  async deleteMessage({ messageId, userId }: FindMessageDto) {
+  async deleteMessage({ messageId, userId }: FindMessageDto): Promise<string> {
     try {
-      return await this.messagesRepository.findOneAndDelete({
+      const message = await this.messagesRepository.findOne({
         _id: messageId,
         sender: userId,
       });
+
+      console.log({ message });
+
+      if (!message) {
+        throw new ConflictException(
+          'You are not the sender or message does not exists',
+        );
+      }
+
+      await this.messagesRepository.findOneAndDelete({
+        _id: messageId,
+        sender: userId,
+      });
+
+      return message._id.toHexString();
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -143,7 +158,9 @@ export class MessagesService {
       );
 
       if (!updatedMessage) {
-        throw new NotFoundException('You are not the sender');
+        throw new ConflictException(
+          'You are not the sender or message does not exists',
+        );
       }
 
       const sender = await this.usersService.getUser({

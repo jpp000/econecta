@@ -15,6 +15,7 @@ const ChatsContainer = () => {
     getPrivateChatMessages,
     getPublicChatMessages,
     editMessage,
+    deleteMessage,
   } = useChatStore();
   const { listContacts } = useAuthStore();
   const { setVariant } = useNavbarStore();
@@ -54,12 +55,9 @@ const ChatsContainer = () => {
     setEditingMessage(message);
   };
 
-  // const handleDeleteMessage = (index: number) => {
-  //   const updatedMessages = messages.split(index, 1);
-  //   setMessages({
-  //     ...updatedMessages,
-  //   });
-  // };
+  const handleDeleteMessage = (messageId: string) => {
+    deleteMessage(messageId);
+  };
 
   const handleSelectChat = (chat: ChatUser | null) => {
     setSelectedChat(chat);
@@ -75,7 +73,7 @@ const ChatsContainer = () => {
       editingMessage={editingMessage}
       handleEditMessage={handleEditMessage}
       setEditingMessage={setEditingMessage}
-      // handleDeleteMessage={handleDeleteMessage}
+      handleDeleteMessage={handleDeleteMessage}
     />
   );
 };
