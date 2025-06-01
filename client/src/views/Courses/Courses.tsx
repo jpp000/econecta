@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Course } from "@/interfaces/course";
+import { Course } from "@/interfaces/course.interface";
 import { useNavbarStore } from "@/store/useNavbarStore";
 
 interface CoursesProps {

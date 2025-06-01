@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axiosInstance";
 import { handleApiError } from "@/lib/handleApiError";
-import type { Course } from "@/interfaces/course";
+import type { Course } from "@/interfaces/course.interface";
 
 export type Lesson = {
   _id: string;

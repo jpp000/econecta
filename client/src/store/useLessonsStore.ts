@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { axiosInstance } from '@/lib/axiosInstance';
 import { handleApiError } from '@/lib/handleApiError';
-import type { Lesson } from '@/interfaces/course';
+import type { Lesson } from '@/interfaces/course.interface';
 import toast from 'react-hot-toast';
 
 interface LessonsState {

@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useCoursesStore } from "@/store/useCoursesStore";
 import { useLessonsStore } from "@/store/useLessonsStore";
-import { Lesson } from "@/interfaces/course";
+import { Lesson } from "@/interfaces/course.interface";
 import CourseEditModal from "@/components/Modals/CourseEditModal";
 import CourseDeleteModal from "@/components/Modals/CourseDeleteModal";
 import LessonAddEditModal from "@/components/Modals/LessonAddEditModal";
