@@ -1,17 +1,18 @@
 import type React from "react"
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 import { Message } from "@/interfaces/message.interface"
 import { useAuthStore } from "@/store/useAuthStore"
 
 interface MessageAreaProps {
   messages: Message[]
-  // onEditMessage: (message: Message) => void
-  // onDeleteMessage: (messageId: number) => void
+  onEditMessage?: (message: Message) => void
+  onDeleteMessage?: (messageId: string) => void
 }
 
-const MessageArea: React.FC<MessageAreaProps> = ({ messages }) => {
+const MessageArea: React.FC<MessageAreaProps> = ({ messages, onEditMessage, onDeleteMessage }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const { user } = useAuthStore()
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -21,47 +22,80 @@ const MessageArea: React.FC<MessageAreaProps> = ({ messages }) => {
     scrollToBottom()
   }, [messages])
 
+  const toggleMenu = (id: string) => {
+    setOpenMenuId(prev => (prev === id ? null : id))
+  }
+
   return (
     <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
       <div className="space-y-4 pb-2">
         {messages && messages.length > 0 ? (
-          messages.map((message) => (
-            <div
-              key={message._id}
-              className={`flex ${message.sender._id === user?._id ? "justify-end" : "justify-start"} animate-fadeIn`}
-            >
+          messages.map((message) => {
+            const isOwnMessage = message.sender._id === user?._id
+            const isOpen = openMenuId === message._id
+
+            return (
               <div
-                className={`
-                  max-w-130 rounded-lg p-3 shadow-sm
-                  ${message.sender._id === user?._id
-                    ? "bg-green-500 text-white rounded-br-none"
-                    : "bg-white border border-gray-200 text-gray-800 rounded-bl-none"
-                  }
-                `}
+                key={message._id}
+                className={`relative flex ${isOwnMessage ? "justify-end" : "justify-start"} animate-fadeIn`}
               >
-                <div className="flex min-w-30 max-w-130 justify-between mb-1">
-                  <span
-                    className={`font-semibold text-sm ${message.sender._id === user?._id ? "text-white" : "text-green-600"}`}
-                  >
-                    {message.sender._id === user?._id ? "Você" : message.sender.username}
-                  </span>
-                </div>
-                <p
-                  className={`text-sm break-words leading-relaxed ${message.sender._id === user?._id ? "text-white" : "text-gray-800"}`}
+                <div
+                  className={`
+                    min-w-30 max-w-130 rounded-lg p-3 shadow-sm relative
+                    ${isOwnMessage
+                      ? "bg-green-500 text-white rounded-br-none"
+                      : "bg-white border border-gray-200 text-gray-800 rounded-bl-none"
+                    }
+                  `}
                 >
-                  {message.text}
-                </p>
-                {/* {message.edited && (
-                  <span
-                    className={`text-xs opacity-70 italic mt-1 inline-block ${message.sender._id === user?._id ? "text-green-100" : "text-gray-500"
-                      }`}
-                  >
-                    (edited)
-                  </span>
-                )} */}
+                  <div className="flex justify-between items-center mb-1">
+                    <span
+                      className={`font-semibold text-sm ${isOwnMessage ? "text-white" : "text-green-600"}`}
+                    >
+                      {isOwnMessage ? "Você" : message.sender.username}
+                    </span>
+
+                    {isOwnMessage && (
+                      <button
+                        onClick={() => toggleMenu(message._id)}
+                        className="ml-2 text-white opacity-80 hover:opacity-100"
+                      >
+                        ⋯
+                      </button>
+                    )}
+                  </div>
+
+                  <p className={`text-sm break-words leading-relaxed ${isOwnMessage ? "text-white" : "text-gray-800"}`}>
+                    {message.text}
+                  </p>
+
+                  {/* Popover de opções */}
+                  {isOwnMessage && isOpen && (
+                    <div className="absolute top-8 right-2 bg-white border border-gray-200 rounded-lg shadow-md z-10">
+                      <button
+                        onClick={() => {
+                          onEditMessage?.(message)
+                          setOpenMenuId(null)
+                        }}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => {
+                          onDeleteMessage?.(message._id)
+                          setOpenMenuId(null)
+                        }}
+                        className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
+                      >
+                        Deletar
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))
+            )
+          })
         ) : (
           <div className="flex items-center justify-center h-full">
             <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200">
