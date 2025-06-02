@@ -221,7 +221,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => openEditLessonModal(lesson)}
-                                className="text-gray-500 hover:text-gray-700"
+                                className="text-gray-500 hover:text-gray-700 cursor-pointer"
                               >
                                 <Edit className="w-4 h-4" />
                               </Button>
@@ -231,7 +231,7 @@ export default function CourseDetail({ courseId, onBack }: CourseDetailProps) {
                                 onClick={() =>
                                   openDeleteLessonModal(lesson._id)
                                 }
-                                className="text-red-500 hover:text-red-700"
+                                className="text-red-500 hover:text-red-700 cursor-pointer"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </Button>

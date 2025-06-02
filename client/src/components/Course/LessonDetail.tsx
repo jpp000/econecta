@@ -82,7 +82,7 @@ export default function LessonDetail({ lessonId, onBack }: LessonDetailProps) {
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-6">
           <Button
             variant="ghost"
-            className="mb-8 flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            className="mb-8 flex items-center gap-2 text-gray-600 hover:text-gray-900 cursor-pointer"
             onClick={onBack}
           >
             <ArrowLeft className="w-4 h-4" />

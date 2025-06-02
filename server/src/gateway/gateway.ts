@@ -13,10 +13,8 @@ import { MessagesService } from 'src/messages/messages.service';
 import { Logger } from '@nestjs/common';
 import { MESSAGES_EVENTS } from 'src/common/constants/events';
 
-@WebSocketGateway(4000, {
-  cors: {
-    origin: '*',
-  },
+@WebSocketGateway({
+  cors: true,
 })
 export class GatewayProvider
   implements OnGatewayConnection, OnGatewayDisconnect

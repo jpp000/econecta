@@ -25,7 +25,7 @@ const ContactsList: React.FC<ContactsListProps> = ({
     contact.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const onlineCount = onlineUsers.length - 1;
+  const onlineCount = onlineUsers.length - 1 ? onlineUsers.length - 1 > 0 : 0;
 
   if (isCollapsed) {
     return (

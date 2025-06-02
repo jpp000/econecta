@@ -1,5 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface LessonDeleteModalProps {
   open: boolean;
@@ -9,7 +15,13 @@ interface LessonDeleteModalProps {
   isLoading: boolean;
 }
 
-export default function LessonDeleteModal({ open, onClose, onConfirm, lessonTitle, isLoading }: LessonDeleteModalProps) {
+export default function LessonDeleteModal({
+  open,
+  onClose,
+  onConfirm,
+  lessonTitle,
+  isLoading,
+}: LessonDeleteModalProps) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
@@ -17,17 +29,26 @@ export default function LessonDeleteModal({ open, onClose, onConfirm, lessonTitl
           <DialogTitle>Excluir Aula</DialogTitle>
         </DialogHeader>
         <div className="py-3">
-          <p>Tem certeza que deseja excluir a aula <strong>"{lessonTitle}"</strong>? Esta ação não pode ser desfeita.</p>
+          <p>
+            Tem certeza que deseja excluir a aula{" "}
+            <strong>"{lessonTitle}"</strong>? Esta ação não pode ser desfeita.
+          </p>
         </div>
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={onClose}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            className="cursor-pointer"
+          >
             Cancelar
           </Button>
-          <Button 
-            type="button" 
-            variant="destructive" 
-            onClick={onConfirm} 
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={onConfirm}
             disabled={isLoading}
+            className="cursor-pointer"
           >
             {isLoading ? "Excluindo..." : "Excluir Aula"}
           </Button>
@@ -35,4 +56,4 @@ export default function LessonDeleteModal({ open, onClose, onConfirm, lessonTitl
       </DialogContent>
     </Dialog>
   );
-} 
+}
