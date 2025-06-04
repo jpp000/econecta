@@ -34,7 +34,7 @@ const Calendar = ({
   handleSaveEdit,
 }: CalendarProps) => {
   return (
-    <div className="flex justify-center items-center w-full bg-[#1E3A3A]">
+    <div className="h-[calc(100vh-3rem)] flex justify-center items-center w-full bg-[#1E3A3A]">
       <ContinuousCalendar
         showAllEventsClick={onClickHandler}
         addEventClick={addEventClick}
