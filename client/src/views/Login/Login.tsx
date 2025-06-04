@@ -22,7 +22,7 @@ const Login = ({
 }: LoginProps) => {
   return (
     <div className="min-h-screen mt-18 flex flex-col md:flex-row">
-      {/* Left side - Form */}
+      {/* Lado esquerdo - Formulário */}
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8 md:p-16">
         <div className="w-full max-w-md">
           <div className="flex items-center mb-8">
@@ -33,10 +33,10 @@ const Login = ({
           </div>
 
           <h2 className="text-3xl font-semibold text-green-950 mb-2">
-            Welcome back
+            Bem-vindo de volta
           </h2>
           <p className="text-gray-500 mb-8">
-            Please enter your details to sign in
+            Por favor, insira seus dados para entrar
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -45,7 +45,7 @@ const Login = ({
                 htmlFor="username"
                 className="block text-sm font-medium text-gray-700"
               >
-                Username
+                Nome de usuário
               </label>
               <input
                 id="username"
@@ -54,7 +54,7 @@ const Login = ({
                 className={`w-full px-4 py-3 rounded-lg border ${
                   errors.username ? "border-red-500" : "border-gray-300"
                 } focus:outline-none focus:ring-2 focus:ring-green-950 focus:border-transparent transition-all`}
-                placeholder="Enter your username"
+                placeholder="Insira seu nome de usuário"
               />
               {errors.username && (
                 <p className="text-red-500 text-sm mt-1">
@@ -68,7 +68,7 @@ const Login = ({
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                Password
+                Senha
               </label>
               <div className="relative">
                 <input
@@ -111,14 +111,14 @@ const Login = ({
                   htmlFor="remember-me"
                   className="ml-2 block text-sm text-gray-700"
                 >
-                  Remember me
+                  Lembrar de mim
                 </label>
               </div>
               <a
                 href="#"
                 className="text-sm font-medium text-green-[#2F4F4F] hover:text-green-950"
               >
-                Forgot password?
+                Esqueceu a senha?
               </a>
             </div>
 
@@ -130,27 +130,27 @@ const Login = ({
               {isLoading ? (
                 <>
                   <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                  Signing in...
+                  Entrando...
                 </>
               ) : (
-                "Sign in"
+                "Entrar"
               )}
             </button>
           </form>
 
           <p className="mt-8 text-center text-sm text-gray-900">
-            Don't have an account?{" "}
+            Não tem uma conta?{" "}
             <Link
               to={"/signup"}
               className="font-medium text-green-950 hover:text-gray-700/70 transition-all"
             >
-              Sign up
+              Cadastre-se
             </Link>
           </p>
         </div>
       </div>
 
-      {/* Right side - Image */}
+      {/* Lado direito - Imagem */}
       <div className="hidden md:block md:w-1/2 bg-green-100">
         <div
           className="h-full w-full bg-cover bg-center relative"
@@ -162,11 +162,10 @@ const Login = ({
           <div className="absolute inset-0 bg-green-900/50 backdrop-blur-sm"></div>
           <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-12">
             <h2 className="text-4xl font-bold mb-4 text-center">
-              Join the Green Revolution
+              Junte-se à nós
             </h2>
             <p className="text-xl text-center max-w-md">
-              Every small action counts! Be part of the movement that changes
-              the world.
+              Cada pequena ação conta! Faça parte do movimento que muda o mundo.
             </p>
           </div>
         </div>

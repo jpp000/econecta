@@ -173,7 +173,6 @@ export const useAuthStore = create<AuthState>()(
           });
 
           socket.on("disconnect", (reason) => {
-            console.log("Disconnected:", reason);
             set({ socketConnected: false });
 
             if (

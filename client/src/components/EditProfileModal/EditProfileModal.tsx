@@ -127,7 +127,6 @@ const EditProfileModal = ({
       await onSave(updatedData);
       onClose();
     } catch (error) {
-      console.error("Error updating profile:", error);
       setErrors({ submit: "Failed to update profile. Please try again." });
     } finally {
       setIsLoading(false);

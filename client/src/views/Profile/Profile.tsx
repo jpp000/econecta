@@ -100,7 +100,6 @@ const ProfilePage = () => {
       // Show success message
       alert("Profile updated successfully!")
     } catch (error) {
-      console.error("Error updating profile:", error)
       alert("Failed to update profile. Please try again.")
     }
   }

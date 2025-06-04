@@ -172,15 +172,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   subscribeMessage: () => {
     const socket = useAuthStore.getState().socket;
 
-    if (!socket) {
-      console.error("Socket not connected");
-      return;
-    }
+    if (!socket) throw new Error("Socket not connected");
 
     socket.on(MESSAGES_EVENTS.RECEIVE_PRIVATE_MESSAGE, (message: Message) => {
       const selectedChat = get().selectedChat
-
-      console.log({ selectedChat, message });
 
       if(selectedChat) {
         set((state) => ({
