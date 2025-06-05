@@ -1,5 +1,3 @@
-import WorldGreen from "../../../assets/world-green.png";
-
 import { Sprout } from "lucide-react";
 import { CarrosselVertical } from "../../CarrosselVertical/CarrosselVertical";
 import PartnerLogosCarousel from "../../PartnerLogosCarousel/PartnerLogosCarousel";
@@ -21,27 +19,7 @@ const MissionSection = () => {
   
   return (
     <section ref={ref} className="bg-white text-green-950 overflow-hidden">
-      <div className="relative h-screen flex items-center justify-center">
-        <img
-          src={WorldGreen}
-          alt="Ilustração de sustentabilidade"
-          className="absolute top-10 left-10 w-70"
-        />
-        <img
-          src={WorldGreen}
-          alt="Ilustração de sustentabilidade"
-          className="absolute top-10 right-10 w-70"
-        />
-        <img
-          src={WorldGreen}
-          alt="Ilustração de sustentabilidade"
-          className="absolute bottom-10 left-10 w-70"
-        />
-        <img
-          src={WorldGreen}
-          alt="Ilustração de sustentabilidade"
-          className="absolute bottom-10 right-10 w-70"
-        />
+      <div className="h-[70vh] flex items-center justify-center">
         <div className="h-full flex flex-col items-center justify-center">
           <h2 className="text-5xl max-w-5xl text-center">
             Plataforma BRASFI: Centralizando conhecimento para um futuro sustentável.
