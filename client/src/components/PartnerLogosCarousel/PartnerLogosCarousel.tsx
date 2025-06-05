@@ -1,7 +1,10 @@
 import "./PartnerLogosCarousel.css";
-import LogoImage from "@/assets/company1-logo.png";
+import Logo1 from '@/assets/climate-company.png';
+import Logo2 from '@/assets/lab-inv-fin.jpg';
+import Logo3 from '@/assets/logo-unifor.png';
+import Logo4 from '@/assets/weesg.png';
 
-const logos = [LogoImage, LogoImage, LogoImage, LogoImage, LogoImage];
+const logos = [Logo1, Logo2, Logo3, Logo4, Logo2, Logo3];
 
 const PartnerLogosCarousel = () => {
   return (
