@@ -7,18 +7,18 @@ import EnterpriseSection from "@/components/Sections/EnterpriseSection/Enterpris
 const Home = () => {
   const professionals = [
     {
-      name: "John Doe",
-      position: "CEO",
+      name: "Ana Silva",
+      position: "Especialista em Finanças Sustentáveis",
       image: CardTree,
     },
     {
-      name: "Jane Smith",
-      position: "CTO",
+      name: "Carlos Pereira",
+      position: "Consultor de Inovação Financeira",
       image: CardTree,
     },
     {
-      name: "Alice Johnson",
-      position: "CFO",
+      name: "Mariana Costa",
+      position: "Analista de Sustentabilidade",
       image: CardTree,
     },
   ];

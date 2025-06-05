@@ -3,9 +3,10 @@ import { ArrowRight, Facebook, Hop, Linkedin, Loader, Twitter, Youtube } from "l
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { InfiniteCarousel } from "../../InfiniteCarousel/InfiniteCarousel";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useSectionInView } from "@/hooks/useSectionInView";
 import { useNavbarStore } from "@/store/useNavbarStore";
+import { useNavigate } from "react-router-dom";
 
 interface Professional {
   name: string;
@@ -19,20 +20,25 @@ interface EnterpriseSectionProps {
 
 const EnterpriseSection = ({ professionals }: EnterpriseSectionProps) => {
   const { setVariant } = useNavbarStore();
-    const { ref, isInView } = useSectionInView(0.4);
-  
-    useEffect(() => {
-      if (isInView) {
-        setVariant("transparent");
-      }
-    }, [isInView, setVariant]);
+  const { ref, isInView } = useSectionInView(0.4);
+
+  const navigate = useNavigate();
+
+  const navigateToApp = useCallback(() => {
+    navigate("/chats");
+  }, [navigate]);
+
+  useEffect(() => {
+    if (isInView) {
+      setVariant("transparent");
+    }
+  }, [isInView, setVariant]);
 
   return (
     <section ref={ref} className="min-h-screen flex flex-col items-center bg-green-100/30 text-green-950">
       <div className="max-w-4xl text-center mt-30">
         <h2 className="text-5xl font-semibold">
-          Our teams the <Hop className="size-12 inline-block" /> driving force
-          behind our mission to create a more sustainable world (Profissionais)
+          Nossa equipe é o <Hop className="size-12 inline-block" /> motor que impulsiona nossa missão de transformar o mercado financeiro sustentável.
         </h2>
       </div>
 
@@ -56,28 +62,25 @@ const EnterpriseSection = ({ professionals }: EnterpriseSectionProps) => {
         <div className="flex w-9/10 bg-green-900/60 p-10 rounded-lg shadow-lg">
           <div className="flex flex-col gap-8 items-start text-white">
             <h3 className="text-6xl font-semibold max-w-full">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+              Junte-se a nós para construir um futuro mais sustentável.
             </h3>
             <p className="mt-2 max-w-100 font-light leading-7">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam
-              natus vero tempore hic nesciunt quisquam, qui dolorum laboriosam
-              perferendis voluptas.
+              A BRASFI conecta profissionais e organizações para promover inovação, colaboração e impacto positivo no mercado financeiro.
             </p>
 
-            <Button className="bg-white p-6 text-black text-md font-medium rounded-full hover:bg-gray-200 cursor-pointer">
-              Lets Get Started
+            <Button onClick={navigateToApp} className="bg-white p-6 text-black text-md font-medium rounded-full hover:bg-gray-200 cursor-pointer">
+              Faça Parte da Mudança
             </Button>
 
             <div className="flex gap-2">
               <div className="flex items-center gap-2 bg-gray-200/20 p-4 text-white text-md font-medium rounded-full hover:bg-gray-200/40 transition-all">
-                <Loader className="size-5 inline-block" /> Be part of the change
+                <Loader className="size-5 inline-block" /> Seja um Voluntário
               </div>
               <div className="flex items-center gap-2 bg-gray-200/20 p-4 text-white text-md font-medium rounded-full hover:bg-gray-200/40 transition-all">
-                <Loader className="size-5 inline-block" /> Join the Green
-                Revolution
+                <Loader className="size-5 inline-block" /> Contribua com a BRASFI
               </div>
               <div className="flex items-center gap-2 bg-gray-200/20 p-4 text-white text-md font-medium rounded-full hover:bg-gray-200/40 transition-all">
-                <Loader className="size-5 inline-block" /> Stay Connected!
+                <Loader className="size-5 inline-block" /> Conecte-se Conosco
               </div>
             </div>
           </div>
@@ -94,16 +97,15 @@ const EnterpriseSection = ({ professionals }: EnterpriseSectionProps) => {
 
       <div className="w-full p-14 flex justify-around mb-10">
         <div className="flex flex-col gap-4">
-          <h3 className="text-2xl font-medium">Subscribe to our newsletter</h3>
+          <h3 className="text-2xl font-medium">Assine nossa newsletter</h3>
           <p className="text-sm text-gray-500 max-w-80 font-light leading-7">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus
-            voluptatem.
+            Receba atualizações sobre nossas iniciativas e eventos diretamente no seu e-mail.
           </p>
 
           <div className="relative">
             <Input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Digite seu e-mail"
               className="w-full rounded-full placeholder:text-gray-500"
             />
             <ArrowRight className="size-5 absolute top-1/4 right-4 cursor-pointer" />
@@ -139,17 +141,17 @@ const EnterpriseSection = ({ professionals }: EnterpriseSectionProps) => {
 
         <div className="flex gap-30 text-gray-500 text-lg">
           <div className="flex flex-col gap-4">
-            <h3 className="text-green-900/80 text-2xl mb-5">Service</h3>
-            <p>About Us</p>
-            <p>About Us</p>
-            <p>About Us</p>
+            <h3 className="text-green-900/80 text-2xl mb-5">Serviços</h3>
+            <p>Sobre Nós</p>
+            <p>Iniciativas</p>
+            <p>Parcerias</p>
           </div>
 
           <div className="flex flex-col gap-4">
-            <h3 className="text-green-900/80 text-2xl mb-5">Service</h3>
-            <p>About Us</p>
-            <p>About Us</p>
-            <p>About Us</p>
+            <h3 className="text-green-900/80 text-2xl mb-5">Contato</h3>
+            <p>Fale Conosco</p>
+            <p>Seja Voluntário</p>
+            <p>Contribua</p>
           </div>
         </div>
       </div>

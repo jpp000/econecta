@@ -4,18 +4,18 @@ import BgImage from "@/assets/bg-image.jpg";
 const cards = [
   {
     image: BgImage,
-    title: "Nosso time é o coração da missão Nosso time é o coração da missão",
-    text: "Inspiramos pessoas a tomar decisões ambientalmente conscientes. Inspiramos pessoas a tomar decisões ambientalmente conscientes.",
+    title: "Capacitação em Finanças Sustentáveis",
+    text: "Oferecemos cursos e treinamentos especializados para formar líderes que promovam práticas financeiras responsáveis e sustentáveis. Nosso objetivo é capacitar profissionais para enfrentar os desafios do mercado financeiro com ética e inovação.",
   },
   {
     image: BgImage,
-    title: "Tecnologia verde Tecnologia verde",
-    text: "Criamos soluções sustentáveis para o futuro. Criamos soluções sustentáveis para o futuro. Criamos soluções sustentáveis para o futuro.",
+    title: "Conexão entre Profissionais e Organizações",
+    text: "Criamos uma rede de networking que conecta especialistas e organizações para impulsionar a inovação no mercado financeiro. Nossa plataforma facilita a troca de ideias e a construção de parcerias estratégicas.",
   },
   {
     image: BgImage,
-    title: "Inovação limpa Inovação limpa",
-    text: "Aliamos ciência e natureza para um mundo melhor. Aliamos ciência e natureza para um mundo melhor. Aliamos ciência e natureza para um mundo melhor.",
+    title: "Iniciativas de Impacto Positivo e Sustentável",
+    text: "Apoiamos projetos que promovem mudanças reais e alinhados aos princípios de sustentabilidade e responsabilidade social. Trabalhamos para criar soluções que beneficiem tanto o meio ambiente quanto a sociedade.",
   },
 ];
 
@@ -43,10 +43,12 @@ export function CarrosselVertical() {
         {cards.map((card, i) => (
           <div
             key={i}
-            className="h-[650px] w-full flex-shrink-0 px-4 py-6 flex flex-col justify-start gap-4 bg-white rounded-xl"
+            className="h-[650px] w-full flex-shrink-0 px-4 py-6 flex flex-col justify-between gap-4 bg-white rounded-xl"
           >
-            <h4 className="text-green-950 text-4xl font-medium max-w-120">{card.title}</h4>
-            <p className="text-gray-500 max-w-150">{card.text}</p>
+            <div className="flex flex-col gap-2">
+              <h4 className="text-green-950 text-4xl font-medium max-w-120">{card.title}</h4>
+              <p className="text-gray-500 max-w-150">{card.text}</p>
+            </div>
             <img
               src={card.image}
               alt={card.title}
