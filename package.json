@@ -1,0 +1,26 @@
+{
+  "name": "econecta",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "test:cov": "turbo run test:cov",
+    "test:debug": "turbo run test:debug",
+    "test:e2e": "turbo run test:e2e",
+    "start": "turbo run start",
+    "start:dev": "turbo run start:dev",
+    "start:debug": "turbo run start:debug",
+    "start:prod": "turbo run start:prod",
+    "preview": "turbo run preview"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3"
+  }
+}
+

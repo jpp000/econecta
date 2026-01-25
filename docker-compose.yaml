@@ -1,7 +1,7 @@
 services:
-  server:
+  api:
     build:
-      context: ./server
+      context: ./apps/api
       dockerfile: ./Dockerfile
       target: build
     command: pnpm run start:dev
@@ -9,28 +9,29 @@ services:
       - "3000:3000"
       - "4000:4000"
     volumes:
-      - ./server:/app
+      - ./apps/api:/app
+      - ./packages:/app/packages
       - /app/node_modules
     env_file:
-      - server/.env
+      - apps/api/.env
     depends_on:
       - db
     environment:
       - NODE_ENV=development
   
-  client:
+  web:
     build:
-      context: ./client
+      context: ./apps/web
       dockerfile: ./Dockerfile
       target: deps
     command: pnpm run dev --host
     ports:
       - "5173:5173"
     volumes:
-      - ./client:/app
+      - ./apps/web:/app
       - /app/node_modules
     depends_on:
-      - server
+      - api
     environment:
       - NODE_ENV=development
 

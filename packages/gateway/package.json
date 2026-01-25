@@ -1,0 +1,26 @@
+{
+  "name": "@econecta/gateway",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@econecta/messages": "workspace:*",
+    "@econecta/common": "workspace:*",
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/platform-socket.io": "^11.0.20",
+    "@nestjs/websockets": "^11.0.20",
+    "@nestjs/config": "^4.0.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "typescript": "^5.7.3"
+  }
+}
+
